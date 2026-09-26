@@ -196,7 +196,7 @@ def form_indicator(form: dict) -> list:
         children.append(html.Span(
             ["🧊", html.Span(str(form["loss_streak"]), className="streak-count")],
             className="streak-cold",
-            title=f"{form['loss_streak']}-game losing streak — it turns around",
+            title=f"{form['loss_streak']}-game losing streak. It turns around.",
         ))
 
     if form["last_5"]:
@@ -657,7 +657,7 @@ def uscf_unavailable_card(reason: str) -> html.Div:
         html.Div("US Chess Federation", className="chart-title"),
         html.Div(className="uscf-alert", children=[
             html.Span("USCF data unavailable", className="uscf-alert-headline"),
-            html.Span(f" — {reason}" if reason else "", className="uscf-alert-reason"),
+            html.Span(f": {reason}" if reason else "", className="uscf-alert-reason"),
         ]),
         html.Div(
             "Your Lichess games are unaffected. The card will fill in on the next "

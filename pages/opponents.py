@@ -52,7 +52,7 @@ from styles import (
 )
 
 dash.register_page(
-    __name__, path="/opponents", name="Opponents", title="Opponents — Chess Dashboard", order=3,
+    __name__, path="/opponents", name="Opponents", title="Opponents | Chess Dashboard", order=3,
 )
 
 
@@ -219,7 +219,7 @@ def _render_dossier(report: dict, games) -> html.Div:
 
         # Every game, click a row to open it
         html.Div(className="scout-section", children=[
-            html.Div("Your games — click one to open it", className="scout-section-title"),
+            html.Div("Your games (click one to open it)", className="scout-section-title"),
             html.Div(className="clickable-rows", children=[timeline_table]),
         ]),
 

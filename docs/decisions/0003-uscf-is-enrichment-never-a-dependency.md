@@ -6,7 +6,7 @@ status: accepted
 
 ## Context and Problem Statement
 
-The MUIR ratings API is undocumented and unofficial — its routes were discovered by reading the ratings website's JavaScript bundle, not from a published spec. US Chess could rename, restrict, or break it at any time without notice. How should the dashboard depend on official USCF data without letting a third party's silent change take it down?
+The MUIR ratings API is undocumented and unofficial: its routes were discovered by reading the ratings website's JavaScript bundle, not from a published spec. US Chess could rename, restrict, or break it at any time without notice. How should the dashboard depend on official USCF data without letting a third party's silent change take it down?
 
 ## Considered Options
 
@@ -23,7 +23,7 @@ USCF data is fetched from the MUIR ratings API (`ratings-api.uschess.org/api/v1/
 ### Consequences
 
 - Good, because a Sync that reaches Lichess but not USCF is a *successful* Sync.
-- Good, because USCF responses that can never change once written (crosstables of rated events, past monthly supplements) are cached aggressively, so a routine Sync makes only a handful of USCF calls — both politeness toward an API we were not invited to use, and resilience for when it disappears.
+- Good, because USCF responses that can never change once written (crosstables of rated events, past monthly supplements) are cached aggressively, so a routine Sync makes only a handful of USCF calls. This is both politeness toward an API we were not invited to use, and resilience for when it disappears.
 
 ## Pros and Cons of the Options
 

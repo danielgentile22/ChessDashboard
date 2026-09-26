@@ -25,7 +25,7 @@ from uscf_core import ReconciliationEntry
 
 dash.register_page(
     __name__, path="/reconciliation", name="Reconciliation",
-    title="Reconciliation — Chess Dashboard", order=8,
+    title="Reconciliation | Chess Dashboard", order=8,
 )
 
 # The five entry kinds, in display order: what they are and what to do about them.
@@ -37,14 +37,14 @@ _KINDS = [
      "Rated games with no Chapter in your Studies. Add the Chapter on Lichess, "
      "or dismiss the ones you skip on purpose (online-rated games)."),
     ("lichess_only", "Lichess only",
-     "Games USCF hasn't rated. Usually just rating lag — the next supplement "
+     "Games USCF hasn't rated. Usually just rating lag. The next supplement "
      "clears these."),
     ("missing_fide_id", "Missing opponent IDs",
      "Chapters without the opponent's USCF member ID typed in. Matching found "
      "them by name this time; type the ID in to make it robust."),
     ("rating_mismatch", "Typed-rating mismatches",
      "Your hand-typed header rating disagrees with the Official Rating in "
-     "effect for that Rated Event. Typed values power no stats — this is "
+     "effect for that Rated Event. Typed values power no stats; this is "
      "bookkeeping only."),
 ]
 
@@ -86,7 +86,7 @@ def _entry_card(entry: ReconciliationEntry) -> html.Div:
         "Dismiss",
         id={"type": "reconcile-dismiss", "index": entry.entry_id},
         className="reconcile-action reconcile-dismiss",
-        title="USCF is wrong, or this difference is intentional — stop showing it",
+        title="USCF is wrong, or this difference is intentional. Stop showing it.",
     ))
 
     head = [html.Span(f"vs {entry.opponent}", className="reconcile-opponent")]
@@ -103,8 +103,8 @@ def _entry_card(entry: ReconciliationEntry) -> html.Div:
 def _persistence_note() -> html.Div:
     """The documented limitation: dismissals are best-effort local state."""
     return html.Div(
-        "Dismissals are remembered in this dashboard's local cache only — "
-        "after a redeploy or on a fresh machine, dismissed items may come back.",
+        "Dismissals are remembered in this dashboard's local cache only. "
+        "After a redeploy or on a fresh machine, dismissed items may come back.",
         className="reconcile-persistence-note",
     )
 
@@ -131,7 +131,7 @@ def _coach_ambiguity_card(chapters: list[dict]) -> html.Div:
     return content_card(
         f"Coach reviews ({len(chapters)})",
         html.Div(
-            "The coach reviewed a Game the matcher couldn't place unambiguously — "
+            "The coach reviewed a Game the matcher couldn't place unambiguously: "
             "its moves fit more than one of your Games, or a Game two of his "
             "Chapters both claim. Nothing is dropped silently; open the Chapter "
             "to see which Game it belongs to (typing the moves or ID in fixes it).",
@@ -173,7 +173,7 @@ def _render_entries(
     elif uscf_on and not coach_ambiguities:
         sections.append(empty_state(
             "✓", "Everything agrees",
-            "Your Studies and USCF tell the same story — no conflicts, "
+            "Your Studies and USCF tell the same story: no conflicts, "
             "nothing missing on either side.",
         ))
 

@@ -41,7 +41,7 @@ from uscf_core import (
 )
 
 dash.register_page(
-    __name__, path="/events", name="Events", title="Events — Chess Dashboard", order=4,
+    __name__, path="/events", name="Events", title="Events | Chess Dashboard", order=4,
 )
 
 
@@ -382,7 +382,7 @@ def update_unplayed(colors, outcomes, terminations, start, end, events, moves, _
     return content_card(
         "Entered, never played",
         html.Div(
-            "Rated Events you registered for but have no Games from — "
+            "Rated Events you registered for but have no Games from: "
             "no-shows and online-only events.",
             className="series-list-hint",
         ),

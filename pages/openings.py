@@ -39,7 +39,7 @@ from styles import (
 )
 
 dash.register_page(
-    __name__, path="/openings", name="Openings", title="Openings — Chess Dashboard", order=2,
+    __name__, path="/openings", name="Openings", title="Openings | Chess Dashboard", order=2,
 )
 
 
@@ -214,7 +214,7 @@ def update_repertoire(color, colors, outcomes, terminations, start, end,
             html.Span(" · "),
             html.Span(f"{tree['score_pct']}% overall score",
                       className="rep-baseline-score"),
-            html.Span(f"  —  branches scoring below that across "
+            html.Span(f". Branches scoring below that across "
                       f"{tree['min_games']}+ games are flagged",
                       className="rep-baseline-hint"),
         ]),

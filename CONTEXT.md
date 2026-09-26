@@ -16,14 +16,14 @@ _Avoid_: database, PGN file (those are exports/caches, not the source)
 Lichess's term for one entry inside a Study. Each Chapter holds exactly one Game and has a stable URL (the ChapterURL) that deep-links to it on Lichess.
 
 **Sync**:
-Fetching every designated Study from the Lichess API and Daniel's USCF record from the USCF ratings API, then rebuilding the full set of Games and their enrichment. Happens at app startup and on demand via a Sync button; a successful Sync also refreshes the local cache. A Sync that reaches Lichess but not USCF still succeeds — USCF data is enrichment, never a dependency.
+Fetching every designated Study from the Lichess API and Daniel's USCF record from the USCF ratings API, then rebuilding the full set of Games and their enrichment. Happens at app startup and on demand via a Sync button; a successful Sync also refreshes the local cache. A Sync that reaches Lichess but not USCF still succeeds. USCF data is enrichment, never a dependency.
 
 **Series**:
 A tournament or ladder as Daniel experiences and names it (PGN `Event` header), e.g. "ACC Friday Ladder". A Series contains one or more Rated Events.
-_Avoid_: Event (ambiguous — say Series or Rated Event)
+_Avoid_: Event (ambiguous: say Series or Rated Event)
 
 **Rated Event**:
-A USCF-rated tournament, identified by its USCF event ID, with official dates, Sections, standings, and a rating change — e.g. "ACC JUNE 2025". Daniel's monthly club ladder is one Series but twelve Rated Events per year.
+A USCF-rated tournament, identified by its USCF event ID, with official dates, Sections, standings, and a rating change (e.g. "ACC JUNE 2025"). Daniel's monthly club ladder is one Series but twelve Rated Events per year.
 
 **Section**:
 The subdivision of a Rated Event that USCF actually rates (e.g. "U1600", "LADDER"). Rating changes happen per Section, never per game. Daniel can play more than one Section of the same Rated Event.
@@ -36,7 +36,7 @@ Daniel's USCF rating as published in the monthly rating supplement. An integer; 
 
 **Live Rating**:
 Daniel's USCF rating as recalculated after each Section he completes, carried to two decimals. Updates faster than the Official Rating and can differ from it by a large margin between supplements.
-_Avoid_: current rating (ambiguous — official and live are both "current")
+_Avoid_: current rating (ambiguous: official and live are both "current")
 
 **Forfeit**:
 A Game whose Chapter exists but where no game was actually played over the board (opponent no-show). It counts toward the tournament score but USCF never rates it, so it has no USCF Game Record.
@@ -45,20 +45,20 @@ A Game whose Chapter exists but where no game was actually played over the board
 The dashboard surface listing every disagreement between the Studies and USCF: matched Games whose facts conflict, USCF Game Records with no Chapter, Forfeits, and typed ratings that don't match the Official Rating.
 
 **Lesson**:
-The takeaway Daniel wrote for a Game — a Lichess chapter comment starting with `Lesson:`. A Game has zero or more Lessons; they are written on Lichess, never in the dashboard.
+The takeaway Daniel wrote for a Game: a Lichess chapter comment starting with `Lesson:`. A Game has zero or more Lessons; they are written on Lichess, never in the dashboard.
 _Avoid_: note, annotation (an annotation is any chapter comment; a Lesson is the marked takeaway)
 
 **Tag**:
 A hashtag (e.g. `#endgame`, `#time-trouble`) appearing in any of a Game's chapter comments. Tags categorize what a Game taught and are filterable in the dashboard. The canonical taxonomy below is the default vocabulary; new freeform tags are allowed and surface on the Lessons page with counts so fragmentation stays visible. A Tag is either **hand-written** (one Daniel typed in a comment) or **engine-emitted** (see below); the two render distinguishably but live together in the one `Tags` column, so the Lessons page, recurring-weakness detection, and review mode count both.
 
 **Engine-emitted Tag**:
-A canonical Tag an analysed Game earns itself from its Error Profile, with no comment written (issue #62 [F4]) — a tactical mistake → `#tactics`, a positional one → `#strategy`, any blunder → `#blunder`, an opening/endgame-phase mistake → `#opening`/`#endgame`. Derived enrichment, never written back to Lichess (ADR 0002): each carries a source of `engine` (vs `mine`) in the parallel `TagSources` map and renders with a muted ⚙ chip so Daniel can always tell the computer's Tags from his own. `#calculation` and `#time-trouble` are deliberately never auto-emitted — the engine has no signal that separates a miscalculation from a missed tactic, and the export carries no clock data — so those stay hand-written only.
+A canonical Tag an analysed Game earns itself from its Error Profile, with no comment written (issue #62 [F4]): a tactical mistake → `#tactics`, a positional one → `#strategy`, any blunder → `#blunder`, an opening/endgame-phase mistake → `#opening`/`#endgame`. Derived enrichment, never written back to Lichess (ADR 0002): each carries a source of `engine` (vs `mine`) in the parallel `TagSources` map and renders with a muted ⚙ chip so Daniel can always tell the computer's Tags from his own. `#calculation` and `#time-trouble` are deliberately never auto-emitted. The engine has no signal that separates a miscalculation from a missed tactic, and the export carries no clock data, so those stay hand-written only.
 
 **Coach Study**:
 A Lichess Study a user designates as holding their coach's game reviews. Fetched on Sync (with the user's token when private) and matched to the user's Games **by the moves played**, so the coach's own online games and teaching positions are ignored automatically. Coach content is enrichment (a coach Chapter never creates a Game) and renders only behind the login gate.
 
 **Coach view**:
-The fourth tab of a Game's board switcher (Game / My Analysis / Engine / **Coach**) — the coach's review chapter for that Game, with all his variations and notes. Offered only on Games a coach Chapter matched. The Lessons page collects the prose from these chapters as the **Coach's Notes** feed, kept visually distinct from the user's own Lessons.
+The fourth tab of a Game's board switcher (Game / My Analysis / Engine / **Coach**): the coach's review chapter for that Game, with all his variations and notes. Offered only on Games a coach Chapter matched. The Lessons page collects the prose from these chapters as the **Coach's Notes** feed, kept visually distinct from the user's own Lessons.
 
 **Streak**:
 A run of consecutive Games with the same outcome, ordered by date. The current win streak drives the fire indicator; the longest win streak is a tracked personal best.
@@ -68,35 +68,35 @@ The pre-game dossier on one opponent: head-to-head score, the openings they've p
 _Avoid_: head-to-head (that's just the score; the Scouting Report includes Lessons and openings)
 
 **Error Profile**:
-A Game's classified mistakes by Daniel — the engine-judged non-best moves *he* played, recorded for every Game regardless of result so the improvement signal isn't biased by wins. Read from the computer analysis Lichess embeds in an analysed Chapter's export (see `docs/decisions/0004`); a Game with no requested analysis has an empty profile. Each entry carries a Severity, a Phase, a Mistake Type, and the move number it happened on.
+A Game's classified mistakes by Daniel: the engine-judged non-best moves *he* played, recorded for every Game regardless of result so the improvement signal isn't biased by wins. Read from the computer analysis Lichess embeds in an analysed Chapter's export (see `docs/decisions/0004`); a Game with no requested analysis has an empty profile. Each entry carries a Severity, a Phase, a Mistake Type, and the move number it happened on.
 _Avoid_: weakness (a Tag-derived recurring theme on the Lessons page is a different thing)
 
 **Severity**:
-How bad a mistake was — `inaccuracy`, `mistake`, or `blunder` — recomputed from the move's win-probability drop at the 0.1 / 0.2 / 0.3 thresholds, not read from Lichess's text word. A swing below the inaccuracy line is no mistake at all and never enters the Error Profile.
+How bad a mistake was (`inaccuracy`, `mistake`, or `blunder`), recomputed from the move's win-probability drop at the 0.1 / 0.2 / 0.3 thresholds, not read from Lichess's text word. A swing below the inaccuracy line is no mistake at all and never enters the Error Profile.
 
 **Phase**:
-The part of the Game a mistake happened in — `opening`, `middlegame`, or `endgame` — from a per-position port of Lichess's open-source `Divider` (majors+minors ≤ 6 → endgame; ≤ 10, a sparse home rank, or high "mixedness" → middlegame).
+The part of the Game a mistake happened in (`opening`, `middlegame`, or `endgame`), from a per-position port of Lichess's open-source `Divider` (majors+minors ≤ 6 → endgame; ≤ 10, a sparse home rank, or high "mixedness" → middlegame).
 
 **Mistake Type**:
-What kind of error a mistake was — `tactical` (a forcing shot missed, or material dropped to a forcing sequence) or `positional` (a slow eval bleed with no forcing refutation) — by a deterministic heuristic over the moves, never an extra engine call.
+What kind of error a mistake was: `tactical` (a forcing shot missed, or material dropped to a forcing sequence) or `positional` (a slow eval bleed with no forcing refutation). Decided by a deterministic heuristic over the moves, never an extra engine call.
 
 **Accuracy**:
-One 0–100 quality number for Daniel's play in a Game — the mean of the published Lichess per-move accuracy curve (`103.1668·exp(−0.04354·winLoss) − 3.1669`) over *his* moves only. Unlike the result it doesn't depend on whether he won, so it's the honest signal to trend. Computed in `engine_analysis_core` (`player_accuracy`) and carried on the `GameAnalysis`; None when his colour is unknown.
+One 0–100 quality number for Daniel's play in a Game: the mean of the published Lichess per-move accuracy curve (`103.1668·exp(−0.04354·winLoss) − 3.1669`) over *his* moves only. Unlike the result it doesn't depend on whether he won, so it's the honest signal to trend. Computed in `engine_analysis_core` (`player_accuracy`) and carried on the `GameAnalysis`; None when his colour is unknown.
 
 **Analysis Trends**:
 The Analysis page's aggregates over the Error Profile across analysed Games (pure module `analysis_trends`, mirroring the Phase-4 analytics): the Accuracy trend over time with rating, the mistake-type trend with rating, the Phase × Mistake-Type matrix (his worst specific combination), and a histogram of the move numbers his mistakes land on (the time-trouble fingerprint). Games still awaiting analysis are excluded from every one.
 
 **AI Summary**:
-One plain-English paragraph about an analysed Game, written by Claude Haiku from the engine's *already-computed* facts (the Critical Moment and Error Profile) — never by asking the model to evaluate the position, so it cannot invent chess. Lives behind a single boundary module (`ai_summary`), the only place the dashboard touches the Anthropic API. Optional and resilient (see `docs/decisions/0004`): with no `ANTHROPIC_API_KEY` it is a no-op empty string, any failure degrades silently, and a Sync that reached Lichess succeeds without it.
+One plain-English paragraph about an analysed Game, written by Claude Haiku from the engine's *already-computed* facts (the Critical Moment and Error Profile), never by asking the model to evaluate the position, so it cannot invent chess. Lives behind a single boundary module (`ai_summary`), the only place the dashboard touches the Anthropic API. Optional and resilient (see `docs/decisions/0004`): with no `ANTHROPIC_API_KEY` it is a no-op empty string, any failure degrades silently, and a Sync that reached Lichess succeeds without it.
 
 **Analysis Cache**:
-The disposable `analysis_cache.json` that stores AI Summaries by Game identity (the ChapterURL plus a fingerprint of the facts), so an unchanged Game is never re-billed and a re-analysed one is summarised afresh. Same lifecycle as the USCF cache — never a source of truth, every filesystem misfortune degrades to "no cache".
+The disposable `analysis_cache.json` that stores AI Summaries by Game identity (the ChapterURL plus a fingerprint of the facts), so an unchanged Game is never re-billed and a re-analysed one is summarised afresh. Same lifecycle as the USCF cache: never a source of truth, every filesystem misfortune degrades to "no cache".
 
 **Engine view**:
 The third view in a Game's board switcher (Game / My Analysis / **Engine**), where Daniel reviews where he went wrong and what was better. Under the AI Summary paragraph it shows the engine's evaluation across the Game (a win-probability advantage chart), his move judgments (the Error Profile's severities), and the recommended corrections (the best move + refutation line carried on each move's eval). An un-analysed Game shows an awaiting-analysis state rather than breaking (see `docs/decisions/0004`).
 
 **My Analysis**:
-The Game-detail board view that plays Daniel's *own* annotations — his variations and comments on that Chapter, from the retained PGN — in place. It is offered only when he actually added them; a Lesson-only Game (its Lesson has its own card) or a bare Game shows just the default **Game** view (a clean replay with his annotations stripped). The board is rendered by Lichess's open-source pgn-viewer bundled as a local asset, not an iframe embed, themed from the shared `--cs-*` tokens (dark board, no flashbang).
+The Game-detail board view that plays Daniel's *own* annotations (his variations and comments on that Chapter, from the retained PGN) in place. It is offered only when he actually added them; a Lesson-only Game (its Lesson has its own card) or a bare Game shows just the default **Game** view (a clean replay with his annotations stripped). The board is rendered by Lichess's open-source pgn-viewer bundled as a local asset, not an iframe embed, themed from the shared `--cs-*` tokens (dark board, no flashbang).
 
 ## Tag taxonomy
 
@@ -114,19 +114,19 @@ The Game-detail board view that plays Daniel's *own* annotations — his variati
 
 - "PGN file" / "database": previously meant the source of truth (a manually exported file). Now means only a local cache of the last successful Sync. The source of truth is always the designated Studies on Lichess.
 - "Event": previously the only event-like term; now ambiguous between Series (Daniel's grouping) and Rated Event (USCF's grouping). Say which one.
-- "Rating" / "Elo": ambiguous between Official Rating and Live Rating. The ratings Daniel hand-types in chapter headers are his record of the Official Rating at event start — USCF's published supplement is the authority; typed values are cross-checked against it.
+- "Rating" / "Elo": ambiguous between Official Rating and Live Rating. The ratings Daniel hand-types in chapter headers are his record of the Official Rating at event start. USCF's published supplement is the authority; typed values are cross-checked against it.
 
 ## Example dialogue
 
-> **Dev:** A new game was played — what happens?
+> **Dev:** A new game was played. What happens?
 > **Daniel:** I add it as a new Chapter to the active Study on Lichess. Next time the dashboard Syncs, the Game shows up in every chart.
 > **Dev:** What if the active Study is full?
 > **Daniel:** I create a new Study on Lichess, designate it (add its ID to the dashboard config), and keep adding Chapters there. The old Study stays designated but frozen.
 > **Dev:** Where do I find what you learned from a Game?
-> **Daniel:** In its Lesson — a chapter comment starting with `Lesson:` that I wrote on Lichess. The Tags in my comments tell you *what kind* of mistake it was; the dashboard counts those to find my recurring weaknesses.
+> **Daniel:** In its Lesson: a chapter comment starting with `Lesson:` that I wrote on Lichess. The Tags in my comments tell you *what kind* of mistake it was; the dashboard counts those to find my recurring weaknesses.
 > **Dev:** And before you play someone you've faced before?
-> **Daniel:** I open their Scouting Report on my phone — score, their openings against me, and my own Lessons from those Games.
-> **Dev:** Your chart says you're 1545 but you said you're almost 1571 — which is it?
-> **Daniel:** Both. 1545 is my Official Rating — the June supplement missed my last event. 1570.72 is my Live Rating after that event. The dashboard's Official/Live switch picks which one every stat uses.
+> **Daniel:** I open their Scouting Report on my phone: score, their openings against me, and my own Lessons from those Games.
+> **Dev:** Your chart says you're 1545 but you said you're almost 1571. Which is it?
+> **Daniel:** Both. 1545 is my Official Rating. The June supplement missed my last event. 1570.72 is my Live Rating after that event. The dashboard's Official/Live switch picks which one every stat uses.
 > **Dev:** USCF lists a rated game I can't find a Chapter for.
-> **Daniel:** Then it shows up in Reconciliation. Either I forgot to add the game to my Study, or it's one I'm skipping on purpose — like online-rated games, which aren't OTB.
+> **Daniel:** Then it shows up in Reconciliation. Either I forgot to add the game to my Study, or it's one I'm skipping on purpose, like online-rated games, which aren't OTB.

@@ -45,7 +45,7 @@ from pgn_stats_core import (
 )
 
 dash.register_page(
-    __name__, path="/lessons", name="Lessons", title="Lessons — Chess Dashboard", order=6,
+    __name__, path="/lessons", name="Lessons", title="Lessons | Chess Dashboard", order=6,
 )
 
 
@@ -124,7 +124,7 @@ def _coach_notes_feed() -> html.Div | None:
         content_card(
             "Coach's Notes",
             html.Div(
-                f"What your coach has told you — {count} "
+                f"What your coach has told you: {count} "
                 f"note{'s' if count != 1 else ''}, newest first",
                 className="coach-notes-subtitle",
             ),
@@ -141,7 +141,7 @@ def _convention_explainer() -> html.Div:
         html.Div([
             "On Lichess, write a comment on any Chapter starting with ",
             html.Code("Lesson:"),
-            " — it becomes that Game's Lesson here after the next Sync.",
+            ". It becomes that Game's Lesson here after the next Sync.",
         ], className="empty-state-line"),
         html.Div([
             "Add hashtags like ",

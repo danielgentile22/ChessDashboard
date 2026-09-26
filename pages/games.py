@@ -26,7 +26,7 @@ from components import (
 from filters import FILTER_INPUTS, get_filtered
 
 dash.register_page(
-    __name__, path="/games", name="Games", title="Games — Chess Dashboard", order=5,
+    __name__, path="/games", name="Games", title="Games | Chess Dashboard", order=5,
 )
 
 # Columns shown in the games table, in display order.  The table is built
@@ -71,7 +71,7 @@ def layout(**kwargs) -> html.Div:
         page_header("Games", "Every game in your archive"),
 
         content_card(
-            "All games (filtered) — tap a game to open it",
+            "All games (filtered). Tap a game to open it.",
             # Desktop: the full player-centric table.  Phone: the card list.
             # Both are fed by the same callback rows (see update_games), so the
             # card list is a different rendering, never a second data path.

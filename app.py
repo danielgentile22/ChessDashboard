@@ -120,7 +120,7 @@ def build_app(study_ids: list[str], player_name=None, token=None, cache_path=Non
         use_pages=True,
         external_stylesheets=[dbc.themes.CYBORG, dbc.icons.BOOTSTRAP],
         suppress_callback_exceptions=True,
-        title=f"Chess Dashboard — {detected}",
+        title=f"Chess Dashboard | {detected}",
         # Lichess's pgn-viewer (issue #60 [F6]) ships as an ES module; Dash would
         # otherwise inject it as a classic <script> and the browser would reject
         # its `export`.  Keep it out of the auto-bundle — assets/lpv-init.js

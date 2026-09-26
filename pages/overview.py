@@ -46,7 +46,7 @@ from styles import (
 from uscf_core import achievement_milestones, membership_alert
 
 dash.register_page(
-    __name__, path="/", name="Overview", title="Overview — Chess Dashboard", order=0,
+    __name__, path="/", name="Overview", title="Overview | Chess Dashboard", order=0,
 )
 
 
@@ -158,7 +158,7 @@ def update_uscf_card(_sync):
 
     stale = data.uscf_unavailable_since()
     if stale:
-        stale += " — showing the last successful Sync's data."
+        stale += ". Showing the last successful Sync's data."
 
     # The current Live Rating: where the per-Section chain stands today (issue #27)
     live_series = data.get_live_series()

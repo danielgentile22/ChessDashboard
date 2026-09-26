@@ -35,7 +35,7 @@ from styles import COLORS, apply_dark_theme, donut_fig, empty_fig
 
 dash.register_page(
     __name__, path="/analysis", name="Analysis",
-    title="Analysis — Chess Dashboard", order=7,
+    title="Analysis | Chess Dashboard", order=7,
 )
 
 # Tactical reads as the sharp, interactive blue; positional as a calm grey — two
@@ -64,7 +64,7 @@ def _distribution_fig(distribution: dict[str, int]) -> go.Figure:
     none to show yet."""
     kinds = [k for k in ("tactical", "positional") if distribution.get(k, 0) > 0]
     if not kinds:
-        return empty_fig("No mistakes in your analysed games yet — clean play.")
+        return empty_fig("No mistakes in your analysed games yet. Clean play.")
 
     return donut_fig(
         labels=[_TYPE_LABEL[k] for k in kinds],
@@ -78,7 +78,7 @@ def _distribution_card(distribution: dict[str, int]) -> html.Div:
     return content_card(
         "Mistake types",
         html.Div(
-            "Your non-best moves across every analysed Game, split by kind — "
+            "Your non-best moves across every analysed Game, split by kind: "
             "tactical (a forcing shot missed or material dropped to a "
             "combination) versus positional (a slow eval bleed).",
             className="analysis-explain",
@@ -131,7 +131,7 @@ def _add_rating_overlay(fig: go.Figure, trend: pd.DataFrame) -> None:
 def _accuracy_fig(trend: pd.DataFrame) -> go.Figure:
     """A per-Game accuracy line over time, with the rating overlaid."""
     if trend.empty:
-        return empty_fig("No analysed games yet — accuracy appears here.")
+        return empty_fig("No analysed games yet. Accuracy appears here.")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=trend["Date_dt"], y=trend["Accuracy"], name="Accuracy",
@@ -152,8 +152,8 @@ def _accuracy_card(trend: pd.DataFrame) -> html.Div:
     return content_card(
         "Accuracy over time",
         html.Div(
-            "One quality number per analysed Game — how close your moves were "
-            "to the engine's best, regardless of the result — with your rating "
+            "One quality number per analysed Game (how close your moves were "
+            "to the engine's best, regardless of the result), with your rating "
             "for context.",
             className="analysis-explain",
         ),
@@ -165,7 +165,7 @@ def _accuracy_card(trend: pd.DataFrame) -> html.Div:
 def _type_trend_fig(trend: pd.DataFrame) -> go.Figure:
     """Tactical/positional counts per Game over time, rating overlaid."""
     if trend.empty:
-        return empty_fig("No analysed games yet — the trend appears here.")
+        return empty_fig("No analysed games yet. The trend appears here.")
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=trend["Date_dt"], y=trend["Tactical"], name="Tactical",
@@ -188,7 +188,7 @@ def _type_trend_card(trend: pd.DataFrame) -> html.Div:
         "Mistake types over time",
         html.Div(
             "Your tactical and positional mistakes per analysed Game, with your "
-            "rating — do the tactical errors fall as the positional ones grow "
+            "rating. Do the tactical errors fall as the positional ones grow "
             "with your level?",
             className="analysis-explain",
         ),
@@ -200,7 +200,7 @@ def _type_trend_card(trend: pd.DataFrame) -> html.Div:
 def _phase_matrix_fig(matrix: pd.DataFrame) -> go.Figure:
     """A phase × type heatmap — the worst specific combination is the hottest."""
     if matrix.empty:
-        return empty_fig("No mistakes to map yet — clean play.")
+        return empty_fig("No mistakes to map yet. Clean play.")
     phases = ["opening", "middlegame", "endgame"]
     full = matrix.reindex(index=phases, columns=["tactical", "positional"],
                           fill_value=0)
@@ -236,7 +236,7 @@ def _phase_matrix_card(matrix: pd.DataFrame) -> html.Div:
 def _histogram_fig(hist: pd.DataFrame) -> go.Figure:
     """A histogram of the move numbers your mistakes land on."""
     if hist.empty:
-        return empty_fig("No mistakes to chart yet — clean play.")
+        return empty_fig("No mistakes to chart yet. Clean play.")
     fig = go.Figure(go.Bar(
         x=hist["MoveNumber"], y=hist["Count"],
         marker_color=COLORS["primary"],
@@ -304,8 +304,8 @@ def _render_analysis() -> html.Div:
         children: list = [empty_state(
             "♟",
             "No games analyzed yet",
-            "Request computer analysis on a Chapter on Lichess — one click at "
-            "the board — and the next Sync reads it in.",
+            "Request computer analysis on a Chapter on Lichess (one click at "
+            "the board), and the next Sync reads it in.",
             "Your mistake profile, tactical versus positional, appears here once "
             "a Game is analysed.",
         )]

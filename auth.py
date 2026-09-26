@@ -179,7 +179,7 @@ def install_auth(
             throttle_key = (request.remote_addr or "?", username)
             if _throttled(throttle_key):
                 return Response(
-                    _login_page(error="Too many attempts — wait a few minutes."),
+                    _login_page(error="Too many attempts. Wait a few minutes."),
                     status=429, mimetype="text/html")
             if gate.authenticate(username, password) is not None:
                 _login_fails.pop(throttle_key, None)
@@ -228,7 +228,7 @@ def _login_page(*, error: str = "", next_path: str = "/") -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign in — Chess Dashboard</title>
+  <title>Sign in | Chess Dashboard</title>
   <style>
     :root {{ color-scheme: dark; }}
     body {{ margin: 0; min-height: 100vh; display: grid; place-items: center;

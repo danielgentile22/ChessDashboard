@@ -883,7 +883,7 @@ def achievement_milestones(
                 continue
         description = achievement.title
         if achievement.event_name:
-            description += f" — {achievement.event_name}"
+            description += f", {achievement.event_name}"
         if achievement.detail:
             description += f" ({achievement.detail})"
         entries.append({
@@ -1615,7 +1615,7 @@ def _conflict_entries(
             date=str(game["Date"]),
             lichess_says=f"You played {game['Color']} ({game['Outcome']})",
             uscf_says=(f"You played {record.player_color} "
-                       f"({record.player_outcome}) — {record.event_name}"),
+                       f"({record.player_outcome}) in {record.event_name}"),
             chapter_url=str(game["ChapterURL"]),
         ))
     return entries
@@ -1645,7 +1645,7 @@ def _uscf_only_entries(result: MatchResult) -> list[ReconciliationEntry]:
             opponent=record.opponent_name,
             date=event_dates,
             lichess_says="",
-            uscf_says=(f"{record.player_outcome} with {record.player_color} — "
+            uscf_says=(f"{record.player_outcome} with {record.player_color} in "
                        f"{record.event_name}, {record.section_name} ({system})"),
             chapter_url="",
         ))
@@ -1666,7 +1666,7 @@ def _lichess_only_entries(
             kind="lichess_only",
             opponent=str(game["Opponent"]),
             date=str(game["Date"]),
-            lichess_says=(f"{game['Outcome']} with {game['Color']} — "
+            lichess_says=(f"{game['Outcome']} with {game['Color']} in "
                           f"{game['Event']}"),
             uscf_says="",
             chapter_url=str(game["ChapterURL"]),
@@ -1686,7 +1686,7 @@ def _missing_fide_id_entries(
         record = result.record_for(game["ChapterURL"])
         uscf_says = (
             f"USCF knows this opponent as {record.opponent_name} "
-            f"(#{record.opponent_id}) — type that ID into the chapter"
+            f"(#{record.opponent_id}). Type that ID into the chapter."
             if record is not None else ""
         )
         entries.append(ReconciliationEntry(
@@ -1750,7 +1750,7 @@ def membership_alert(profile: UscfProfile, *, today: date) -> str | None:
 
     days_left = (expires - today).days
     if days_left < 0:
-        return f"Membership lapsed on {expires.isoformat()} — renew before your next rated event."
+        return f"Membership lapsed on {expires.isoformat()}. Renew before your next rated event."
     if days_left <= _EXPIRATION_WARNING_DAYS:
         return f"Membership expires in {days_left} days ({expires.isoformat()})."
     return None

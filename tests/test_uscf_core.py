@@ -1508,7 +1508,7 @@ class TestReconcileAgainstRealData:
 
         assert len(missing) == 7
         # Every one tells Daniel the exact ID to type in (they all matched by name)
-        assert all("type that ID" in e.uscf_says for e in missing)
+        assert all("Type that ID" in e.uscf_says for e in missing)
 
     def test_one_rating_mismatch_typed_1440_official_1470(
         self, study_snapshot_df, uscf_games_json, uscf_supplements_json

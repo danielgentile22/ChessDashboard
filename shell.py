@@ -71,7 +71,7 @@ def _lens_toggle() -> html.Div:
             persistence=True,
             persistence_type="session",
         ),
-    ], title="Rating lens — which rating series every rating-derived stat uses")
+    ], title="Rating lens: which rating series every rating-derived stat uses")
 
 
 def _header(player_name: str) -> html.Header:
@@ -208,7 +208,7 @@ def _per_source_freshness(lichess_label: str) -> str:
 def _describe_new_games(new_games: list[dict]) -> str:
     """Toast body for a successful Sync, e.g. '2 new games: vs Edwards (Win), vs Lopez (Loss)'."""
     if not new_games:
-        return "No new games — everything is already up to date."
+        return "No new games. Everything is already up to date."
     parts = [f"vs {g['Opponent']} ({g['Outcome']})" for g in new_games]
     n = len(new_games)
     return f"{n} new game{'s' if n > 1 else ''}: " + ", ".join(parts)
@@ -234,7 +234,7 @@ def run_sync(n_clicks, store):
 
     if outcome.status == "already_running":
         return (no_update, True, "Sync already running", "warning",
-                "A Sync is already in progress — hang tight.", no_update)
+                "A Sync is already in progress. Hang tight.", no_update)
 
     if outcome.status == "demo":
         return (no_update, True, "Demo mode", "info",
@@ -242,7 +242,7 @@ def run_sync(n_clicks, store):
 
     if outcome.status == "error":
         return (no_update, True, "Sync failed", "danger",
-                f"{outcome.error} — still showing your current games.", no_update)
+                f"{outcome.error} (still showing your current games).", no_update)
 
     # Success: bump the store so every chart re-renders on the new data
     seq = (store or {}).get("seq", 0) + 1
@@ -263,7 +263,7 @@ def run_sync(n_clicks, store):
     deltas += [{
         "kind": "uscf_achievement",
         "description": f"Official USCF achievement: {a.title}"
-                       + (f" — {a.event_name}" if a.event_name else ""),
+                       + (f" ({a.event_name})" if a.event_name else ""),
     } for a in data.get_new_achievements()]
     celebration = celebration_banner(deltas) if deltas else no_update
 
@@ -296,7 +296,7 @@ def update_reconciliation_badge(_sync, _dismissals):
          html.Span(str(count), className="reconciliation-badge-count")],
         href="/reconciliation",
         className="reconciliation-badge",
-        title=f"{count} open Reconciliation item{'s' if count != 1 else ''} — "
+        title=f"{count} open Reconciliation item{'s' if count != 1 else ''}: "
               "your Studies, USCF, or coach reviews need attention",
     )
 
@@ -331,7 +331,7 @@ def update_freshness(_n, _sync):
         notice = dbc.Alert(
             [
                 html.Strong("Showing cached data "),
-                f"from {when} — Lichess was unreachable at startup. "
+                f"from {when}. Lichess was unreachable at startup. "
                 "Click Sync to retry.",
             ],
             color="warning", className="cache-notice-alert mb-0",

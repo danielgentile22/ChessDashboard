@@ -16,9 +16,9 @@ The dashboard needs an authoritative, low-maintenance source for the Games it an
 
 ## Decision Outcome
 
-Chosen: "explicit study ID list", because it can never surprise — no future study silently pollutes the stats — at the cost of one config edit per new study (~once a year).
+Chosen: "explicit study ID list", because it can never surprise (no future study silently pollutes the stats), at the cost of one config edit per new study (~once a year).
 
-Games are fetched from the Lichess study export API (`GET /api/study/{id}.pgn`) for an explicit, configured list of study IDs — not uploaded as PGN files, and not pulled by username. A local PGN cache of the last successful sync is kept only as an offline fallback.
+Games are fetched from the Lichess study export API (`GET /api/study/{id}.pgn`) for an explicit, configured list of study IDs, not uploaded as PGN files, and not pulled by username. A local PGN cache of the last successful sync is kept only as an offline fallback.
 
 ### Consequences
 

@@ -957,11 +957,11 @@ def scouting_report(df: pd.DataFrame, opponent: str) -> dict:
 # ---------------------------------------------------------------------------
 
 _ECO_FAMILY_NAMES = {
-    "A": "A — Flank / Queen's Pawn",
-    "B": "B — Semi-Open",
-    "C": "C — Open",
-    "D": "D — Closed / Semi-Closed",
-    "E": "E — Indian Defences",
+    "A": "A: Flank / Queen's Pawn",
+    "B": "B: Semi-Open",
+    "C": "C: Open",
+    "D": "D: Closed / Semi-Closed",
+    "E": "E: Indian Defences",
 }
 
 
@@ -1001,7 +1001,7 @@ def opening_summary(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     fam = _build_pivot(has_eco, "ECO_Family")
     fam.columns = ["ECO_Family", "Win", "Draw", "Loss", "Games", "WinRate"]
     fam["FamilyName"] = fam["ECO_Family"].map(
-        lambda x: _ECO_FAMILY_NAMES.get(x, f"{x} — Other")
+        lambda x: _ECO_FAMILY_NAMES.get(x, f"{x}: Other")
     )
     fam = fam.sort_values("Games", ascending=False)[_FC]
 

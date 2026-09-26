@@ -37,7 +37,7 @@ dash.register_page(
     __name__,
     path_template="/game/<chapter_id>",
     name="Game",
-    title="Game — Chess Dashboard",
+    title="Game | Chess Dashboard",
     nav=False,  # reached by clicking a Game, not from the nav tabs
 )
 
@@ -116,8 +116,8 @@ def _uscf_facts_card(game: pd.Series) -> html.Div | None:
         conflict_badge = dcc.Link(
             className="uscf-conflict-badge", href="/reconciliation", children=[
                 html.Span("⚠", className="uscf-conflict-icon"),
-                html.Span("USCF disagrees about this game — review it in "
-                          "Reconciliation"),
+                html.Span("USCF disagrees about this game. Review it in "
+                          "Reconciliation."),
             ],
         )
 
@@ -149,7 +149,7 @@ def _forfeit_tag(game: pd.Series) -> html.Div | None:
     return html.Div(className="forfeit-tag", children=[
         html.Span("Forfeit", className="forfeit-tag-label"),
         html.Span(
-            " — opponent no-show; USCF never rated this game. It counts toward "
+            " (opponent no-show). USCF never rated this game. It counts toward "
             "the event score but not toward win rate, streaks, or opening stats.",
             className="forfeit-tag-hint",
         ),
@@ -162,7 +162,7 @@ def _awaiting_hint(tail: str) -> html.Div:
     return html.Div(className="awaiting-analysis-hint", children=[
         html.Span("Awaiting analysis", className="awaiting-analysis-label"),
         html.Span(
-            " — request computer analysis on this Chapter on Lichess and " + tail,
+            ". Request computer analysis on this Chapter on Lichess and " + tail,
             className="awaiting-analysis-text",
         ),
     ])

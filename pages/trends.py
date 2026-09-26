@@ -59,7 +59,7 @@ from styles import (
 from uscf_core import LIVE_LENS, OFFICIAL_LENS, rating_trend_series
 
 dash.register_page(
-    __name__, path="/trends", name="Trends", title="Trends — Chess Dashboard", order=1,
+    __name__, path="/trends", name="Trends", title="Trends | Chess Dashboard", order=1,
 )
 
 
@@ -121,19 +121,19 @@ def layout(**kwargs) -> html.Div:
         # Playing conditions (issue #17): time control + round fatigue
         html.Div(className="g2", children=[
             chart_card("Results by time control", "tc-bar"),
-            chart_card("Score by round — the fatigue check", "round-bar"),
+            chart_card("Score by round: the fatigue check", "round-bar"),
         ]),
 
         # Upset tracker (issue #17): giant kills and upset losses
         html.Div(className="g2", children=[
             content_card(
-                "Giant kills — wins over higher-rated opponents",
+                "Giant kills: wins over higher-rated opponents",
                 html.Div(id="upset-wins-status"),
                 quiet_table(_upset_table("upset-wins-table"),
                             clickable=True, scroll=False),
             ),
             content_card(
-                "Upset losses — losses to lower-rated opponents",
+                "Upset losses: losses to lower-rated opponents",
                 html.Div(id="upset-losses-status"),
                 quiet_table(_upset_table("upset-losses-table"),
                             clickable=True, scroll=False),
@@ -618,7 +618,7 @@ def update_upsets(colors, outcomes, terminations, start, end, events, moves, _sy
     wins_status = None
     if not upsets["wins"]:
         wins_status = html.Div(
-            "No giant kills in this filter yet — beat someone rated above you "
+            "No giant kills in this filter yet. Beat someone rated above you "
             "and they show up here.",
             className="upset-empty-line",
         )
@@ -626,7 +626,7 @@ def update_upsets(colors, outcomes, terminations, start, end, events, moves, _sy
     losses_status = None
     if not upsets["losses"]:
         losses_status = html.Div(
-            "No upset losses — you hold serve against lower-rated opponents.",
+            "No upset losses. You hold serve against lower-rated opponents.",
             className="upset-empty-line",
         )
 
