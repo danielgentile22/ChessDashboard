@@ -155,7 +155,7 @@ class TestLoadGamesDf:
         assert sorted(df["RoundNum"].dropna().unique()) == [1, 2, 3, 4]
 
     def test_mainline_moves_extracted_as_san(self, df):
-        """Each Game stores its mainline move sequence (issue #16)."""
+        """Each Game stores its mainline move sequence."""
         game1 = df[df["ChapterURL"].str.endswith("chap0001")].iloc[0]
         assert game1["Moves"][:6] == ["d4", "Nf6", "c4", "e6", "g3", "d5"]
         assert len(game1["Moves"]) == game1["Plies"]
@@ -216,7 +216,7 @@ class TestLoadGamesFromText:
 
 
 # ---------------------------------------------------------------------------
-# Chapter metadata (Game identity — ADR 0001 / issue #3)
+# Chapter metadata (Game identity — ADR 0001)
 # ---------------------------------------------------------------------------
 
 # A PGN that did not come from a Lichess Study (no chapter headers at all).
@@ -256,7 +256,7 @@ class TestChapterMetadata:
 
 
 # ---------------------------------------------------------------------------
-# Lessons and Tags (ADR 0002 — comment conventions / issue #4)
+# Lessons and Tags (ADR 0002 — comment conventions)
 # ---------------------------------------------------------------------------
 
 class TestLessons:
@@ -357,10 +357,10 @@ class TestApplyFilters:
         assert (out["FullMoves"] >= 5).all()
 
     def test_undated_games_survive_when_no_date_bound(self, df):
-        """No date bound → undated (NaT) Games stay reachable (#93).
+        """No date bound → undated (NaT) Games stay reachable.
 
         This is what the drawer's None-default dates rely on: the whole point of
-        issue #93's fix is that the default filter state never hides undated Games.
+        the fix is that the default filter state never hides undated Games.
         """
         undated = df.copy()
         undated.loc[undated.index[0], "Date_dt"] = pd.NaT
@@ -369,7 +369,7 @@ class TestApplyFilters:
         assert len(out) == len(undated)
 
     def test_undated_games_excluded_once_a_date_bound_is_set(self, df):
-        """A set bound deliberately narrows to dated Games (#93)."""
+        """A set bound deliberately narrows to dated Games."""
         undated = df.copy()
         undated.loc[undated.index[0], "Date_dt"] = pd.NaT
         out = apply_filters(undated, [], [], [], date_start="2024-01-01", date_end=None)
@@ -444,7 +444,7 @@ def _games_with_outcomes(outcomes: list[str]) -> pd.DataFrame:
 
 
 class TestCurrentForm:
-    """Streak fire / form dots computation (issue #10)."""
+    """Streak fire / form dots computation."""
 
     def test_empty_data(self):
         form = current_form(pd.DataFrame())
@@ -491,7 +491,7 @@ class TestCurrentForm:
 
 
 # ---------------------------------------------------------------------------
-# Lessons aggregation + Tag counting (issue #12)
+# Lessons aggregation + Tag counting
 # ---------------------------------------------------------------------------
 
 class TestLessonsTable:
@@ -553,7 +553,7 @@ def _tagged_games(games: list[tuple[str, list[str]]]) -> pd.DataFrame:
 
 
 class TestRecurringWeaknesses:
-    """Tag ↔ loss correlation (issue #18): the insight that makes Tags pay off."""
+    """Tag ↔ loss correlation: the insight that makes Tags pay off."""
 
     def test_clear_recurring_pattern_is_called_out(self):
         """#time-trouble on most recent losses → a callout naming the stat."""
@@ -642,7 +642,7 @@ def _games_with_lessons(games: list[dict]) -> pd.DataFrame:
 
 
 class TestReviewQueue:
-    """Pre-game review prioritization (issue #19)."""
+    """Pre-game review prioritization."""
 
     def test_weakness_tagged_lessons_come_first(self):
         """Lessons tagged with a detected recurring weakness lead the queue."""
@@ -815,7 +815,7 @@ class TestOpponentSummary:
 
 
 class TestScoutingReport:
-    """The pre-game dossier on one opponent (issue #13, CONTEXT.md glossary)."""
+    """The pre-game dossier on one opponent (CONTEXT.md glossary)."""
 
     def test_head_to_head_score(self, df):
         # Fixture vs Opponent A: Win (G1), Win (G4), Draw (G7)
@@ -1000,7 +1000,7 @@ class TestActivityData:
 
 
 class TestDailyActivity:
-    """Per-day aggregation behind the activity heatmap calendar (issue #14)."""
+    """Per-day aggregation behind the activity heatmap calendar."""
 
     def test_one_row_per_day_with_games(self, df):
         # Fixture days: 2024-01-06 (2 games), 01-07 (1), 06-15 (2), 06-16 (2)
@@ -1139,7 +1139,7 @@ class TestPerformanceRatingStats:
 
 
 # ---------------------------------------------------------------------------
-# Repertoire tree (issue #16)
+# Repertoire tree
 # ---------------------------------------------------------------------------
 
 class TestRepertoireTree:
@@ -1346,7 +1346,7 @@ def _pgn_with_headers(games: list[dict]) -> str:
 
 
 class TestTimeControlSummary:
-    """Performance by time control (issue #17): does Daniel play better slow or fast?"""
+    """Performance by time control: does Daniel play better slow or fast?"""
 
     def test_groups_results_by_time_control(self):
         games, _ = load_games_from_text(_pgn_with_headers([
@@ -1416,7 +1416,7 @@ class TestTimeControlSummary:
 
 
 class TestRoundPerformance:
-    """Performance by round number (issue #17): late-round fatigue detection."""
+    """Performance by round number: late-round fatigue detection."""
 
     def test_results_grouped_by_round_number(self, df):
         # Fixture rounds: R1 = W+W, R2 = D+W, R3 = L+W, R4 = D
@@ -1459,7 +1459,7 @@ class TestRoundPerformance:
         assert list(rounds["Round"]) == [1]
 
     def test_real_uscf_rounds_take_precedence_over_typed_rounds(self):
-        """Issue #34: Daniel hand-types continuous ladder rounds (24, 25, …);
+        """Daniel hand-types continuous ladder rounds (24, 25, …);
         the crosstable knows they were really rounds 1, 3, … of the Rated
         Event.  When the real round is attached, fatigue analytics use it."""
         games, _ = load_games_from_text(_pgn_with_headers([
@@ -1492,7 +1492,7 @@ class TestRoundPerformance:
 
 
 class TestUpsetTracker:
-    """Giant kills and upset losses (issue #17), ranked by rating margin."""
+    """Giant kills and upset losses, ranked by rating margin."""
 
     def test_wins_against_higher_rated_opponents_are_upsets(self, df):
         # Fixture upset wins: game 1 (1800 beats 1920) and game 4 (1810 beats 1930)
@@ -1513,7 +1513,7 @@ class TestUpsetTracker:
         assert upsets["losses"][0]["Margin"] == 150
 
     def test_forfeit_wins_are_never_giant_kills(self):
-        """A no-show win is not an upset (issue #35 / Daniel's decision):
+        """A no-show win is not an upset (Daniel's decision):
         Forfeits already sit outside win rate, Streaks, and openings —
         upset stats follow the same rule."""
         games, _ = load_games_from_text(_pgn_with_headers([
@@ -1602,7 +1602,7 @@ class TestComputeMilestones:
 
 
 # ---------------------------------------------------------------------------
-# Milestone celebrations (issue #15) — comparing two data snapshots
+# Milestone celebrations — comparing two data snapshots
 # ---------------------------------------------------------------------------
 
 def _snapshot(games: list[dict]) -> pd.DataFrame:
@@ -1720,7 +1720,7 @@ class TestKpiStats:
 
 
 # ---------------------------------------------------------------------------
-# Forfeit exclusion (issue #29)
+# Forfeit exclusion
 #
 # A forfeit win is not chess: Games whose Forfeit column is True are excluded
 # from win rate, Streak math, and opening/repertoire stats — but they stay in
@@ -1876,7 +1876,7 @@ class TestForfeitExclusion:
         assert counts["Win"] == 2  # the forfeit counts: nothing says it's one
 
     def test_performance_rating_excludes_forfeits(self):
-        """The forfeit win never scores against its opponent's rating (#90.1):
+        """The forfeit win never scores against its opponent's rating:
         1 real win (1480) + 1 real loss (1520) → 50% at avg 1500 → PR 1500,
         not the inflated number a free point vs 1510 would produce."""
         pr = performance_rating_stats(_df_with_forfeit())
@@ -1885,7 +1885,7 @@ class TestForfeitExclusion:
         assert pr["performance_rating"] == 1500
 
     def test_game_length_excludes_forfeits(self):
-        """The 1-move forfeit is not a game that unfolded (#90.3): it leaves the
+        """The 1-move forfeit is not a game that unfolded: it leaves the
         histogram and never drags the winning-game average toward zero."""
         hist, avgs = game_length_data(_df_with_forfeit())
 
@@ -1894,7 +1894,7 @@ class TestForfeitExclusion:
 
     def test_milestones_giant_kill_excludes_forfeits(self):
         """The highest-rated opponent 'beaten' is the real 1480 win, not the
-        1510 no-show — the milestone timeline never celebrates a forfeit (#90.2)."""
+        1510 no-show — the milestone timeline never celebrates a forfeit."""
         beat = [m for m in compute_milestones(_df_with_forfeit())
                 if m["description"].startswith("Beat highest-rated opponent")]
 
@@ -1904,7 +1904,7 @@ class TestForfeitExclusion:
 
     def test_milestone_deltas_ignore_forfeit_giant_kill(self):
         """Syncing in a forfeit win vs a 1510 opponent is not a new personal
-        best over the 1480 real win — no giant-kill banner fires (#90.2)."""
+        best over the 1480 real win — no giant-kill banner fires."""
         full = _df_with_forfeit()
         old = full[~full["Forfeit"]]   # the two real games; best real win is 1480
         kinds = {d["kind"] for d in milestone_deltas(old, full)}
@@ -1912,8 +1912,8 @@ class TestForfeitExclusion:
         assert "giant_kill" not in kinds
 
     def test_opponent_summary_win_rate_excludes_forfeits(self):
-        """A forfeit win never lifts the win rate shown against an opponent
-        (#90.5): 1 real win + 1 real loss vs A → 2 games at 50%, not 66.7%."""
+        """A forfeit win never lifts the win rate shown against an opponent:
+        1 real win + 1 real loss vs A → 2 games at 50%, not 66.7%."""
         frame = pd.DataFrame({
             "Opponent": ["A", "A", "A"],
             "Outcome": ["Win", "Loss", "Win"],
@@ -1926,7 +1926,7 @@ class TestForfeitExclusion:
         assert opp.loc["A", "WinRate"] == 50.0
 
     def test_activity_win_rate_excludes_forfeits(self):
-        """A no-show win never raises a month's win rate (#90.5)."""
+        """A no-show win never raises a month's win rate."""
         frame = pd.DataFrame({
             "Date_dt": pd.to_datetime(["2024-03-01", "2024-03-02"]),
             "Outcome": ["Loss", "Win"],
@@ -1940,7 +1940,7 @@ class TestForfeitExclusion:
         assert float(row["WinRate"]) == 0.0
 
     def test_daily_activity_net_excludes_forfeits(self):
-        """A forfeit win never turns a losing day green (#90.5): the day's Net
+        """A forfeit win never turns a losing day green: the day's Net
         stays negative, not flat."""
         frame = pd.DataFrame({
             "Date_dt": pd.to_datetime(["2024-03-01", "2024-03-01"]),
@@ -1955,7 +1955,7 @@ class TestForfeitExclusion:
         assert int(daily.iloc[0]["Net"]) == -1
 
     def test_round_performance_win_rate_excludes_forfeits(self):
-        """A forfeit win never counts toward a round's win rate (#90.5)."""
+        """A forfeit win never counts toward a round's win rate."""
         frame = pd.DataFrame({
             "RoundNum": [1, 1],
             "Outcome": ["Loss", "Win"],
@@ -1968,15 +1968,15 @@ class TestForfeitExclusion:
 
     def test_head_to_head_excludes_forfeits(self):
         """The opponent drill-down is an over-the-board record: the no-show win
-        vs Opp Three never appears there, matching opponent_summary (#90.5)."""
+        vs Opp Three never appears there, matching opponent_summary."""
         h2h = head_to_head(_df_with_forfeit(), "Opp Three")
 
         assert h2h["total"] == 0
         assert h2h["win"] == 0
 
     def test_opponent_rating_buckets_exclude_forfeits(self):
-        """A forfeit win never counts as a win in any rating-difference bucket
-        (#90.5): 2 real games, 1 real win, not 3 games / 2 wins."""
+        """A forfeit win never counts as a win in any rating-difference bucket:
+        2 real games, 1 real win, not 3 games / 2 wins."""
         buckets = opponent_rating_bucket_summary(_df_with_forfeit())
 
         assert int(buckets["Games"].sum()) == 2
@@ -1984,14 +1984,14 @@ class TestForfeitExclusion:
 
     def test_outcome_vs_rating_excludes_forfeits(self):
         """The scatter plots scored games only: the 1510 no-show is not a point
-        on it (#90.5)."""
+        on it."""
         scatter = outcome_vs_rating_data(_df_with_forfeit())
 
         assert len(scatter) == 2
         assert 1510 not in set(scatter["OpponentRatingNum"])
 
     def test_time_control_excludes_forfeits(self):
-        """A forfeit win never lifts a time control's win rate (#90.5)."""
+        """A forfeit win never lifts a time control's win rate."""
         tc = time_control_summary(_df_with_forfeit())
 
         assert int(tc["Games"].sum()) == 2
@@ -1999,7 +1999,7 @@ class TestForfeitExclusion:
 
     def test_milestones_first_win_excludes_forfeits(self):
         """The earliest game is a forfeit win, then a real win: 'First win'
-        celebrates the real one, never the no-show (#90.2)."""
+        celebrates the real one, never the no-show."""
         frame = pd.DataFrame({
             "Date_dt": pd.to_datetime(["2024-01-01", "2024-01-08"]),
             "Date": ["2024.01.01", "2024.01.08"],
@@ -2019,7 +2019,7 @@ class TestForfeitExclusion:
 
     def test_recurring_weaknesses_excludes_forfeit_losses(self):
         """A forfeit loss is a no-show, not a chess weakness: its Tags never
-        surface as a recurring weakness (#90)."""
+        surface as a recurring weakness."""
         frame = pd.DataFrame({
             "Date_dt": pd.to_datetime(["2024-01-01", "2024-01-08"]),
             "Index": [0, 1],
@@ -2032,8 +2032,8 @@ class TestForfeitExclusion:
         assert recurring_weaknesses(frame, min_occurrences=1) == []
 
     def test_event_notable_opponents_exclude_forfeits(self):
-        """The score keeps the forfeit point (#29), but a 2000 no-show is never
-        the 'highest-rated opponent faced' in the event (#35)."""
+        """The score keeps the forfeit point, but a 2000 no-show is never
+        the 'highest-rated opponent faced' in the event."""
         frame = pd.DataFrame({
             "Event": ["Cup", "Cup"],
             "Date_dt": pd.to_datetime(["2024-05-01", "2024-05-02"]),
@@ -2051,7 +2051,7 @@ class TestForfeitExclusion:
 
     def test_milestone_deltas_all_forfeit_baseline_is_no_baseline(self):
         """An old snapshot of only no-shows has no real win streak to beat, so
-        the first real streak is not a 'new record' banner (#29)."""
+        the first real streak is not a 'new record' banner."""
         def _frame(outcomes, forfeits):
             n = len(outcomes)
             return pd.DataFrame({
@@ -2073,7 +2073,7 @@ class TestForfeitExclusion:
 
 
 # ---------------------------------------------------------------------------
-# KPI correctness (issue #90 items 4, 6, 7)
+# KPI correctness
 #
 # Three non-forfeit KPI bugs from the same deep review: the favourite ECO
 # family picked the family of the most-common single code (not the most-common
@@ -2127,7 +2127,7 @@ class TestKpiCorrectness:
 
 
 # ---------------------------------------------------------------------------
-# "My Analysis" availability (issue #60 [F6])
+# "My Analysis" availability
 #
 # The Game-detail view offers a "My Analysis" board only when Daniel has
 # actually annotated the Chapter himself — his own variations or comments.
@@ -2164,7 +2164,7 @@ class TestHasMyAnalysis:
 
 
 class TestMainlineMovetext:
-    """The clean replay (issue #60 [F6]): the default Game board shows the bare
+    """The clean replay: the default Game board shows the bare
     line, with Daniel's comments and variations stripped out."""
 
     def test_strips_comments_and_variations_keeping_the_played_line(self):
@@ -2181,12 +2181,12 @@ class TestMainlineMovetext:
 
 
 # ---------------------------------------------------------------------------
-# Robustness fixes (issue #91): URL fragments, hand-drawn shapes, custom FEN,
+# Robustness fixes: URL fragments, hand-drawn shapes, custom FEN,
 # and malformed chapters
 # ---------------------------------------------------------------------------
 
 class TestTagUrlFragments:
-    """A link's #fragment in a comment must not masquerade as a Tag (#91)."""
+    """A link's #fragment in a comment must not masquerade as a Tag."""
 
     def test_url_fragment_is_not_harvested_as_a_tag(self):
         pgn = (
@@ -2201,7 +2201,7 @@ class TestTagUrlFragments:
 
 
 class TestShapeAnnotationIsMyAnalysis:
-    """Hand-drawn arrows/circles ([%cal]/[%csl]) are Daniel's own analysis (#91)."""
+    """Hand-drawn arrows/circles ([%cal]/[%csl]) are Daniel's own analysis."""
 
     def test_arrows_only_chapter_counts_as_my_analysis(self):
         assert has_my_analysis("1. e4 { [%cal Ge2e4,Rd1d8] } 1... e5 *") is True
@@ -2215,7 +2215,7 @@ class TestShapeAnnotationIsMyAnalysis:
 
 class TestCustomFenChapter:
     """A Chapter starting from a custom FEN keeps its position across the
-    headerless-movetext boundary instead of truncating (#91)."""
+    headerless-movetext boundary instead of truncating."""
 
     _PGN = (
         '[Event "Study"]\n[ChapterURL "https://lichess.org/study/x/pos1"]\n'
@@ -2237,7 +2237,7 @@ class TestCustomFenChapter:
 
 
 class TestMalformedChapterSurfaces:
-    """A malformed movetext is flagged and logged, never silently truncated (#91)."""
+    """A malformed movetext is flagged and logged, never silently truncated."""
 
     _PGN = (
         '[Event "Study"]\n[ChapterName "Bad Chapter"]\n'

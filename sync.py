@@ -34,7 +34,7 @@ import logging
 import os
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
@@ -73,7 +73,7 @@ from uscf_core import (
 logger = logging.getLogger(__name__)
 
 # Serializes UscfCache writes to the same file across live instances so a
-# read-union-write of the append-only user state stays atomic (issue #87 [8]).
+# read-union-write of the append-only user state stays atomic.
 _CACHE_WRITE_LOCK = threading.Lock()
 
 __all__ = [
@@ -163,7 +163,7 @@ def _fetch_all_pgns(
     """Fetch each Study's PGN, degrading per Study (one failure never loses the
     rest).  Returns ``(study_id, pgn_or_None, reason)`` per Study in order —
     reason is '' on success, and pgn is None on failure so callers can tell which
-    Study each result belongs to (issue #92).  A 429 aborts the loop: the
+    Study each result belongs to.  A 429 aborts the loop: the
     remaining Studies are marked rate-limited rather than fired into the same
     window (Lichess may block the token)."""
     results: list[tuple[str, str | None, str]] = []
@@ -189,7 +189,7 @@ def _fetch_all_pgns(
 
 class UscfCache:
     """
-    The local cache of raw USCF API responses (issue #26).
+    The local cache of raw USCF API responses.
 
     Like the PGN cache: a disposable local JSON file, never a source of truth
     (ADR 0003).  Every filesystem misfortune — missing file, corrupt file,
@@ -202,13 +202,12 @@ class UscfCache:
     * **immutable** — USCF data that can never change once written (rated
       crosstables, past supplements).  Stored once, then served from the
       cache forever — ``fetch_immutable`` never re-fetches them.
-    * **aged** — data that changes slowly (opponent current ratings —
-      issue #35).  Served from the cache within a freshness window,
+    * **aged** — data that changes slowly (opponent current ratings).  Served from the cache within a freshness window,
       re-fetched only after it; never touched by ``replace_current``.
-    * **dismissals** — Reconciliation entries Daniel has judged (issue #30).
+    * **dismissals** — Reconciliation entries Daniel has judged.
       User state, not API responses: never touched by ``replace_current``.
     * **seen achievements** — which norms/awards previous Syncs have already
-      seen (issue #36), so a fresh one is celebrated exactly once.  Like
+      seen, so a fresh one is celebrated exactly once.  Like
       dismissals: bookkeeping, never touched by ``replace_current``.
     """
 
@@ -225,7 +224,7 @@ class UscfCache:
     def replace_current(self, entries: dict[str, Any]) -> None:
         """Overwrite all current-state entries (a successful Sync's results)."""
         self._data["current"] = entries
-        self._data["fetched_at"] = datetime.now(timezone.utc).isoformat()
+        self._data["fetched_at"] = datetime.now(UTC).isoformat()
         self._write()
 
     def fetched_at(self) -> datetime | None:
@@ -267,14 +266,14 @@ class UscfCache:
     def fetch_aged(self, key: str, fetcher, *, max_age: timedelta) -> Any:
         """
         The aged entry for *key*, re-fetching only when it is older than
-        *max_age* (issue #35: opponent current ratings refresh at most weekly).
+        *max_age* (opponent current ratings refresh at most weekly).
 
         A fetch failure propagates — callers decide whether stale data beats
         nothing (``get_aged``).
         """
         aged = self._data.setdefault("aged", {})
         entry = aged.get(key)
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         if entry is not None:
             try:
                 fetched_at = datetime.fromisoformat(entry["fetched_at"])
@@ -297,7 +296,7 @@ class UscfCache:
     # -- dismissals (user judgements — survive every Sync) -------------------
 
     def dismissals(self) -> list[str]:
-        """Entry IDs of dismissed Reconciliation entries (issue #30)."""
+        """Entry IDs of dismissed Reconciliation entries."""
         return list(self._data.get("dismissals", []))
 
     def add_dismissal(self, entry_id: str) -> None:
@@ -311,7 +310,7 @@ class UscfCache:
             dismissals.append(entry_id)
             self._write()
 
-    # -- seen achievements (celebration bookkeeping — issue #36) -------------
+    # -- seen achievements (celebration bookkeeping) -------------
 
     def seen_achievements(self) -> list[str] | None:
         """
@@ -389,7 +388,7 @@ class UscfCache:
         disk_seen = on_disk.get("seen_achievements")
         mem_seen = self._data.get("seen_achievements")
         # None means "never recorded" — keep it absent; only merge once either
-        # side has verifiably recorded a set (issue #36's None/[] distinction).
+        # side has verifiably recorded a set (the None vs [] distinction).
         if disk_seen is not None or mem_seen is not None:
             merged_seen = list(mem_seen or [])
             merged_seen.extend(a for a in (disk_seen or []) if a not in merged_seen)
@@ -401,21 +400,21 @@ class UscfSyncResult:
     """The outcome of the USCF half of a Sync — never required for success."""
 
     profile: UscfProfile | None = None
-    # The Official Rating series (one point per supplement month) — issue #27
+    # The Official Rating series (one point per supplement month)
     official_series: list[OfficialRatingPoint] = field(default_factory=list)
-    # The Live Rating series (one point per Regular-rated Section) — issue #27
+    # The Live Rating series (one point per Regular-rated Section)
     live_series: list[LiveRatingPoint] = field(default_factory=list)
-    # Every USCF Game Record — the matching engine's input (issue #28)
+    # Every USCF Game Record — the matching engine's input
     game_records: list[UscfGameRecord] = field(default_factory=list)
-    # Every Rated Event entered — the Events page's grouping data (issue #33)
+    # Every Rated Event entered — the Events page's grouping data
     member_events: list[UscfEvent] = field(default_factory=list)
     # Crosstables of played OTB Sections, keyed by (event_id, section name) —
-    # standings, placements, and real round numbers (issue #34)
+    # standings, placements, and real round numbers
     standings: dict[tuple[str, str], list[StandingEntry]] = field(default_factory=dict)
     # Opponents' current profiles, keyed by member ID — the "they're 1580 now"
-    # half of the then-vs-now insight (issue #35)
+    # half of the then-vs-now insight
     opponent_profiles: dict[str, UscfProfile] = field(default_factory=dict)
-    # Official achievements: norms and awards, chronological (issue #36)
+    # Official achievements: norms and awards, chronological
     achievements: list[UscfAchievement] = field(default_factory=list)
     # When USCF was last successfully reached: the fetch time for live data,
     # the cached data's age when degraded (None if USCF has never been reached)
@@ -475,11 +474,11 @@ def sync_uscf(member_id: str, cache_path: str | None = None) -> UscfSyncResult:
         standings=_fetch_standings(cache, raw_sections),
         opponent_profiles=_fetch_opponent_profiles(cache, game_records),
         achievements=build_achievements(raw_norms, raw_awards),
-        synced_at=datetime.now(timezone.utc),
+        synced_at=datetime.now(UTC),
     )
 
 
-# Opponent current ratings refresh at most this often (issue #35) — they only
+# Opponent current ratings refresh at most this often — they only
 # change when the opponent plays, and "roughly current" is all the then-vs-now
 # insight needs.
 _OPPONENT_REFRESH_AGE = timedelta(days=7)
@@ -489,7 +488,7 @@ def _fetch_opponent_profiles(
     cache: UscfCache, game_records: list[UscfGameRecord], *, allow_fetch: bool = True
 ) -> dict[str, UscfProfile]:
     """
-    The current profile of every unique opponent (issue #35), politely:
+    The current profile of every unique opponent, politely:
     one call per opponent, served from the cache for a week before
     re-fetching, and failures degrade per opponent — stale data (or no data)
     for one opponent never costs the others or the Sync.
@@ -525,7 +524,7 @@ def _fetch_standings(
     cache: UscfCache, raw_sections: list[dict], *, allow_fetch: bool = True
 ) -> dict[tuple[str, str], list[StandingEntry]]:
     """
-    The crosstables of every OTB Section the member played (issue #34),
+    The crosstables of every OTB Section the member played,
     keyed by (event_id, section name) — how the enriched Games know them.
 
     Crosstables of rated events are immutable: each is fetched exactly once,
@@ -596,7 +595,7 @@ def _uscf_from_cache(cache: UscfCache, failure: str) -> UscfSyncResult:
 
 
 # ---------------------------------------------------------------------------
-# The coach half of a Sync (issue #74 [G4]) — enrichment, never a dependency
+# The coach half of a Sync — enrichment, never a dependency
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -626,14 +625,14 @@ def sync_coach(
     cache_path: str | None = None,
 ) -> CoachSyncResult:
     """
-    Fetch the designated coach Studies and match their Chapters to *games_df*
-    (issue #74), the same disposable-cache lifecycle as USCF (ADR 0003).
+    Fetch the designated coach Studies and match their Chapters to *games_df*,
+    with the same disposable-cache lifecycle as USCF (ADR 0003).
 
     Private coach Studies are read with the user's *token*.  Each Study is cached
     on its own (``coach-<id>.pgn``): a successful fetch refreshes that Study's
     cache, and a Study that is unreachable falls back to its own cached Chapters —
     so a partial fetch never drops a Study's reviews nor shrinks the cache to the
-    Studies that happened to fetch (issue #92).  Never raises: a coach Study being
+    Studies that happened to fetch.  Never raises: a coach Study being
     down never fails the Sync.  The user's main Study stays the source of truth
     (ADR 0001) — an unmatched coach Chapter never creates a Game.
     """
@@ -684,7 +683,7 @@ def sync_coach(
         logger.info("Showing cached coach content (coach Studies unreachable)")
     return CoachSyncResult(
         result=match_coach_study(games_df, "\n\n".join(parts)),
-        synced_at=(datetime.now(timezone.utc) if any_fresh
+        synced_at=(datetime.now(UTC) if any_fresh
                    else _latest_coach_cache_mtime(cache_path, coach_study_ids)),
         failure=failure,
         from_cache=from_cache,
@@ -695,7 +694,7 @@ def _coach_study_cache(cache_path: str | None, study_id: str) -> str | None:
     """Per-Study coach PGN cache path derived from the base *cache_path*
     (``coach.pgn`` → ``coach-<id>.pgn``).  Per-Study so one Study's fetch failure
     reuses its own cached Chapters without a partial fetch clobbering or shrinking
-    another Study's cache (issue #92)."""
+    another Study's cache."""
     if not cache_path:
         return None
     base, ext = os.path.splitext(cache_path)
@@ -729,7 +728,7 @@ def _cache_mtime(cache_path: str | None) -> datetime | None:
     """When a cache file was last written (UTC), or None."""
     if not cache_path or not os.path.exists(cache_path):
         return None
-    return datetime.fromtimestamp(os.path.getmtime(cache_path), tz=timezone.utc)
+    return datetime.fromtimestamp(os.path.getmtime(cache_path), tz=UTC)
 
 
 def load_from_cache(
@@ -748,7 +747,7 @@ def load_from_cache(
         pgn_text = f.read()
     df, player = load_games_from_text(pgn_text, player_name=player_name)
     df = _dedupe_and_sort(df)
-    cached_at = datetime.fromtimestamp(os.path.getmtime(cache_path), tz=timezone.utc)
+    cached_at = datetime.fromtimestamp(os.path.getmtime(cache_path), tz=UTC)
     return df, player, cached_at
 
 

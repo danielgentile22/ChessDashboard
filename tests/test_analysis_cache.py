@@ -1,7 +1,7 @@
 """
 tests/test_analysis_cache.py
 ============================
-The disposable analysis cache (issue #59 [F5]).
+The disposable analysis cache.
 
 Same lifecycle as ``uscf_cache.json`` (ADR 0003/0004): a local JSON file that is
 never a source of truth.  Every filesystem misfortune — missing file, corrupt

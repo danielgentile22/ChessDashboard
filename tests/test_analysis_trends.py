@@ -1,7 +1,7 @@
 """
 tests/test_analysis_trends.py
 =============================
-The priority suite for ``analysis_trends`` (issue #61 [F3]) — the rest of the
+The priority suite for ``analysis_trends`` — the rest of the
 Analysis-page aggregates over the engine error profile.
 
 DataFrame-in → data-out, mirroring the Phase-4 analytics tests

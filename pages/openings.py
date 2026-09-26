@@ -4,7 +4,7 @@ pages/openings.py
 The Openings page — the repertoire tree plus ECO families and per-opening
 results.
 
-The repertoire tree (issue #16) is Daniel's personal opening explorer: every
+The repertoire tree is Daniel's personal opening explorer: every
 Game as one color, arranged move by move.  Each branch shows how many Games
 went that way and what they scored; branches that score below his overall
 average for that color (across enough games to mean something) are flagged —
@@ -51,7 +51,7 @@ def layout(**kwargs) -> html.Div:
     return html.Div(className="page", children=[
         page_header("Openings", "Where your repertoire wins and leaks points"),
 
-        # The repertoire tree (issue #16) — the personal opening explorer
+        # The repertoire tree — the personal opening explorer
         content_card(
             "Repertoire",
             dcc.RadioItems(
@@ -99,7 +99,7 @@ def layout(**kwargs) -> html.Div:
 
 
 # ---------------------------------------------------------------------------
-# Repertoire tree rendering (issue #16)
+# Repertoire tree rendering
 # ---------------------------------------------------------------------------
 
 def _move_label(node: dict) -> str:
@@ -149,7 +149,7 @@ def _tree_node(node: dict, baseline: float):
 
     # ▴/•/▾ marks above/at/below your overall baseline — the non-color channel,
     # since the number alone doesn't reveal which side of the (dynamic) baseline
-    # it is on and colour can't carry it for a red-green viewer (issue #88).
+    # it is on and colour can't carry it for a red-green viewer.
     # A tie is genuinely neutral, so it gets its own marker, not a false "above".
     score_pct = node["score_pct"]
     if score_pct > baseline:

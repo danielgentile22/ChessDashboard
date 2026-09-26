@@ -1,7 +1,7 @@
 """
 analysis_cache.py
 =================
-The disposable cache for engine analysis (issue #59 [F5]).
+The disposable cache for engine analysis.
 
 Same lifecycle as ``uscf_cache.json`` (ADR 0003, extended by ADR 0004): a local
 JSON file that is **never a source of truth**.  Every filesystem misfortune —
@@ -82,7 +82,7 @@ class AnalysisCache:
         if not isinstance(data, dict):
             return {}
         # Drop a wrong-typed "summaries" section so get_summary's nested .get
-        # never raises on a truncated / hand-edited file (issue #87 [7]).
+        # never raises on a truncated / hand-edited file.
         if not isinstance(data.get("summaries"), dict):
             data.pop("summaries", None)
         return data

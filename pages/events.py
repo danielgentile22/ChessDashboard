@@ -1,7 +1,7 @@
 """
 pages/events.py
 ===============
-The Events page — Series → Rated Event (issue #33).
+The Events page — Series → Rated Event.
 
 The two-level model from CONTEXT.md: a **Series** is a tournament as Daniel
 names it (the PGN Event header, e.g. "ACC Friday Ladder"); each Series
@@ -11,7 +11,7 @@ rating change.
 
 The page is built from native <details> groups — they expand/collapse with
 zero callbacks, work on a phone, and let several Series stay open at once.
-Game rows are plain links into the Game detail view (issue #11).
+Game rows are plain links into the Game detail view.
 """
 from __future__ import annotations
 
@@ -55,7 +55,7 @@ def layout(**kwargs) -> html.Div:
 
         chart_card("Performance per Series (W/D/L)", "event-bar", height=420),
 
-        # Series → Rated Events (issue #33) — filled by callback
+        # Series → Rated Events — filled by callback
         html.Div(id="series-groups"),
 
         # Rated Events entered but with no Games (Rockville) — filled by callback
@@ -93,7 +93,7 @@ def _score_label(group: dict) -> str:
 
 
 def _date_range(start: str, end: str | None) -> str:
-    """A start–end window, collapsing a single-day event to one date (issue #96)."""
+    """A start–end window, collapsing a single-day event to one date."""
     return start if start == end or not end else f"{start} – {end}"
 
 
@@ -108,8 +108,8 @@ def _event_dates(event: dict) -> str:
 def _game_row(row: dict):
     """One Game line inside a Rated Event — a link into its detail view.
 
-    The round shown is the REAL one from the crosstable when known
-    (issue #34), falling back to the hand-typed Round header."""
+    The round shown is the REAL one from the crosstable when known,
+    falling back to the hand-typed Round header."""
     round_num = row.get("UscfRound")
     if round_num is None or pd.isna(round_num):
         round_num = row.get("RoundNum")
@@ -172,7 +172,7 @@ def _crosstable_row(entry: StandingEntry, member_id: str,
 
 def _crosstable(section_name: str, standings: list[StandingEntry],
                 member_id: str, games_by_round: dict[int, str]) -> html.Details:
-    """The full standings of one Section, expandable (issue #34)."""
+    """The full standings of one Section, expandable."""
     me = next((s for s in standings if s.member_id == member_id), None)
     placement = (f"Finished {ordinal(me.ordinal)} of {len(standings)}"
                  if me else f"{len(standings)} players")
@@ -201,7 +201,7 @@ def _rated_event_card(event: dict, performance_rating: int | None = None,
                       extra_rows: list[dict] | None = None) -> html.Div:
     """One Rated Event inside a Series: official identity, score, rating change,
     its Games, and — when its crosstables are cached — the full standings with
-    the member's placement (issue #34)."""
+    the member's placement."""
     meta_bits = [
         " · ".join(event["sections"]),
         f"{event['player_count']} players" if event["player_count"] else "",
@@ -332,7 +332,7 @@ def update_event_bar(colors, outcomes, terminations, start, end, events, moves, 
 
 @callback(Output("series-groups", "children"), FILTER_INPUTS)
 def update_series_groups(colors, outcomes, terminations, start, end, events, moves, _sync=None, lens=None):
-    """The Series → Rated Event groups (issue #33)."""
+    """The Series → Rated Event groups."""
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
     summary = series_summary(df_f, data.get_live_series(), data.get_uscf_events())
     if not summary:
@@ -348,7 +348,7 @@ def update_series_groups(colors, outcomes, terminations, start, end, events, mov
             performance_rating_stats(games)["performance_rating"]
         )
 
-    # Crosstables + whose row to highlight in them (issue #34)
+    # Crosstables + whose row to highlight in them
     standings = data.get_uscf_standings()
     profile = data.get_uscf_profile()
     member_id = profile.member_id if profile else ""
@@ -369,7 +369,7 @@ def update_series_groups(colors, outcomes, terminations, start, end, events, mov
 
 @callback(Output("unplayed-events", "children"), FILTER_INPUTS)
 def update_unplayed(colors, outcomes, terminations, start, end, events, moves, _sync=None, lens=None):
-    """Rated Events entered but never played (issue #33's Rockville case).
+    """Rated Events entered but never played (the Rockville case).
 
     Determined against the FULL Games df — a date filter must never turn a
     played event into a 'never played' one; it only bounds which unplayed

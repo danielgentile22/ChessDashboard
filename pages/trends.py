@@ -4,11 +4,11 @@ pages/trends.py
 The Trends page — rating, win rate, and activity over time.
 
 Per the PRD layout decision, Game Length and Activity content folds in here
-alongside the timeline charts.  The activity heatmap calendar (issue #14)
+alongside the timeline charts.  The activity heatmap calendar
 leads the page: one GitHub-contribution-style calendar per year, cells
 colored by that day's results.
 
-Issue #17 adds the conditions analytics: score by time control, score by
+It also carries the conditions analytics: score by time control, score by
 round number (the fatigue check), and the upset tracker — giant kills and
 upset losses ranked by rating margin, each clickable into its Game.
 """
@@ -79,7 +79,7 @@ _UPSET_TABLE_COLS = [
 
 
 def _upset_table(table_id: str) -> dash_table.DataTable:
-    """One of the two upset tables — rows click through to the Game (issue #11).
+    """One of the two upset tables — rows click through to the Game.
 
     Uses the shared quiet-table treatment (neutral headers, left-aligned text,
     hairline separators, focused-row fix) so the upset tables read like every
@@ -102,7 +102,7 @@ def layout(**kwargs) -> html.Div:
     return html.Div(className="page", children=[
         page_header("Trends", "Rating, win rate, and activity over time"),
 
-        # Activity heatmap calendar (issue #14) — your chess year at a glance
+        # Activity heatmap calendar — your chess year at a glance
         content_card("Activity", html.Div(id="activity-calendar")),
 
         html.Div(className="g2", children=[
@@ -118,13 +118,13 @@ def layout(**kwargs) -> html.Div:
             content_card("Average game length", html.Div(id="length-stats")),
         ]),
 
-        # Playing conditions (issue #17): time control + round fatigue
+        # Playing conditions: time control + round fatigue
         html.Div(className="g2", children=[
             chart_card("Results by time control", "tc-bar"),
             chart_card("Score by round: the fatigue check", "round-bar"),
         ]),
 
-        # Upset tracker (issue #17): giant kills and upset losses
+        # Upset tracker: giant kills and upset losses
         html.Div(className="g2", children=[
             content_card(
                 "Giant kills: wins over higher-rated opponents",
@@ -143,7 +143,7 @@ def layout(**kwargs) -> html.Div:
 
 
 # ---------------------------------------------------------------------------
-# Activity calendar (issue #14)
+# Activity calendar
 # ---------------------------------------------------------------------------
 
 # Cell color scale: losing days → red, winning days → green, mixed → gray.
@@ -151,7 +151,7 @@ def layout(**kwargs) -> html.Div:
 # Every stop derives from a theme token so the calendar can't drift.
 # Hue alone can't carry the win/loss meaning (Daniel is red-green colorblind),
 # so each played cell also shows a net-sign glyph (+ won on balance, − lost) —
-# a second, color-independent channel (issue #88).
+# a second, color-independent channel.
 _NET_CLAMP = 3
 _CAL_COLORSCALE = [
     [0.0,  COLORS["loss"]],     # net −3 or worse: full loss-red
@@ -186,7 +186,7 @@ def _year_calendar_fig(year_daily: pd.DataFrame, year: int) -> go.Figure:
             row = by_day.loc[day]
             net = int(row["Net"])
             game_z[weekday][week] = max(-_NET_CLAMP, min(_NET_CLAMP, net))
-            # Net-sign glyph: the color-independent win/loss channel (issue #88).
+            # Net-sign glyph: the color-independent win/loss channel.
             glyph[weekday][week] = "+" if net > 0 else "−" if net < 0 else ""
             games = int(row["Games"])
             plural = "s" if games != 1 else ""
@@ -215,7 +215,7 @@ def _year_calendar_fig(year_daily: pd.DataFrame, year: int) -> go.Figure:
     ))
     # Days with Games, colored by their results.  `text` holds the net-sign
     # glyph so `texttemplate` paints it in the cell (a dark glyph reads on both
-    # the green and red fills); the hover popup rides in `hovertext` (issue #88).
+    # the green and red fills); the hover popup rides in `hovertext`.
     fig.add_trace(go.Heatmap(
         z=game_z, hovertext=hover, hoverinfo="text",
         text=glyph, texttemplate="%{text}",
@@ -279,7 +279,7 @@ def update_activity_calendar(colors, outcomes, terminations, start, end, events,
 # Callbacks
 # ---------------------------------------------------------------------------
 
-# The two rating series, distinguishable at a glance in dark mode (issue #31):
+# The two rating series, distinguishable at a glance in dark mode:
 # the Official Rating is the solid, neutral published number; the Live Rating
 # wears the same blue as the profile card's Live value (.uscf-live-value).
 _OFFICIAL_COLOR = COLORS["text"]
@@ -320,7 +320,7 @@ def _typed_rating_fig(pr: pd.DataFrame) -> go.Figure:
 
 def _dual_line_rating_fig(official, live, lens: str) -> go.Figure:
     """
-    The dual-line rating trend (issue #31): the Official step line and the
+    The dual-line rating trend: the Official step line and the
     Live per-Rated-Event line, both always drawn.  The active lens is full
     strength; the other stays readable but recedes.
     """
@@ -463,7 +463,7 @@ def update_dow(colors, outcomes, terminations, start, end, events, moves, _sync=
 
 
 # Hatch pattern per outcome — the color-independent channel on the overlaid
-# game-length histogram (issue #88).  Wins and losses get distinct, non-color
+# game-length histogram.  Wins and losses get distinct, non-color
 # textures; draws stay solid (they aren't part of the red-green confusion).
 _LEN_HIST_PATTERN = {"Win": "/", "Draw": "", "Loss": "x"}
 
@@ -483,7 +483,7 @@ def update_length_hist(colors, outcomes, terminations, start, end, events, moves
     # Overlay mode stacks the wins and losses at the same x, so hue is the only
     # thing telling them apart — invisible to a red-green colorblind viewer.
     # A per-outcome hatch pattern adds a color-independent channel, and the hover
-    # names the outcome so a hovered bar is never ambiguous either (issue #88).
+    # names the outcome so a hovered bar is never ambiguous either.
     for trace in fig.data:
         word = WDL_HOVER_WORD.get(trace.name, str(trace.name).lower())
         trace.marker.pattern.shape = _LEN_HIST_PATTERN.get(trace.name, "")
@@ -495,7 +495,7 @@ def update_length_hist(colors, outcomes, terminations, start, end, events, moves
 
 
 # ---------------------------------------------------------------------------
-# Time control, fatigue, and upsets (issue #17)
+# Time control, fatigue, and upsets
 # ---------------------------------------------------------------------------
 
 # Label for Games whose PGN has no TimeControl header

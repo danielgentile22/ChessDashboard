@@ -1,7 +1,7 @@
 """
 pages/lessons.py
 ================
-The Lessons page (issue #12) — every takeaway written on Lichess, in one place.
+The Lessons page — every takeaway written on Lichess, in one place.
 
 Each Lesson shows its text, the Game it came from, and that Game's Tags,
 newest first.  A tag summary strip (canonical taxonomy first, then freeform)
@@ -10,9 +10,9 @@ narrow things further.  Lessons link to their Game's detail view.
 
 Two insights live on top of the list:
 
-  * recurring weakness callouts (issue #18) — Tags that keep showing up in
+  * recurring weakness callouts — Tags that keep showing up in
     recent losses
-  * pre-game review mode (issue #19) — ``/lessons?review=1[&opponent=X]``
+  * pre-game review mode — ``/lessons?review=1[&opponent=X]``
     opens a full-screen, card-by-card walk through the most relevant
     Lessons, prioritized by weakness → opponent → recency
 
@@ -58,14 +58,14 @@ def layout(review: str | None = None, opponent: str | None = None, **kwargs) -> 
     children = [
         page_header("Lessons", "What your games have taught you"),
 
-        # Pre-game review mode launcher (issue #19)
+        # Pre-game review mode launcher
         dcc.Link(
             [html.Span("♟", className="review-launch-icon"), "Review before playing"],
             href="/lessons?review=1",
             className="review-launch-btn",
         ),
 
-        # Recurring weaknesses (issue #18) — what's actually costing you games
+        # Recurring weaknesses — what's actually costing you games
         html.Div(id="weakness-callouts"),
 
         # Selected-tag filter state (toggled by clicking chips in the strip)
@@ -88,14 +88,14 @@ def layout(review: str | None = None, opponent: str | None = None, **kwargs) -> 
         html.Div(id="lessons-list"),
 
         # The coach's prose, newest first — kept visually distinct from the
-        # user's own Lessons above (issue #75 [G5]).
+        # user's own Lessons above.
         _coach_notes_feed(),
     ]
 
-    # Review mode rides on top of the page (issue #19).  The page's entry
+    # Review mode rides on top of the page.  The page's entry
     # animation must be off in this case: its transform creates a CSS
     # containing block that would trap the fixed-position overlay.
-    if review == "1":  # the documented ?review=1 contract — not any truthy string (#93)
+    if review == "1":  # the documented ?review=1 contract — not any truthy string
         children.append(_review_overlay(opponent or None))
         return html.Div(className="page page-no-anim", children=children)
 
@@ -108,7 +108,7 @@ def layout(review: str | None = None, opponent: str | None = None, **kwargs) -> 
 
 def _coach_notes_feed() -> html.Div | None:
     """
-    The Coach's Notes feed (issue #75 [G5]): the coach's prose across matched
+    The Coach's Notes feed: the coach's prose across matched
     Games, newest first, each linking to its Game.
 
     Omitted entirely when there is no coach content (a user with no coach
@@ -180,7 +180,7 @@ def _tag_strip(df_filtered, selected_tags: list[str]) -> list:
 @callback(Output("weakness-callouts", "children"), FILTER_INPUTS)
 def update_weakness_callouts(colors, outcomes, terminations, start, end,
                              events, moves, _sync=None, lens=None):
-    """Recurring weaknesses (issue #18). Silent below threshold."""
+    """Recurring weaknesses. Silent below threshold."""
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
     callouts = recurring_weaknesses(df_f)
     if not callouts:
@@ -245,7 +245,7 @@ def update_lessons_page(selected_tags, opponent, colors, outcomes, terminations,
 
 
 # ---------------------------------------------------------------------------
-# Pre-game review mode (issue #19)
+# Pre-game review mode
 # ---------------------------------------------------------------------------
 
 def _review_overlay(opponent: str | None) -> html.Div:

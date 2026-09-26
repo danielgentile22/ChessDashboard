@@ -1,7 +1,7 @@
 """
 tests/test_coach_sync.py
 ========================
-Coach ingestion on Sync (issue #74 [G4]).
+Coach ingestion on Sync.
 
 After the Lichess Sync, a coach-ingestion pass fetches each designated coach
 Study (with the user's token for private ones), runs ``coach_match_core``, and
@@ -124,7 +124,7 @@ class TestSyncCoach:
     ):
         """One Study down must not lose its Chapters nor overwrite its cache with
         the Studies that happened to fetch — each Study is cached on its own so a
-        later total outage still finds the full content (issue #92)."""
+        later total outage still finds the full content."""
         cache = str(tmp_path / "coach.pgn")
         coach2_cache = tmp_path / "coach-coach2.pgn"
 
@@ -147,7 +147,7 @@ class TestSyncCoach:
     ):
         """Installs from before per-Study caching have one merged coach.pgn.  A
         full outage right after upgrading (no per-Study caches yet) must still
-        serve it, not lose coach content (issue #92)."""
+        serve it, not lose coach content."""
         cache = tmp_path / "coach.pgn"
         cache.write_text(COACH_PGN)   # the pre-upgrade merged cache
 

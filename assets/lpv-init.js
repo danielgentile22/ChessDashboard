@@ -1,5 +1,5 @@
 /*
- * assets/lpv-init.js — Game-detail board bootstrap (issue #60 [F6]).
+ * assets/lpv-init.js — Game-detail board bootstrap.
  *
  * Lichess's open-source pgn-viewer ships as an ES module (bundled locally at
  * assets/lichess-pgn-viewer.min.js and kept out of Dash's classic <script>
@@ -23,7 +23,7 @@
   var mounted = new WeakSet();
   // The view each card is currently meant to show ("game"/"analysis"/"coach"/
   // "engine").  Set synchronously on every switch so an async board render that
-  // resolves after the user has moved on can tell it's stale and bail (#93 [3]).
+  // resolves after the user has moved on can tell it's stale and bail.
   var views = new WeakMap();
 
   function mountFor(card) {
@@ -45,13 +45,13 @@
   // *data* is the attribute payload captured before the first render wiped it.
   function renderBoard(card, data, view) {
     var pgn = view === "analysis" ? data.analysis
-      // The Coach view (issue #74 [G4]) replays the coach's annotated line —
+      // The Coach view replays the coach's annotated line —
       // his variations and notes — in the same board, like My Analysis.
       : view === "coach" ? data.coach
       : data.game;
     loadLpv().then(function (LichessPgnViewer) {
       // The user may have switched away (e.g. to Engine) while the module import
-      // was in flight; don't paint a board they no longer asked for (#93 [3]).
+      // was in flight; don't paint a board they no longer asked for.
       if (views.get(card) !== view) {
         return;
       }
@@ -75,14 +75,14 @@
       // The import failed (asset missing after a bad deploy, network hiccup, CSP
       // blocking module scripts).  Reset the memoized promise so the next
       // interaction retries, and show a visible fallback instead of a dead blank
-      // board — the "Open on Lichess" button still works alongside (#93 [2]).
+      // board — the "Open on Lichess" button still works alongside.
       lpvPromise = null;
       if (views.get(card) !== view) {
         return;
       }
       var mount = mountFor(card);
       if (mount) {
-        mount.textContent = "Board failed to load — open this game on Lichess instead.";
+        mount.textContent = "Board failed to load. Open this game on Lichess instead.";
       }
     });
   }
@@ -102,7 +102,7 @@
     views.set(card, "game");
     renderBoard(card, data, "game");
 
-    // The Engine view (issue #63 [F7]) is server-rendered Dash content, not a
+    // The Engine view is server-rendered Dash content, not a
     // board — so the switcher toggles between the board mount and this panel
     // rather than re-mounting the viewer.
     var engine = card.querySelector(".lpv-engine");
@@ -111,7 +111,7 @@
     Array.prototype.forEach.call(switches, function (btn) {
       btn.addEventListener("click", function () {
         // Re-clicking the active view would re-mount and reset the replay
-        // position; a no-op click should be a no-op (#93 [10]).
+        // position; a no-op click should be a no-op.
         if (btn.classList.contains("active")) {
           return;
         }
@@ -121,7 +121,7 @@
         btn.classList.add("active");
 
         var view = btn.getAttribute("data-view");
-        views.set(card, view);  // record the desired view before any async render (#93 [3])
+        views.set(card, view);  // record the desired view before any async render
         var liveMount = mountFor(card);
         if (view === "engine") {
           if (liveMount) {
@@ -160,7 +160,7 @@
   // Dash mounts the Game-detail page after navigation — rescan on DOM changes.
   // The observer sees every mutation on every page (Plotly redraws on the chart
   // pages fire storms of them); coalesce a whole batch into one scan per frame so
-  // board-less pages don't pay a document-wide selector query per mutation (#93 [11]).
+  // board-less pages don't pay a document-wide selector query per mutation.
   var scanScheduled = false;
   var observer = new MutationObserver(function () {
     if (scanScheduled) {

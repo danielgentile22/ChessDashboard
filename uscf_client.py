@@ -122,7 +122,7 @@ def fetch_member_games(
 ) -> list[dict]:
     """
     Fetch every USCF Game Record for *member_id* — opponent (with member ID),
-    color, outcome, Rated Event, Section, and rating system (issue #28).
+    color, outcome, Rated Event, Section, and rating system.
     Pagination is handled internally.
 
     Raises the same typed errors as :func:`fetch_member_profile`.
@@ -139,7 +139,7 @@ def fetch_member_events(
 ) -> list[dict]:
     """
     Fetch every Rated Event *member_id* has entered — official names, dates,
-    section counts, and field sizes (issue #33).  Pagination is handled
+    section counts, and field sizes.  Pagination is handled
     internally.
 
     Raises the same typed errors as :func:`fetch_member_profile`.
@@ -156,7 +156,7 @@ def fetch_member_norms(
 ) -> list[dict]:
     """
     Fetch every norm *member_id* has earned — official achievements toward
-    titles (issue #36).  Pagination is handled internally (the live endpoint
+    titles.  Pagination is handled internally (the live endpoint
     returns bare items without pagination fields; both shapes are tolerated).
 
     Raises the same typed errors as :func:`fetch_member_profile`.
@@ -173,7 +173,7 @@ def fetch_member_awards(
 ) -> list[dict]:
     """
     Fetch every award *member_id* has earned — milestones USCF itself
-    recognizes, like the 25th career win (issue #36).  Pagination is handled
+    recognizes, like the 25th career win.  Pagination is handled
     internally.
 
     Raises the same typed errors as :func:`fetch_member_profile`.
@@ -189,7 +189,7 @@ def fetch_event_standings(
     event_id: str, section_number: int, *, timeout: float = _DEFAULT_TIMEOUT
 ) -> list[dict]:
     """
-    Fetch the full crosstable of one Rated Event Section (issue #34): every
+    Fetch the full crosstable of one Rated Event Section: every
     player with their score, pre/post ratings, and round-by-round outcomes.
 
     Crosstables of rated events are immutable — callers cache them forever

@@ -58,7 +58,7 @@ def stub_uscf(profile, supplements=None, sections=None, games=None,
         return fetch
 
     def fake_profile(member_id, **kwargs):
-        # The member's own profile, or a stubbed opponent's (issue #35)
+        # The member's own profile, or a stubbed opponent's
         if isinstance(profile, Exception):
             raise profile
         if str(profile.get("id", "")) == str(member_id):
@@ -180,7 +180,7 @@ class TestPartialFailure:
 
     def test_rate_limit_aborts_the_remaining_studies(self, sample_pgn_text):
         """A 429 stops the loop: the rest are marked skipped, never fired into
-        the same rate-limit window (issue #87 [5]).  study3 is deliberately
+        the same rate-limit window.  study3 is deliberately
         absent from the stub — fetching it after the 429 would KeyError."""
         with stub_studies(study1=sample_pgn_text,
                           study2=LichessRateLimitedError("HTTP 429")):
@@ -231,7 +231,7 @@ class TestCache:
 
     def test_gameless_sync_does_not_clobber_the_cache(self, sample_pgn_text, tmp_path):
         """A reachable-but-gameless Sync keeps the last good cache — otherwise an
-        offline boot afterwards would fail with no games to load (issue #87 [3])."""
+        offline boot afterwards would fail with no games to load."""
         cache = tmp_path / "games.pgn"
         with stub_studies(study1=sample_pgn_text):
             sync.sync_studies(["study1"], player_name="Test Player", cache_path=str(cache))
@@ -263,7 +263,7 @@ class TestCache:
 
 class TestUscfCache:
     """
-    The local USCF response cache (issue #26): a disposable JSON file, never a
+    The local USCF response cache: a disposable JSON file, never a
     source of truth (ADR 0003), tolerant of every filesystem misfortune.
     """
 
@@ -317,7 +317,7 @@ class TestUscfCache:
 
 class TestUscfCachePolicy:
     """
-    Immutable vs current-state data (issue #26): immutable USCF data (rated
+    Immutable vs current-state data: immutable USCF data (rated
     crosstables, past supplements) is fetched once and never again; current
     data (the profile) is refreshed on every Sync.
     """
@@ -369,7 +369,7 @@ class TestUscfCachePolicy:
 
 class TestUscfCacheDismissals:
     """
-    Reconciliation dismissals (issue #30): user judgements ("USCF is wrong",
+    Reconciliation dismissals: user judgements ("USCF is wrong",
     "intentionally skipped"), not API responses — they must survive every
     Sync's replace_current and app restarts.  Best-effort persistence: a
     redeploy on a stateless host may resurrect dismissed items (documented).
@@ -417,7 +417,7 @@ class TestUscfCacheDismissals:
 
     def test_concurrent_dismissal_survives_a_stale_writer(self, tmp_path):
         """A dismissal made mid-Sync must not be clobbered when the Sync's stale
-        instance (which never saw it) writes afterwards (issue #87 [8])."""
+        instance (which never saw it) writes afterwards."""
         path = str(tmp_path / "uscf_cache.json")
         stale = sync.UscfCache(path)                        # instance from Sync start
         sync.UscfCache(path).add_dismissal("conflict:url")  # user dismisses mid-Sync
@@ -429,7 +429,7 @@ class TestUscfCacheDismissals:
 class TestUscfCacheCorruptionDegrades:
     """A right-top-level / wrong-nested-type file — what a truncated or
     hand-edited JSON produces — must still degrade to 'no cache', never raise
-    from an accessor (issue #87 [7])."""
+    from an accessor."""
 
     def test_wrong_typed_sections_degrade_to_no_cache(self, tmp_path):
         path = tmp_path / "uscf_cache.json"
@@ -443,7 +443,7 @@ class TestUscfCacheCorruptionDegrades:
 
 class TestUscfCacheAged:
     """
-    Aged entries (issue #35): data that changes slowly — opponent current
+    Aged entries: data that changes slowly — opponent current
     ratings — refreshed at most every *max_age*, never on every Sync.
     The fourth cache kind: not current (per-Sync), not immutable (forever),
     not user state.
@@ -514,7 +514,7 @@ class TestUscfCacheAged:
 
 class TestUscfCacheSeenAchievements:
     """
-    Seen-achievement memory (issue #36): which norms/awards every previous
+    Seen-achievement memory: which norms/awards every previous
     Sync has already seen, so a fresh one is celebrated exactly once — and
     never again after restarts.  Like dismissals, this is bookkeeping state
     that must survive replace_current.
@@ -554,7 +554,7 @@ class TestUscfCacheSeenAchievements:
 
 
 class TestSyncUscf:
-    """The USCF half of a Sync (issue #25, ADR 0003)."""
+    """The USCF half of a Sync (ADR 0003)."""
 
     def test_successful_sync_returns_the_profile(self, uscf_profile_json):
         with stub_uscf(uscf_profile_json):
@@ -581,7 +581,7 @@ class TestSyncUscf:
 
 
 class TestSyncUscfWithCache:
-    """USCF data survives the USCF API being down (issue #26)."""
+    """USCF data survives the USCF API being down."""
 
     def test_successful_sync_writes_the_cache(self, uscf_profile_json, tmp_path):
         cache_path = str(tmp_path / "uscf_cache.json")
@@ -636,7 +636,7 @@ class TestSyncUscfWithCache:
 
 
 class TestSyncUscfSeries:
-    """sync_uscf also builds the Official and Live rating series (issue #27)."""
+    """sync_uscf also builds the Official and Live rating series."""
 
     def test_successful_sync_builds_both_series(
         self, uscf_profile_json, uscf_supplements_json, uscf_sections_json
@@ -704,8 +704,7 @@ class TestSyncUscfSeries:
 
 
 class TestSyncUscfGames:
-    """sync_uscf also fetches USCF Game Records — the matching engine's input
-    (issue #28)."""
+    """sync_uscf also fetches USCF Game Records — the matching engine's input."""
 
     def test_successful_sync_returns_typed_game_records(
         self, uscf_profile_json, uscf_games_json
@@ -735,7 +734,7 @@ class TestSyncUscfGames:
     def test_games_endpoint_failing_degrades_the_whole_uscf_half(
         self, uscf_profile_json, uscf_games_json, tmp_path
     ):
-        """All-or-nothing (PR #37's decision): the games endpoint failing means
+        """All-or-nothing: the games endpoint failing means
         the whole USCF half comes from the consistent cached snapshot."""
         cache_path = str(tmp_path / "uscf_cache.json")
         with stub_uscf(uscf_profile_json, games=uscf_games_json["items"]):
@@ -755,7 +754,7 @@ class TestSyncUscfGames:
 
 class TestSyncUscfEvents:
     """sync_uscf also fetches the member's Rated Events — the Events page's
-    grouping data (issue #33)."""
+    grouping data."""
 
     def test_successful_sync_returns_typed_events(
         self, uscf_profile_json, uscf_events_json
@@ -800,7 +799,7 @@ class TestSyncUscfEvents:
 
 class TestSyncUscfStandings:
     """sync_uscf also fetches crosstables — one per OTB Section played,
-    cached permanently (issue #34)."""
+    cached permanently."""
 
     @pytest.fixture()
     def raw_standings(self, uscf_standings_json):
@@ -837,7 +836,7 @@ class TestSyncUscfStandings:
     def test_crosstables_are_cached_permanently(
         self, uscf_profile_json, uscf_sections_json, raw_standings, tmp_path
     ):
-        """Issue #34's acceptance criterion: repeat Syncs make ZERO crosstable
+        """Repeat Syncs make ZERO crosstable
         calls for already-cached events — they are immutable once rated."""
         cache_path = str(tmp_path / "uscf_cache.json")
         # Only the Sections whose crosstables were captured as fixtures
@@ -914,7 +913,7 @@ class TestSyncUscfStandings:
 
 
 class TestSyncOpponentProfiles:
-    """sync_uscf also fetches opponent current ratings — politely (issue #35):
+    """sync_uscf also fetches opponent current ratings — politely:
     one call per unique opponent, refreshed at most weekly."""
 
     @pytest.fixture()
@@ -1004,7 +1003,7 @@ class TestSyncOpponentProfiles:
 
 class TestSyncUscfAchievements:
     """sync_uscf also fetches norms and awards — official achievements that
-    become Milestones (issue #36)."""
+    become Milestones."""
 
     def test_successful_sync_returns_typed_achievements(
         self, uscf_profile_json, uscf_norms_json, uscf_awards_json
@@ -1021,7 +1020,7 @@ class TestSyncUscfAchievements:
         self, uscf_profile_json, uscf_norms_json, uscf_awards_json, tmp_path
     ):
         """Previously seen norms/awards remain when USCF is unavailable —
-        issue #36's acceptance criterion, via the cached snapshot (ADR 0003)."""
+        via the cached snapshot (ADR 0003)."""
         cache_path = str(tmp_path / "uscf_cache.json")
         with stub_uscf(uscf_profile_json, norms=uscf_norms_json["items"],
                        awards=uscf_awards_json["items"]):

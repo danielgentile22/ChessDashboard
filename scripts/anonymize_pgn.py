@@ -5,7 +5,7 @@ Replaces every identifying value — opponent names, USCF member IDs
 (`WhiteFideId`/`BlackFideId`), the Lichess study/chapter IDs in `ChapterURL`,
 non-self annotator handles, and the quasi-identifiers that make a synthetic name
 reversible via public USCF crosstables (real `Event`/`Site` names and the game
-`Date`s, issue #89) — with stable synthetic equivalents, while leaving the chess
+`Date`s) — with stable synthetic equivalents, while leaving the chess
 itself (moves, variations, `[%eval]`, NAGs, and the `Lesson:` comments)
 byte-for-byte intact. The player themself is kept real: this is their dashboard.
 
@@ -81,7 +81,7 @@ def _synthetic_site(i: int) -> str:
 def _rewrite_headers(text: str, tag_maps: dict[str, dict[str, str]]) -> str:
     """Replace header *values* per ``{tag: {real: synthetic}}`` — header lines
     only, so ``Lesson:`` comments and movetext stay byte-for-byte intact even if
-    a real Event/Site name happens to be a common word (issue #89)."""
+    a real Event/Site name happens to be a common word."""
     def repl(m: re.Match) -> str:
         mapping = tag_maps.get(m[1])
         if mapping and m[2] in mapping:
@@ -95,7 +95,7 @@ def _date_offset(source: str) -> timedelta:
 
     Reproducible from the real games, but — unlike a constant baked into this
     committed script — not recoverable from the demo file alone, since computing
-    it needs the source content (issue #89).  (The pre-perturbation real dates
+    it needs the source content.  (The pre-perturbation real dates
     still live in git history; fully closing that needs a history rewrite.)
     """
     h = int.from_bytes(hashlib.sha256(source.encode("utf-8")).digest()[:4], "big")

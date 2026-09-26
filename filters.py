@@ -34,7 +34,7 @@ from uscf_core import OFFICIAL_LENS, apply_rating_lens
 # Every chart callback in every page listens to exactly these inputs.
 # sync-store is bumped after every successful Sync so charts re-render on
 # fresh data without any page knowing how Syncing works.
-# rating-lens is the Official/Live lens (issue #31) — not a filter (it never
+# rating-lens is the Official/Live lens — not a filter (it never
 # hides Games), but it rides the same dependency list so every page follows
 # it the way it follows the global filters.
 FILTER_INPUTS = [
@@ -56,7 +56,7 @@ def get_filtered(colors, outcomes, terminations, start_date, end_date,
     Apply all filter inputs and the rating lens to the data store and return
     the Games every chart should show.
 
-    The lens (issue #32) is applied here, in exactly one place, so every page
+    The lens is applied here, in exactly one place, so every page
     and every stat function follows it without knowing it exists: the returned
     Games carry the lens basis in their player-rating columns.
     """
@@ -81,7 +81,7 @@ def get_filtered(colors, outcomes, terminations, start_date, end_date,
         data.get_official_series(),
         data.get_live_series(),
         data.get_uscf_matches(),
-        standings=data.get_uscf_standings(),  # opponent ratings too (issue #35)
+        standings=data.get_uscf_standings(),  # opponent ratings too
     )
 
 
@@ -200,7 +200,7 @@ def make_filter_drawer(df: pd.DataFrame) -> dbc.Offcanvas:
                 dcc.DatePickerRange(
                     id="date-filter",
                     min_date_allowed=b["min_date"], max_date_allowed=b["max_date"],
-                    # No date bound by default so undated Games stay in view (#93);
+                    # No date bound by default so undated Games stay in view;
                     # apply_filters only drops NaT rows once a bound is set. clearable
                     # lets the user empty the range back to "all dates".
                     start_date=None, end_date=None, clearable=True,
@@ -262,7 +262,7 @@ def apply_preset(n_all, n20, n_year, n_white, n_black, n_wins):
     b = _data_bounds(df)
     dated = df[df["Date_dt"].notna()]
 
-    # Every preset is a complete starting point (#93): reset all filters to
+    # Every preset is a complete starting point: reset all filters to
     # "everything", then apply the preset's one specialization.  Dates default to
     # None (no bound) so undated Games stay visible unless a preset narrows dates.
     colors = ["White", "Black"]
@@ -307,7 +307,7 @@ def update_filter_summary(colors, outcomes, terminations, start, end,
     """
     The drawer summary line + the active-filter count badge.
 
-    The game count and date range relocated here from the header (issue #45):
+    The game count and date range relocated here from the header:
     e.g. "Showing all 63 games · Jun 2025 – May 2026".  Both follow the active
     filters — the count and the span describe exactly the Games in view.
     """
@@ -331,7 +331,7 @@ def update_filter_summary(colors, outcomes, terminations, start, end,
         active += 1
     if events:
         active += 1
-    # Any date bound is now an active filter: with the None default (#93) a set
+    # Any date bound is now an active filter: with the None default a set
     # start/end both narrows the range *and* excludes undated Games, so it always
     # changes the result set — even when it equals the dated extent.
     if start or end:
@@ -377,7 +377,7 @@ def _clamp_moves(value, lo: int, hi: int):
 def update_filter_options(sync_store, moves_value, start, end):
     """Filter options follow the current data, not startup data.
 
-    The game count and date range relocated to the drawer summary (issue #45),
+    The game count and date range relocated to the drawer summary,
     which is filter-driven; this callback now only refreshes option lists and
     ranges when a Sync changes the underlying Games.
     """
@@ -391,13 +391,13 @@ def update_filter_options(sync_store, moves_value, start, end):
     if has_new_games:
         # New Games arrived: reset selections to "everything" so they're
         # immediately visible.  Dates go to None (no bound) so undated Games
-        # stay in view (#93).
+        # stay in view.
         start_out, end_out = None, None
         moves_out = [b["min_mv"], b["max_mv"]]
     else:
         # No new Games, but a shrinking Sync (a deleted chapter, a date/movetext
         # correction) can leave the current selection outside the new bounds;
-        # clamp it back in, otherwise leave it alone (#93).
+        # clamp it back in, otherwise leave it alone.
         start_out = _clamp_date(start, b["min_date"], b["max_date"])
         end_out = _clamp_date(end, b["min_date"], b["max_date"])
         moves_out = _clamp_moves(moves_value, b["min_mv"], b["max_mv"])

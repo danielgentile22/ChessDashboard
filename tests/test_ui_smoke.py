@@ -1,7 +1,7 @@
 """
 tests/test_ui_smoke.py
 ======================
-UI smoke-test harness (issue #8).
+UI smoke-test harness.
 
 Boots the real multi-page Dash app with fixture data (Lichess client stubbed
 at the module boundary — no network) and verifies, for every page:
@@ -16,7 +16,7 @@ Plus app-wide integrity checks:
   * every callback Input/Output/State references a component ID that exists
     in the shell or in some page layout (catches ID typos)
 
-Subsequent page slices (issues #9–#12) extend ``PAGES`` and add their own
+Later page tests extend ``PAGES`` and add their own
 callback tests here.
 """
 from __future__ import annotations
@@ -42,7 +42,7 @@ PAGES = [
 
 # Default filter-callback arguments: everything selected / no restriction,
 # matching what the UI sends when no filter has been touched.  The rating
-# lens (issue #31) defaults to Official, exactly like the real toggle.
+# lens defaults to Official, exactly like the real toggle.
 ALL_FILTERS = dict(
     colors=["White", "Black"],
     outcomes=["Win", "Draw", "Loss"],
@@ -145,7 +145,7 @@ class TestShell:
         return _collect_ids(layout() if callable(layout) else layout)
 
     def test_header_holds_exactly_the_calm_set(self, shell_ids):
-        """The simplified header (issue #45): brand, form/streak, reconciliation
+        """The simplified header: brand, form/streak, reconciliation
         badge, the Official/Live lens, Filters, Sync — and nothing else."""
         for present in ("header-form", "reconciliation-badge", "rating-lens",
                         "filter-drawer-button", "sync-button"):
@@ -153,13 +153,13 @@ class TestShell:
 
     def test_header_metadata_relocated_out_of_header(self, shell_ids):
         """Game count, date range, and the standalone freshness label moved
-        into the filter drawer / Sync tooltip (issue #45) — gone from the header."""
+        into the filter drawer / Sync tooltip — gone from the header."""
         assert "header-games-count" not in shell_ids
         assert "header-date-range" not in shell_ids
         assert "sync-freshness" not in shell_ids
 
     def test_header_has_form_indicators(self, shell_ids):
-        assert "header-form" in shell_ids  # streak fire + form dots (issue #10)
+        assert "header-form" in shell_ids  # streak fire + form dots
 
     def test_filter_drawer_with_all_controls(self, shell_ids):
         assert "filter-drawer" in shell_ids
@@ -196,14 +196,14 @@ class TestShell:
             assert "date-filter" not in page_ids
 
     def test_celebration_zone_lives_in_shell_not_pages(self, shell_ids, ui_data):
-        """A celebration earned by a Sync must survive page navigation (issue #15):
+        """A celebration earned by a Sync must survive page navigation:
         the zone never unmounts because it's part of the shell, not a page."""
         assert "celebration-zone" in shell_ids
         for path, _ in PAGES:
             assert "celebration-zone" not in _collect_ids(_render(_page(path)))
 
     def test_freshness_is_wired_to_the_sync_button_tooltip(self, ui_app, ui_data):
-        """Sync freshness moved onto the Sync button's tooltip (issue #45):
+        """Sync freshness moved onto the Sync button's tooltip:
         a callback must drive ``sync-button.title``, not a header stat span."""
         ui_app.server.test_client().get("/")
         assert any("sync-button.title" in key for key in ui_app.callback_map), (
@@ -270,7 +270,7 @@ class TestCallbackIntegrity:
 
 
 # ---------------------------------------------------------------------------
-# Overview page callbacks (issue #8) — no callback errors, filters respected
+# Overview page callbacks — no callback errors, filters respected
 # ---------------------------------------------------------------------------
 
 class TestOverviewCallbacks:
@@ -291,7 +291,7 @@ class TestOverviewCallbacks:
         badges, stats = update_streak(*_filter_args())
         assert len(badges) == 7  # one badge per fixture game
         assert stats  # streak stat cards present
-        # Colourblind channel (issue #88): each badge carries its W/D/L letter,
+        # Colourblind channel: each badge carries its W/D/L letter,
         # not just a coloured square.
         assert all(b.children in ("W", "D", "L") for b in badges)
 
@@ -331,7 +331,7 @@ class TestOverviewCallbacks:
 
 
 # ---------------------------------------------------------------------------
-# USCF profile card (issue #25) — the first USCF surface
+# USCF profile card — the first USCF surface
 # ---------------------------------------------------------------------------
 
 class TestUscfProfileCard:
@@ -366,7 +366,7 @@ class TestUscfProfileCard:
         assert "uscf-alert" not in rendered
 
     def test_card_warns_when_membership_expires_soon(self, ui_app, sample_pgn_text):
-        """The 90-day warning, exercised with a fixture (issue #25 note)."""
+        """The 90-day warning, exercised with a fixture ."""
         import data
         from pages.overview import update_uscf_card
         from tests.conftest import _UI_USCF_PROFILE, stub_ui_sources
@@ -426,7 +426,7 @@ class TestUscfProfileCard:
             data.reset()
 
     def test_card_shows_official_and_live_side_by_side(self, ui_app, ui_data):
-        """Issue #27's payoff: the ~26-point gap between the published Official
+        """The payoff: the ~26-point gap between the published Official
         Rating and the Live Rating is visible at a glance, clearly labeled."""
         from pages.overview import update_uscf_card
         rendered = str(update_uscf_card({"seq": 0}))
@@ -469,7 +469,7 @@ class TestUscfProfileCard:
     def test_card_keeps_cached_data_with_staleness_warning(
         self, ui_app, sample_pgn_text, tmp_path
     ):
-        """USCF down but cached: the numbers stay, clearly marked stale (issue #26)."""
+        """USCF down but cached: the numbers stay, clearly marked stale."""
         import data
         from pages.overview import update_uscf_card
         from tests.conftest import stub_ui_sources
@@ -509,7 +509,7 @@ class TestUscfProfileCard:
 
 
 # ---------------------------------------------------------------------------
-# USCF achievements as Milestones (issue #36)
+# USCF achievements as Milestones
 #
 # ui fixtures include the real captured norm (Oak Grove, Dec 2025) and award
 # (25th win, Jan 2026), so the Overview timeline carries gold official rows
@@ -597,7 +597,7 @@ class TestUscfAchievementMilestones:
 
 
 # ---------------------------------------------------------------------------
-# Trends page callbacks (issue #9)
+# Trends page callbacks
 # ---------------------------------------------------------------------------
 
 class TestTrendsCallbacks:
@@ -617,7 +617,7 @@ class TestTrendsCallbacks:
         assert update_length_stats(*_filter_args()) is not None
 
     def test_length_hist_distinguishes_outcomes_without_colour(self, ui_app, ui_data):
-        """Colourblind channel (issue #88): the overlaid win/loss distributions
+        """Colourblind channel: the overlaid win/loss distributions
         get distinct hatch patterns and the hover names the outcome."""
         from pages.trends import update_length_hist
         fig = update_length_hist(*_filter_args())
@@ -644,7 +644,7 @@ class TestTrendsCallbacks:
         # The length-stats card renders its own empty state, not a figure.
         assert "No data" in str(update_length_stats(*impossible))
 
-    # -- Activity heatmap calendar (issue #14) ------------------------------
+    # -- Activity heatmap calendar ------------------------------
 
     @staticmethod
     def _calendar_hover_text(calendar_blocks) -> str:
@@ -699,7 +699,7 @@ class TestTrendsCallbacks:
         assert "empty-state" in str(getattr(result, "className", ""))
 
     def test_activity_calendar_carries_a_non_color_net_sign(self, ui_app, ui_data):
-        """Colourblind channel (issue #88): played days show a +/− net-sign glyph
+        """Colourblind channel: played days show a +/− net-sign glyph
         so win vs loss doesn't ride on red-vs-green alone."""
         from pages.trends import update_activity_calendar
         blocks = update_activity_calendar(*_filter_args())
@@ -713,11 +713,11 @@ class TestTrendsCallbacks:
 
 
 # ---------------------------------------------------------------------------
-# Time control, fatigue, and upset analytics (issue #17)
+# Time control, fatigue, and upset analytics
 # ---------------------------------------------------------------------------
 
 class TestTimeControlFatigueUpsets:
-    """The Trends page's #17 sections: TC breakdown, round fatigue, upsets."""
+    """The Trends page's conditions sections: TC breakdown, round fatigue, upsets."""
 
     def test_time_control_chart_shows_fixture_controls(self, ui_app, ui_data):
         from pages.trends import update_time_control
@@ -808,7 +808,7 @@ class TestTimeControlFatigueUpsets:
 
 
 # ---------------------------------------------------------------------------
-# Openings page callbacks (issue #9)
+# Openings page callbacks
 # ---------------------------------------------------------------------------
 
 class TestOpeningsCallbacks:
@@ -829,7 +829,7 @@ class TestOpeningsCallbacks:
 
 
 # ---------------------------------------------------------------------------
-# Repertoire tree (issue #16) — the personal opening explorer
+# Repertoire tree — the personal opening explorer
 # ---------------------------------------------------------------------------
 
 class TestRepertoireTreePage:
@@ -856,7 +856,7 @@ class TestRepertoireTreePage:
         assert "rep-flagged" in rendered
 
     def test_repertoire_score_marks_baseline_side_without_colour(self, ui_app, ui_data):
-        """Colourblind channel (issue #88): the score % carries a ▴/▾ arrow for
+        """Colourblind channel: the score % carries a ▴/▾ arrow for
         above/below baseline, so it isn't green-vs-red text alone."""
         from pages.openings import update_repertoire
         rendered = str(update_repertoire("White", *_filter_args()))
@@ -865,7 +865,7 @@ class TestRepertoireTreePage:
 
     def test_repertoire_score_exactly_at_baseline_reads_neutral(self, ui_app, ui_data):
         """A score that ties the baseline is neither above nor below — it must
-        get the neutral marker, not a false '▴ above' (issue #88 / review)."""
+        get the neutral marker, not a false '▴ above'."""
         from pages.openings import _tree_node
         node = dict(ply=1, san="d4", games=2, win=1, draw=0, loss=1, score_pct=50.0,
                     underperforming=False, moves=[], ended_here=[], game_refs=[])
@@ -916,7 +916,7 @@ class TestRepertoireTreePage:
 
 
 # ---------------------------------------------------------------------------
-# Opponents page callbacks (issue #9)
+# Opponents page callbacks
 # ---------------------------------------------------------------------------
 
 class TestOpponentsCallbacks:
@@ -943,7 +943,7 @@ class TestOpponentsCallbacks:
 
 
 # ---------------------------------------------------------------------------
-# Scouting Report (issue #13) — the pre-game dossier
+# Scouting Report — the pre-game dossier
 # ---------------------------------------------------------------------------
 
 class TestScoutingReportPage:
@@ -980,7 +980,7 @@ class TestScoutingReportPage:
 
 
 # ---------------------------------------------------------------------------
-# Events page: Series → Rated Event (issue #33)
+# Events page: Series → Rated Event
 #
 # With the ui fixtures: SAMPLE_PGN's "Test Open" and "Summer Cup" Series map
 # to the TEST OPEN JANUARY / SUMMER CUP 2024 Rated Events; game 6 stays
@@ -1066,7 +1066,7 @@ class TestEventsSeriesGroups:
     def test_the_real_club_ladder_renders_with_its_monthly_events(
         self, ui_app, real_career_ui
     ):
-        """The money shot (issue #33): ACC Friday Ladder is one Series holding
+        """The money shot: ACC Friday Ladder is one Series holding
         ACC JUNE 2025 … ACC MAY 2026."""
         from pages.events import update_series_groups
         rendered = str(update_series_groups(*_filter_args()))
@@ -1088,7 +1088,7 @@ class TestEventsSeriesGroups:
 
 
 class TestEventsCrosstables:
-    """Standings inside each Rated Event (issue #34): placement, the full
+    """Standings inside each Rated Event: placement, the full
     crosstable with Daniel's row highlighted, and real round numbers."""
 
     def test_rated_events_show_official_placement(self, ui_app, real_career_ui):
@@ -1134,7 +1134,7 @@ class TestEventsCrosstables:
         self, ui_app, real_career_ui
     ):
         """Round outcomes in Daniel's crosstable row click through to the Games
-        where one exists (issue #34's acceptance criterion)."""
+        where one exists."""
         from pages.events import update_series_groups
         rendered = str(update_series_groups(*_filter_args()))
 
@@ -1159,7 +1159,7 @@ class TestEventsCrosstables:
 
 class TestEventsUnplayed:
     def test_entered_but_never_played_events_render(self, ui_app, real_career_ui):
-        """The Rockville case (issue #33): entered, zero games — rendered in
+        """The Rockville case: entered, zero games — rendered in
         its own group without error."""
         from pages.events import update_unplayed
         rendered = str(update_unplayed(*_filter_args()))
@@ -1186,14 +1186,14 @@ class TestEventsUnplayed:
 
 
 # ---------------------------------------------------------------------------
-# Recurring weakness detection (issue #18)
+# Recurring weakness detection
 # ---------------------------------------------------------------------------
 
 def _pgn_with_weakness_pattern() -> str:
     """An archive with a clear pattern: 4 of 4 losses tagged #time-trouble.
 
     Games run several moves so they read as real games — a 1-move game is a
-    forfeit under the enrichment rule (issue #29) and would be excluded from
+    forfeit under the enrichment rule and would be excluded from
     the loss/weakness stats entirely."""
     games = []
     for i in range(1, 7):
@@ -1253,7 +1253,7 @@ class TestWeaknessCallouts:
 
 
 # ---------------------------------------------------------------------------
-# Lessons page (issue #12)
+# Lessons page
 # ---------------------------------------------------------------------------
 
 class TestLessonsPage:
@@ -1339,7 +1339,7 @@ class TestLessonsPage:
 
 
 # ---------------------------------------------------------------------------
-# Pre-game review mode (issue #19)
+# Pre-game review mode
 # ---------------------------------------------------------------------------
 
 class TestReviewMode:
@@ -1415,7 +1415,7 @@ class TestReviewMode:
 
 
 # ---------------------------------------------------------------------------
-# Game detail view (issue #11)
+# Game detail view
 # ---------------------------------------------------------------------------
 
 class TestGameDetail:
@@ -1448,8 +1448,8 @@ class TestGameDetail:
     def test_detail_shows_board_metadata_and_lesson(self, ui_app, ui_data):
         from pages.game_detail import layout
         rendered = str(layout(chapter_id="chap0001"))
-        # The interactive board is now Lichess's pgn-viewer mounted locally
-        # (issue #60 [F6]), not an iframe embed.
+        # The interactive board is now Lichess's pgn-viewer mounted locally,
+        # not an iframe embed.
         assert "lpv" in rendered
         assert "lichess.org/study/embed" not in rendered
         # Metadata alongside the board
@@ -1473,7 +1473,7 @@ class TestGameDetail:
         self, ui_app, ui_data, monkeypatch
     ):
         """A Game with no ChapterURL renders its detail view gracefully —
-        no broken iframe, no crash (acceptance criterion, #43)."""
+        no broken iframe, no crash (acceptance criterion)."""
         import pandas as pd
 
         from pages import game_detail
@@ -1502,14 +1502,14 @@ class TestGameDetail:
 
     def test_unanalyzed_game_shows_awaiting_hint(self, ui_app, ui_data):
         # SAMPLE_PGN carries no engine evals, so a Game degrades to the quiet
-        # awaiting-analysis hint — never a blank or a crash (issue #57).
+        # awaiting-analysis hint — never a blank or a crash.
         from pages.game_detail import layout
         rendered = str(layout(chapter_id="chap0001"))
         assert "Awaiting analysis" in rendered
 
     def test_analyzed_game_shows_critical_moment_headline(self, ui_app):
         """An analysed Game shows its critical-moment headline alongside the
-        board (issue #57) — the captured Alice Anderson Game's −4.38 swing."""
+        board — the captured Alice Anderson Game's −4.38 swing."""
         from pathlib import Path
         from unittest import mock
 
@@ -1562,7 +1562,7 @@ class TestGameNavigation:
 
     def test_both_tables_have_navigation_callbacks(self, ui_app, ui_data):
         """The Games table and the Scouting Report timeline both open Games.
-        (The Events page's game rows are plain links since issue #33 — they
+        (The Events page's game rows are plain links, so they
         need no callback.)"""
         from pages.games import navigate_to_game
         from pages.opponents import navigate_to_game_from_scout
@@ -1573,7 +1573,7 @@ class TestGameNavigation:
 
 
 # ---------------------------------------------------------------------------
-# USCF matching in the UI (issues #28 / #29)
+# USCF matching in the UI
 #
 # The ui fixtures pair SAMPLE_PGN with SAMPLE_USCF_GAMES: games 1–5 match by
 # opponent ID + result, game 6 has an ID but no record (unmatched), game 7
@@ -1582,7 +1582,7 @@ class TestGameNavigation:
 
 class TestUscfMatchUI:
     def test_game_detail_shows_the_uscf_half_of_a_matched_game(self, ui_app, ui_data):
-        """#28: Rated Event, Section, rating system, official opponent name and
+        """Rated Event, Section, rating system, official opponent name and
         member ID, and a link to the opponent's USCF page."""
         from pages.game_detail import layout
         rendered = str(layout(chapter_id="chap0001"))
@@ -1607,7 +1607,7 @@ class TestUscfMatchUI:
     def test_games_table_distinguishes_id_matches_name_matches_and_unmatched(
         self, ui_app, ui_data
     ):
-        """#28/#29/#30: ✓ = matched by opponent ID, ≈ = matched by name (so
+        """✓ = matched by opponent ID, ≈ = matched by name (so
         name matches can be eyeballed), ⚠ = matched but conflicted, blank =
         no USCF Game Record."""
         from pages.games import update_games_table
@@ -1622,7 +1622,7 @@ class TestUscfMatchUI:
 
     def test_game_detail_says_how_a_name_match_was_made(self, ui_app, ui_data):
         """A name-matched Game says so in its USCF card, so Daniel can eyeball
-        whether the fallback got it right (issue #29)."""
+        whether the fallback got it right."""
         from pages.game_detail import layout
         rendered = str(layout(chapter_id="chap0007"))
 
@@ -1631,7 +1631,7 @@ class TestUscfMatchUI:
 
 
 # ---------------------------------------------------------------------------
-# Reconciliation page, header badge, and conflict badges (issue #30)
+# Reconciliation page, header badge, and conflict badges
 #
 # With the ui fixtures: game 4 is a color conflict, game 6 is Lichess-only,
 # game 7 is missing its FideId, and one record (EXTRA OPPONENT) is USCF-only.
@@ -1661,7 +1661,7 @@ class TestReconciliationPage:
         assert "lichess.org/study/teststudy/chap0004" in rendered
 
     def test_page_documents_the_persistence_limitation(self, ui_app, ui_data):
-        """Issue #30: dismissals are best-effort — say so on the page, not
+        """Dismissals are best-effort — say so on the page, not
         just in the PR."""
         from pages.reconciliation import update_reconciliation
         rendered = str(update_reconciliation({"seq": 0}))
@@ -1744,7 +1744,7 @@ class TestReconciliationBadge:
 
 class TestConflictBadgeOnGameDetail:
     def test_conflicted_game_detail_links_to_reconciliation(self, ui_app, ui_data):
-        """#30: the ⚠ badge on a conflicted Game links to its Reconciliation
+        """The ⚠ badge on a conflicted Game links to its Reconciliation
         entry; the Game itself still displays the Lichess version."""
         from pages.game_detail import layout
         rendered = str(layout(chapter_id="chap0004"))
@@ -1762,7 +1762,7 @@ class TestConflictBadgeOnGameDetail:
 
 
 # ---------------------------------------------------------------------------
-# Forfeit in the UI (issue #29): a visible tag wherever the Game appears
+# Forfeit in the UI: a visible tag wherever the Game appears
 # ---------------------------------------------------------------------------
 
 _FORFEIT_UI_PGN = """\
@@ -1835,7 +1835,7 @@ class TestForfeitUI:
 
 
 # ---------------------------------------------------------------------------
-# The Official/Live rating lens (issue #31)
+# The Official/Live rating lens
 #
 # A lens, not a filter: it selects which rating series powers rating-derived
 # numbers and never hides Games.  It lives in the sticky header (so it's on
@@ -1860,7 +1860,7 @@ class TestRatingLensToggle:
             assert "rating-lens" not in _collect_ids(_render(_page(path)))
 
     def test_the_lens_defaults_to_official(self, ui_app, ui_data):
-        """Official is Daniel's long-standing convention (PRD #24)."""
+        """Official is Daniel's long-standing convention."""
         toggle = _shell_component(ui_app, "rating-lens")
         assert toggle.value == "official"
 
@@ -1871,7 +1871,7 @@ class TestRatingLensToggle:
         assert values == ["official", "live"]
 
     def test_the_lens_rides_the_global_filter_inputs(self, ui_app, ui_data):
-        """'Exposed to all pages the same way the global filters are' (#31):
+        """'Exposed to all pages the same way the global filters are':
         the lens value is part of FILTER_INPUTS, so every filter-driven
         callback re-fires when it changes — no page opts in separately."""
         from filters import FILTER_INPUTS
@@ -1880,7 +1880,7 @@ class TestRatingLensToggle:
 
     def test_the_lens_triggers_no_data_callbacks(self, ui_app, ui_data):
         """Toggling the lens changes no data — the freshness label (now the Sync
-        button's tooltip, issue #45), the cache notice, and the Reconciliation
+        button's tooltip), the cache notice, and the Reconciliation
         badge must not re-fire on it."""
         ui_app.server.test_client().get("/")
         data_outputs = ("sync-button.title", "reconciliation-badge", "cache-notice")
@@ -1895,7 +1895,7 @@ class TestRatingLensToggle:
 
 
 # ---------------------------------------------------------------------------
-# The dual-line rating trend (issue #31)
+# The dual-line rating trend
 #
 # The Trends rating chart is the one place the lens hides nothing: the
 # Official step line and the Live per-event line always both render; the
@@ -2010,7 +2010,7 @@ class TestDualLineRatingTrend:
 
 
 # ---------------------------------------------------------------------------
-# The rating lens across all rating-derived stats (issue #32)
+# The rating lens across all rating-derived stats
 #
 # Tested against Daniel's real fixture pair (the real_career_ui conftest
 # fixture: the 63-chapter Study snapshot matched to his real USCF record),
@@ -2036,11 +2036,11 @@ class TestRatingLensAcrossStats:
         assert official[0] == live[0] == "63"
 
     def test_the_upset_tracker_follows_the_lens(self, ui_app, real_career_ui):
-        """'Upset' means the same thing as the rating basis you're looking at
-        (PRD #24): the two lenses see different giant kills.  Phase D changes
+        """'Upset' means the same thing as the rating basis you're looking at:
+        the two lenses see different giant kills.  Phase D changes
         both world views: Forfeit wins are never upsets (the Uma Baker
         '+170 kill' is gone), and the Live lens rates opponents by their
-        crosstable pre-ratings where cached (issue #35)."""
+        crosstable pre-ratings where cached."""
         from pages.trends import update_upsets
         official_wins, _, official_losses, _ = update_upsets(
             *_filter_args(lens="official"))
@@ -2101,13 +2101,13 @@ class TestRatingLensAcrossStats:
     def test_performance_rating_follows_the_lens(self, ui_app, real_career_ui):
         """Phase D closes the Phase C limitation: performance rating is built
         from opponent ratings, which now follow the lens too — typed values
-        under Official (the pairing sheet), crosstable pre-ratings under Live
-        (issue #35).  The two world views give different numbers."""
+        under Official (the pairing sheet), crosstable pre-ratings under Live.
+        The two world views give different numbers."""
         from pages.overview import update_kpis
         official = update_kpis(*_filter_args(lens="official"))
         live = update_kpis(*_filter_args(lens="live"))
 
-        # Forfeit wins no longer score against opponent ratings (issue #90.1),
+        # Forfeit wins no longer score against opponent ratings,
         # so both lenses sit a few points below the pre-fix figures.
         assert official[6] == "1338"     # performance vs typed opponent ratings
         assert live[6] == "1324"         # vs what opponents were really rated
@@ -2137,7 +2137,7 @@ class TestRatingLensAcrossStats:
 
 
 # ---------------------------------------------------------------------------
-# Opponent USCF enrichment in the Scouting Report (issue #35)
+# Opponent USCF enrichment in the Scouting Report
 # ---------------------------------------------------------------------------
 
 class TestScoutingReportUscf:
@@ -2186,7 +2186,7 @@ class TestScoutingReportUscf:
 
 class TestLimitationNoteIsGone:
     def test_no_rating_basis_note_anywhere(self, ui_app, ui_data):
-        """Issue #35 closed the Phase C limitation — the note documenting it
+        """Crosstable pre-ratings closed the old rating-basis limitation, so the note documenting it
         is gone from both pages that carried it."""
         trends = str(_render(_page("/trends")))
         opponents = str(_render(_page("/opponents")))
@@ -2196,7 +2196,7 @@ class TestLimitationNoteIsGone:
 
 
 # ---------------------------------------------------------------------------
-# Games page callbacks (issue #9)
+# Games page callbacks
 # ---------------------------------------------------------------------------
 
 class TestGamesCallbacks:
@@ -2276,7 +2276,7 @@ class TestGamesColumnSet:
 
 
 class TestMobileGameCards:
-    """The mobile Games card list (issue #48): at phone widths each Game
+    """The mobile Games card list: at phone widths each Game
     renders as a tappable card — opponent, outcome, date, event — fed by the
     *same* callback rows as the desktop table (the PRD's "Mobile game cards"
     testing decision)."""
@@ -2365,7 +2365,7 @@ class TestMobileGameCards:
 
     def test_table_and_cards_share_one_callback(self, ui_app, ui_data):
         """Both presentations are fed by the same callback build — no second
-        data pipeline (issue #48's acceptance criterion)."""
+        data pipeline."""
         from pages.games import update_games
         table_data, cards = update_games(*_filter_args())
         # The card list renders exactly the rows the table is given.
@@ -2384,7 +2384,7 @@ class TestMobileGameCards:
 class TestQuietTableTreatment:
     """The shared quiet-table treatment (neutral headers, left-aligned text,
     hairline separators, focused-row fix) is reusable styling, not Games-only
-    CSS — issues #49 (Events crosstables) and #50 (Trends upset tables) reuse
+    CSS: the Events crosstables and the Trends upset tables reuse
     it."""
 
     def test_quiet_helper_wraps_with_the_shared_class(self):
@@ -2606,7 +2606,7 @@ class TestOverviewTrendsContentDiscipline:
         assert table.style_header == QUIET_TABLE_HEADER
 
     def test_upset_rows_still_click_through_to_games(self, ui_app, ui_data):
-        """The quiet treatment keeps the click-to-open behaviour (issue #11)."""
+        """The quiet treatment keeps the click-to-open behaviour."""
         from pages.trends import navigate_to_game_from_upset_loss
         rows = [{"Opponent": "X",
                  "ChapterURL": "https://lichess.org/study/s/chap0009"}]
@@ -2851,7 +2851,7 @@ class TestMotionAndPolish:
 
 
 # ---------------------------------------------------------------------------
-# The Analysis page (issue #58): mistake-type distribution + awaiting list
+# The Analysis page: mistake-type distribution + awaiting list
 # ---------------------------------------------------------------------------
 
 # Two Games: one with requested computer analysis (Daniel, Black, plays the
@@ -2975,7 +2975,7 @@ class TestAnalysisPage:
 
 
 # ---------------------------------------------------------------------------
-# Game detail: pgn-viewer board + view switcher (issue #60 [F6])
+# Game detail: pgn-viewer board + view switcher
 #
 # The single Lichess iframe is replaced by Lichess's own open-source
 # pgn-viewer (a local asset), behind a Game / My Analysis view switcher.
@@ -3085,7 +3085,7 @@ class TestGameDetailBoard:
 
 
 # ---------------------------------------------------------------------------
-# Game detail: the Engine view (issue #63 [F7])
+# Game detail: the Engine view
 #
 # The third view in the F6 switcher: where Daniel reviews where he went wrong
 # and what was better.  The Engine view shows the engine's evaluation across
@@ -3202,8 +3202,8 @@ class TestGameDetailEngineView:
 
 
 # ---------------------------------------------------------------------------
-# Engine-emitted Tags are source-tagged and render distinguishably (issue #62
-# [F4]).  An analysed Game tags itself in Daniel's taxonomy; those engine Tags
+# Engine-emitted Tags are source-tagged and render distinguishably.
+# An analysed Game tags itself in Daniel's taxonomy; those engine Tags
 # must look different from the ones he hand-wrote, wherever Tags render.
 # ---------------------------------------------------------------------------
 

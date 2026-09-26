@@ -170,7 +170,7 @@ def kpi_card(
 
 def form_indicator(form: dict) -> list:
     """
-    Streak fire / cold + last-5 form dots (issue #10).
+    Streak fire / cold + last-5 form dots.
 
     Takes a ``current_form()`` dict and returns header-ready components:
 
@@ -202,7 +202,7 @@ def form_indicator(form: dict) -> list:
     if form["last_5"]:
         children.append(html.Span(
             # The outcome letter (W/D/L) inside each dot is the non-color
-            # channel — colour alone can't carry win vs loss (issue #88).
+            # channel — colour alone can't carry win vs loss.
             [html.Span(o[0], className=f"form-dot {o.lower()}", title=o) for o in form["last_5"]],
             className="form-dots",
             title="Last 5 games, oldest → newest",
@@ -211,12 +211,12 @@ def form_indicator(form: dict) -> list:
     return children
 
 
-# The source value that marks a Tag as the engine's, not Daniel's (issue #62).
+# The source value that marks a Tag as the engine's, not Daniel's.
 ENGINE_TAG_SOURCE = "engine"
 
 
 def tag_chips(tags, sources=None, *, base_class: str = "tag-chip") -> list:
-    """A Game's Tags as chips, marking the engine-emitted ones (issue #62 [F4]).
+    """A Game's Tags as chips, marking the engine-emitted ones.
 
     *sources* maps each Tag to ``"mine"`` or ``"engine"``; a Tag missing from it
     is treated as hand-written.  Engine-emitted Tags get an extra
@@ -277,7 +277,7 @@ def lesson_card(row, *, show_opponent: bool = True) -> html.Div:
 
 def coach_note_card(note: dict) -> html.Div:
     """
-    One coach's note as a card (issue #75 [G5]) — the coach's prose, where in
+    One coach's note as a card — the coach's prose, where in
     the Game it was written, and a link to the Game.
 
     Deliberately distinct from ``lesson_card`` (the king glyph and the
@@ -321,7 +321,7 @@ def uscf_member_url(member_id: str) -> str:
     return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
 
 
-# Display names for USCF rating-system codes (issue #28).
+# Display names for USCF rating-system codes.
 USCF_RATING_SYSTEM_LABELS = {
     "R": "Regular",
     "D": "Dual (Regular + Quick)",
@@ -335,7 +335,7 @@ USCF_RATING_SYSTEM_LABELS = {
 
 def uscf_status_label(matched_by: str, forfeit: bool, conflict: bool = False) -> str:
     """
-    A Game's USCF status, one glanceable token (issues #28/#29/#30):
+    A Game's USCF status, one glanceable token:
     ✓ matched by opponent ID · ≈ matched by name (eyeball these) ·
     ⚠ matched but the sources disagree (see Reconciliation) ·
     "Forfeit" for no-shows · blank for no USCF Game Record.
@@ -355,7 +355,7 @@ def game_detail_path(chapter_url: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Mobile game cards (issue #48)
+# Mobile game cards
 #
 # On a phone the Games table's ~15 columns force a sideways scroll just to find
 # who I played and whether I won.  At phone widths the page swaps the table for
@@ -413,7 +413,7 @@ def game_cards(rows: list[dict]) -> html.Div:
 
 def row_click_to_game(active_cell, viewport_rows):
     """
-    Map a DataTable cell click to a Game detail path (issue #11).
+    Map a DataTable cell click to a Game detail path.
 
     Returns the ``/game/<chapter-id>`` path to navigate to, or ``no_update``
     when the click shouldn't navigate: no cell, a click on the Lichess
@@ -432,8 +432,8 @@ def row_click_to_game(active_cell, viewport_rows):
 
 def register_game_navigation(table_id: str):
     """
-    Register the click-a-row-to-open-the-game callback for one DataTable
-    (issue #11) and return the callback (tests drive it directly).
+    Register the click-a-row-to-open-the-game callback for one DataTable,
+    and return the callback (tests drive it directly).
 
     Every table whose rows carry a ChapterURL gets the exact same behavior —
     navigate to the Game's detail view and clear the selection so the same
@@ -453,7 +453,7 @@ def register_game_navigation(table_id: str):
 
 
 def opponent_options(df, *, with_lessons_only: bool = False) -> list[dict]:
-    """{'label','value'} options for an opponent dropdown, sorted (issue #96).
+    """{'label','value'} options for an opponent dropdown, sorted.
 
     Shared by the Opponents scout picker and the Lessons picker so the
     build-the-options rule lives once.  *with_lessons_only* keeps only opponents
@@ -471,7 +471,7 @@ def opponent_options(df, *, with_lessons_only: bool = False) -> list[dict]:
 
 
 def register_options_refresh(dropdown_id: str, options_fn):
-    """Refresh a dropdown's options after a Sync (issue #96) and return the
+    """Refresh a dropdown's options after a Sync and return the
     callback (tests drive it directly).
 
     Mirrors :func:`register_game_navigation`: the layout already holds correct
@@ -503,7 +503,7 @@ def empty_state(glyph: str, title: str, *lines) -> html.Div:
 
 def weakness_callout(callout: dict, *, compact: bool = False) -> html.Div:
     """
-    A recurring-weakness callout (issue #18): the Tag, the stat, the time
+    A recurring-weakness callout: the Tag, the stat, the time
     window, and the Games behind it.
 
     The full form (Lessons page) links each Game; the compact form (Overview)
@@ -532,7 +532,7 @@ def weakness_callout(callout: dict, *, compact: bool = False) -> html.Div:
 
 
 # ---------------------------------------------------------------------------
-# USCF profile card (issue #25)
+# USCF profile card
 # ---------------------------------------------------------------------------
 
 def _uscf_rating_note(entry: UscfRating | None) -> str:
@@ -559,10 +559,10 @@ def _uscf_rating_block(label: str, entry: UscfRating | None) -> html.Div:
 
 def _uscf_regular_block(entry: UscfRating | None, live_rating: float | None) -> html.Div:
     """
-    The Regular rating tile — the backbone rating (PRD #24).
+    The Regular rating tile — the backbone rating.
 
     With a Live Rating available it shows both values side by side
-    ("Official 1545 · Live 1571" — issue #27); without one it is a plain
+    ("Official 1545 · Live 1571"); without one it is a plain
     rating tile.  Ratings display as whole numbers — no decimal places.
     """
     if live_rating is None:
@@ -613,7 +613,7 @@ def uscf_profile_card(
     *stale* is the degradation notice (ADR 0003): shown when the numbers come
     from the cache because USCF is currently unreachable.
 
-    *live_rating* is the current Live Rating (issue #27): shown next to the
+    *live_rating* is the current Live Rating: shown next to the
     Official Regular rating so the gap between the two is visible at a glance.
     """
     membership = profile.membership_status
@@ -669,9 +669,9 @@ def uscf_unavailable_card(reason: str) -> html.Div:
 
 def celebration_banner(deltas: list[dict]) -> dbc.Alert:
     """
-    The gold milestone celebration (issue #15): shown once after a Sync that
-    set a personal best — or that USCF first recognized with a norm or award
-    (issue #36) — dismissible, and gone for good once dismissed.
+    The gold milestone celebration: shown once after a Sync that
+    set a personal best — or that USCF first recognized with a norm or award.
+    Dismissible, and gone for good once dismissed.
 
     Takes the ``milestone_deltas()`` list — one line per record broken —
     plus any new-achievement deltas (kind ``uscf_achievement``).

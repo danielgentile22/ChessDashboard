@@ -1,8 +1,7 @@
 """
 analysis_trends.py
 ==================
-The Analysis page's trend aggregates over the engine error profile (issue #61
-[F3]) — the charts that were the whole point of reading engine data
+The Analysis page's trend aggregates over the engine error profile — the charts that were the whole point of reading engine data
 automatically.
 
 Pure, framework-agnostic, and deeply testable like the Phase-4 analytics it

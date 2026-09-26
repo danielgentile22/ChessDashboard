@@ -66,7 +66,7 @@ def stub_uscf(profile, supplements=None, sections=None, games=None,
         return fetch
 
     def fake_profile(member_id, **kwargs):
-        # The member's own profile, or a stubbed opponent's (issue #35)
+        # The member's own profile, or a stubbed opponent's
         if isinstance(profile, Exception):
             raise profile
         if str(profile.get("id", "")) == str(member_id):
@@ -161,7 +161,7 @@ class TestInitialize:
 
 
 class TestRefreshAtomicity:
-    """The single-swap contract (ADR 0006, issue #87 [1]): the next state is
+    """The single-swap contract (ADR 0006): the next state is
     built off-store and committed once, so a failure never half-updates it."""
 
     def test_enrichment_failure_leaves_current_data_untouched(self, sample_pgn_text):
@@ -185,7 +185,7 @@ class TestRefreshAtomicity:
     def test_dismissal_during_snapshot_build_survives_the_commit(self, sample_pgn_text):
         """A dismissal made while a refresh's snapshot is still building (a
         threaded-server race) must not be lost when _commit swaps it in —
-        dismissals are append-only user judgement (issue #87 [1])."""
+        dismissals are append-only user judgement."""
         with stub_studies(study1=sample_pgn_text):
             data.initialize(["study1"], player_name="Test Player")
 
@@ -202,7 +202,7 @@ class TestRefreshAtomicity:
 
 
 # ---------------------------------------------------------------------------
-# USCF enrichment in the store (issue #25, ADR 0003)
+# USCF enrichment in the store (ADR 0003)
 # ---------------------------------------------------------------------------
 
 class TestUscfInStore:
@@ -287,7 +287,7 @@ class TestUscfInStore:
 
 
 # ---------------------------------------------------------------------------
-# The matching engine in the data layer (issue #28)
+# The matching engine in the data layer
 # ---------------------------------------------------------------------------
 
 # A Game and the USCF Game Record that matches it (opponent ID + result), in
@@ -343,7 +343,7 @@ class TestUscfMatchingInStore:
         assert game["UscfOpponentId"] == "20000056"
 
     def test_match_result_is_exposed_for_later_slices(self, uscf_profile_json):
-        """Reconciliation (issue #30) consumes the full MatchResult — both
+        """Reconciliation consumes the full MatchResult — both
         leftovers included."""
         with stub_studies(study1=MATCHED_PGN), \
              stub_uscf(uscf_profile_json, games=[MATCHED_USCF_GAME]):
@@ -406,7 +406,7 @@ class TestUscfMatchingInStore:
 
 
 # ---------------------------------------------------------------------------
-# Reconciliation in the data layer (issue #30)
+# Reconciliation in the data layer
 # ---------------------------------------------------------------------------
 
 # The same matched game, but USCF disagrees about the color → a conflict entry
@@ -448,7 +448,7 @@ class TestReconciliationInStore:
         self, uscf_profile_json, tmp_path
     ):
         """The best-effort persistence path: dismiss, restart the app, the
-        entry stays dismissed (issue #30)."""
+        entry stays dismissed."""
         cache = str(tmp_path / "uscf_cache.json")
 
         def boot():
@@ -488,7 +488,7 @@ class TestReconciliationInStore:
 
 
 # ---------------------------------------------------------------------------
-# The Official and Live rating series in the data layer (issue #27)
+# The Official and Live rating series in the data layer
 # ---------------------------------------------------------------------------
 
 class TestRatingSeriesInStore:
@@ -524,7 +524,7 @@ class TestRatingSeriesInStore:
 
 
 # ---------------------------------------------------------------------------
-# USCF achievements in the data layer (issue #36)
+# USCF achievements in the data layer
 # ---------------------------------------------------------------------------
 
 class TestAchievementsInStore:
@@ -555,7 +555,7 @@ class TestAchievementsInStore:
 
 
 class TestEventsInStore:
-    """The member's Rated Events in the data layer (issue #33)."""
+    """The member's Rated Events in the data layer."""
 
     def test_data_layer_exposes_member_events(
         self, sample_pgn_text, uscf_profile_json, uscf_events_json
@@ -579,7 +579,7 @@ class TestEventsInStore:
 
 
 class TestStandingsInStore:
-    """Crosstables and real round numbers in the data layer (issue #34)."""
+    """Crosstables and real round numbers in the data layer."""
 
     @pytest.fixture()
     def real_career_store(self, uscf_profile_json, uscf_games_json,
@@ -626,7 +626,7 @@ class TestStandingsInStore:
 
 
 class TestOpponentProfilesInStore:
-    """Opponent current ratings in the data layer (issue #35)."""
+    """Opponent current ratings in the data layer."""
 
     def test_data_layer_exposes_opponent_profiles(
         self, sample_pgn_text, uscf_profile_json, uscf_games_json
@@ -656,7 +656,7 @@ class TestOpponentProfilesInStore:
 
 class TestNewAchievementDetection:
     """
-    The celebration check (issue #36): an achievement is reported "new" the
+    The celebration check: an achievement is reported "new" the
     first time any Sync sees it — and never again, even across restarts.
     """
 
@@ -753,7 +753,7 @@ class TestNewAchievementDetection:
 
 
 # ---------------------------------------------------------------------------
-# USCF cache fallback (issue #26)
+# USCF cache fallback
 # ---------------------------------------------------------------------------
 
 class TestUscfCacheFallback:
@@ -822,7 +822,7 @@ class TestUscfCacheFallback:
 
 
 # ---------------------------------------------------------------------------
-# refresh() — the Sync button path (issue #6)
+# refresh() — the Sync button path
 # ---------------------------------------------------------------------------
 
 class TestRefresh:
@@ -922,7 +922,7 @@ class TestRefresh:
 
 
 # ---------------------------------------------------------------------------
-# Cache fallback / offline resilience (issue #7)
+# Cache fallback / offline resilience
 # ---------------------------------------------------------------------------
 
 class TestCacheFallback:
@@ -999,7 +999,7 @@ class TestCacheFallback:
         # anonymization pass replaced.
         assert "32487228" not in text  # real member ID → 12345678
         assert "6jYtXHGp" not in text  # real study ID → abcdWXYZ
-        # Quasi-identifiers perturbed too (#89): real Event/Site names that would
+        # Quasi-identifiers perturbed too: real Event/Site names that would
         # let a public USCF crosstable reverse the opponent pseudonyms are gone.
         assert "ACC Friday Ladder" not in text
         assert "Army Navy Club" not in text
@@ -1065,7 +1065,7 @@ class TestCacheFallback:
 
 class TestReconciliationDuringSync:
     def test_snapshot_is_fully_enriched_never_half_swapped(self, uscf_profile_json):
-        """Atomic swap (ADR 0006, issue #87 [1]): the snapshot is built
+        """Atomic swap (ADR 0006): the snapshot is built
         off-store and committed exactly once, so the store never holds a raw,
         un-enriched df while USCF is available.  The enrichment columns are
         present the instant uscf.available is true — the mid-Sync half-swapped
@@ -1082,7 +1082,7 @@ class TestReconciliationDuringSync:
 
 
 class TestAnalysisSummaries:
-    """The AI-summary ingestion (issue #59 [F5]): a Sync runs ai_summary per
+    """The AI-summary ingestion: a Sync runs ai_summary per
     analysed Game and the store exposes the result.  The boundary is stubbed
     like the USCF client; the summary is enrichment, never a dependency."""
 
@@ -1112,7 +1112,7 @@ class TestAnalysisSummaries:
 
     def test_boundary_failure_does_not_fail_the_sync(self):
         """Any client failure degrades silently — the Sync still serves the
-        Game, just without a summary (issue #59, ADR 0004)."""
+        Game, just without a summary (ADR 0004)."""
         with stub_studies(study1=ALICE_PGN), \
              mock.patch.object(ai_summary, "_call_anthropic",
                                side_effect=RuntimeError("Anthropic is down")):
@@ -1132,7 +1132,7 @@ class TestAnalysisSummaries:
 
 
 # ---------------------------------------------------------------------------
-# Per-user store registry (issue #72 [G2], ADR 0005)
+# Per-user store registry (ADR 0005)
 # ---------------------------------------------------------------------------
 
 # One Game for a different player, so a user's data is unmistakably their own.
@@ -1206,7 +1206,7 @@ class TestPerUserRegistry:
 
     def test_case_only_username_difference_is_rejected(self, tmp_path):
         """'Alice' and 'alice' map to the same dir on a case-insensitive FS —
-        registering both would silently share caches, so it's refused (#89)."""
+        registering both would silently share caches, so it's refused."""
         from user_config import UserConfigError
 
         users = {"Alice": _record("Alice"), "alice": _record("alice")}
@@ -1259,7 +1259,7 @@ class TestPerUserRegistry:
 
 
 # ---------------------------------------------------------------------------
-# Coach content ingestion in the store (issue #74 [G4])
+# Coach content ingestion in the store
 # ---------------------------------------------------------------------------
 
 SNAPSHOT_PGN = (
@@ -1296,7 +1296,7 @@ class TestCoachContent:
 
     def test_ambiguous_coach_review_surfaces_via_get_coach_ambiguities(self, tmp_path):
         """A review the matcher can't place (two Chapters mirror the same Game)
-        must surface for Reconciliation, not vanish among the extras (#92)."""
+        must surface for Reconciliation, not vanish among the extras."""
         alice_chapter = "[Event" + COACH_PGN.split("[Event", 2)[1]
         twin = alice_chapter.replace("gc000001", "gc000099").replace(
             "Alice Anderson (your win)", "Alice Anderson (dup)")
@@ -1361,7 +1361,7 @@ ETHAN_URL = "https://lichess.org/study/abcdWXYZ/ethn0001"
 
 
 class TestCoachNotesFeed:
-    """The Coach's Notes feed accessor (issue #75 [G5])."""
+    """The Coach's Notes feed accessor."""
 
     def _setup(self, tmp_path):
         users = {"daniel": _record("daniel", study_ids=("s-main",),

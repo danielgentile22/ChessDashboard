@@ -1,7 +1,7 @@
 """
 tests/test_anonymize_pgn.py
 ===========================
-The demo-seed anonymizer (issue #89 [F5]).
+The demo-seed anonymizer.
 
 Opponent names, real Event/Site names and game Dates are replaced with synthetic
 values, while the chess itself — moves and the ``Lesson:`` comments — stays

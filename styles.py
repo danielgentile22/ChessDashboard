@@ -74,7 +74,7 @@ COLORS = {
     "warning": "#ff9f0a",  # systemOrange — conflict / warning
     # Chess board — the light square; the pgn-viewer overlays dark squares at
     # 20% opacity on top, so one muted-slate value yields a dark board that
-    # reads against both piece colours, no flashbang (issue #60 [F6]).
+    # reads against both piece colours, no flashbang.
     "board":   "#595d66",
 }
 
@@ -85,7 +85,7 @@ WDL_COLOR_MAP: dict[str, str] = {
     "Loss": COLORS["loss"],
 }
 
-# The loss→muted→win diverging scale for score-percentage charts (issue #96).
+# The loss→muted→win diverging scale for score-percentage charts.
 # A theme decision, not a page one: both score charts also pair it with bar
 # position, so the encoding survives red-green colorblindness.
 SCORE_COLORSCALE = [[0, COLORS["loss"]], [0.5, COLORS["muted"]], [1, COLORS["win"]]]
@@ -151,7 +151,7 @@ THEME: dict[str, str] = {
     "--cs-accent":  COLORS["accent"],
     "--cs-primary": COLORS["primary"],
     "--cs-warning": COLORS["warning"],
-    # Chess board square (pgn-viewer) — issue #60 [F6]
+    # Chess board square (pgn-viewer)
     "--cs-board":   COLORS["board"],
     # Gold-discipline washes — every gold tint derives from the gold token so
     # nothing can drift from it.
@@ -369,7 +369,7 @@ def empty_fig(message: str = "No data") -> go.Figure:
 
 
 def donut_fig(labels, values, colors, center_word, *, hover_words=None) -> go.Figure:
-    """A centre-labelled donut in the shared chart voice (issue #96).
+    """A centre-labelled donut in the shared chart voice.
 
     One home for the donut treatment the W/D/L and mistake-type pies both use:
     the hole size, the card-coloured wedge outline, the percent+label wedges,

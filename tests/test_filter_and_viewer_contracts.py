@@ -1,7 +1,7 @@
 """
-tests/test_issue_93.py
-=======================
-Focused checks for issue #93: the filter-clamp helpers and the PGN header
+tests/test_filter_and_viewer_contracts.py
+==========================================
+Focused checks for the filter-clamp helpers and the PGN header
 escaping that keep the filter drawer and the pgn-viewer honest.
 """
 from __future__ import annotations
@@ -10,7 +10,7 @@ import pandas as pd
 
 # ---------------------------------------------------------------------------
 # filters._clamp_moves / _clamp_date — a shrinking Sync must not strand the
-# selection outside the new bounds (finding #8).
+# selection outside the new bounds.
 # ---------------------------------------------------------------------------
 
 class TestClampHelpers:
@@ -44,7 +44,7 @@ class TestClampHelpers:
 
 # ---------------------------------------------------------------------------
 # game_detail._game_pgn — a quote/backslash in a header value must be escaped
-# or the generated PGN is malformed and breaks the board (finding #9).
+# or the generated PGN is malformed and breaks the board.
 # ---------------------------------------------------------------------------
 
 class TestPgnHeaderEscaping:

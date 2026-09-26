@@ -2,7 +2,7 @@
 pages/opponents.py
 ==================
 The Opponents page — who you play, how those games go, and the Scouting
-Report (issue #13): the pre-game dossier on one opponent.
+Report: the pre-game dossier on one opponent.
 
 Pick an opponent and the dossier shows the head-to-head score and rating
 gap, every game with dates, the openings they've played against you (split
@@ -64,7 +64,7 @@ def layout(**kwargs) -> html.Div:
     return html.Div(className="page", children=[
         page_header("Opponents", "Scouting reports, records, and strength analysis"),
 
-        # Scouting Report (issue #13): opponent search → full dossier
+        # Scouting Report: opponent search → full dossier
         content_card(
             "Scouting Report",
             dcc.Dropdown(
@@ -119,7 +119,7 @@ def _openings_panel(title: str, openings: list[dict]) -> html.Div:
 
 def _uscf_identity(report: dict, games) -> html.Div | None:
     """
-    The opponent's official USCF identity (issue #35): a deep link to their
+    The opponent's official USCF identity: a deep link to their
     page on ratings.uschess.org, plus then-vs-now — their rating when you
     last played (lens-aware: the crosstable value under Live) against their
     current rating (their profile, refreshed at most weekly).
@@ -145,7 +145,7 @@ def _uscf_identity(report: dict, games) -> html.Div | None:
     ]
 
     # Then vs now: what they were rated when you played them (lens-aware)
-    # vs where their rating stands today (issue #35's insight)
+    # vs where their rating stands today
     profile = data.get_opponent_profiles().get(opponent_id)
     regular = profile.rating("R") if profile is not None else None
     then = report["their_rating"]
@@ -204,7 +204,7 @@ def _render_dossier(report: dict, games) -> html.Div:
     lessons = [lesson_card(lesson, show_opponent=False) for lesson in report["lessons"]]
 
     return html.Div(className="scout-dossier", children=[
-        # The opponent's official USCF identity + then-vs-now (issue #35)
+        # The opponent's official USCF identity + then-vs-now
         _uscf_identity(report, games),
 
         # The headline numbers
@@ -247,7 +247,7 @@ def _render_dossier(report: dict, games) -> html.Div:
                 "No Lessons written from these games yet.",
                 className="scout-empty-line",
             )]),
-            # Pre-game review mode, primed with this opponent (issue #19)
+            # Pre-game review mode, primed with this opponent
             dcc.Link(
                 [html.Span("♟", className="review-launch-icon"),
                  f"Review before facing {report['opponent']}"],

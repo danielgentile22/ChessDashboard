@@ -1,9 +1,9 @@
 """
 data.py
 =======
-Application data store — a registry of per-user stores (issue #72 [G2]).
+Application data store — a registry of per-user stores.
 
-Before multi-user (PRD #55), this module was a single module-level singleton:
+Before multi-user, this module was a single module-level singleton:
 one ``_df``, one ``_uscf``, swapped atomically.  It is now a **registry of
 per-user stores** keyed by the authenticated user.  Every accessor resolves
 against the *current* user's store; a Sync runs per user against that user's
@@ -32,7 +32,7 @@ import os
 import re
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -109,24 +109,24 @@ class Store:
     seen_achievement_ids: set[str] | None = None
     new_achievements: list[UscfAchievement] = field(default_factory=list)
 
-    # --- coach review (issue #74 [G4]: enrichment, never required) ----------
+    # --- coach review (enrichment, never required) ----------
     coach: CoachSyncResult = field(default_factory=CoachSyncResult)
 
     # --- the configuration a refresh()/Sync needs ---------------------------
     study_ids: list[str] = field(default_factory=list)
     coach_study_ids: list[str] = field(default_factory=list)
     player_name: str | None = None
-    token: str | None = field(default=None, repr=False)  # secret — keep out of reprs (#89)
+    token: str | None = field(default=None, repr=False)  # secret — keep out of reprs
     cache_path: str | None = None
     uscf_member_id: str | None = None
     uscf_cache_path: str | None = None
     coach_cache_path: str | None = None
-    anthropic_api_key: str | None = field(default=None, repr=False)  # secret (#89)
+    anthropic_api_key: str | None = field(default=None, repr=False)  # secret
     analysis_cache_path: str | None = None
     demo_mode: bool = False
 
     # True once this store has had a Sync attempted (so a multi-user deploy
-    # never re-Syncs a user's store on every request — issue #72).
+    # never re-Syncs a user's store on every request).
     initialized: bool = False
 
     # Guards against doubled Syncs (button mashing); refresh() never blocks on it.
@@ -284,7 +284,7 @@ def _sync_store(store: Store) -> None:
         raise RuntimeError(f"No games found in designated Studies: {store.study_ids}")
     _commit(store, _build_snapshot(
         store, result.df, result.player, result.failures,
-        source="lichess", synced_at=datetime.now(timezone.utc), cached_at=None,
+        source="lichess", synced_at=datetime.now(UTC), cached_at=None,
     ))
 
 
@@ -342,23 +342,23 @@ def _build_snapshot(
     else:
         uscf = sync_uscf(store.uscf_member_id, cache_path=store.uscf_cache_path)
 
-    match_result = match_games(base_df, uscf.game_records)  # issue #28
+    match_result = match_games(base_df, uscf.game_records)
     df = enrich_games(base_df, match_result)
-    df = attach_round_numbers(df, uscf.standings, store.uscf_member_id or "")  # #34
-    # Sync-invariant rating bases as columns, so the lens is O(1) per callback (#87)
+    df = attach_round_numbers(df, uscf.standings, store.uscf_member_id or "")
+    # Sync-invariant rating bases as columns, so the lens is O(1) per callback
     df = attach_rating_bases(
         df, uscf.official_series, uscf.live_series, match_result, uscf.standings,
     )
 
     # Engine analysis + AI summaries (ADR 0004: enrichment, never required)
-    df = enrich_games_with_analysis(df)  # issue #57 [F1]
-    df["Summary"] = _summaries_for(store, df)  # issue #59 [F5]
+    df = enrich_games_with_analysis(df)
+    df["Summary"] = _summaries_for(store, df)
 
-    # Dismissed Reconciliation entries survive restarts via the cache (#30)
+    # Dismissed Reconciliation entries survive restarts via the cache
     dismissed = set(UscfCache(store.uscf_cache_path).dismissals()) | store.dismissed
-    # Which achievements has this Sync seen for the first time? (issue #36)
+    # Which achievements has this Sync seen for the first time?
     new_achievements, seen_ids = _detect_new_achievements(store, uscf)
-    # Coach review (issue #74 [G4]) — enrichment, never a dependency (ADR 0003)
+    # Coach review — enrichment, never a dependency (ADR 0003)
     coach = sync_coach(
         store.coach_study_ids, df, token=store.token, cache_path=store.coach_cache_path,
     )
@@ -385,7 +385,7 @@ def _commit(store: Store, snap: _Snapshot) -> None:
     store.match_result = snap.match_result
     # Union, not overwrite: a dismissal made while the snapshot was building
     # (threaded dev server) landed in store.dismissed after snap.dismissed was
-    # computed — dismissals are append-only, so it must survive the swap (#87).
+    # computed — dismissals are append-only, so it must survive the swap.
     store.dismissed = snap.dismissed | store.dismissed
     store.seen_achievement_ids = snap.seen_achievement_ids
     store.new_achievements = snap.new_achievements
@@ -393,7 +393,7 @@ def _commit(store: Store, snap: _Snapshot) -> None:
 
 
 def _summaries_for(store: Store, enriched: pd.DataFrame) -> list[str]:
-    """One plain-English summary per Game (issue #59 [F5]), via the AI boundary.
+    """One plain-English summary per Game, via the AI boundary.
 
     Empty for an unanalysed Game, when no API key is configured, or on any
     client failure — the boundary degrades silently, so this never fails the
@@ -513,7 +513,7 @@ def refresh() -> RefreshOutcome:
         # before _commit, so current data is untouched — never half-updated.
         snapshot = _build_snapshot(
             store, result.df, result.player, result.failures,
-            source="lichess", synced_at=datetime.now(timezone.utc), cached_at=None,
+            source="lichess", synced_at=datetime.now(UTC), cached_at=None,
         )
         _commit(store, snapshot)
         logger.info(
@@ -530,7 +530,7 @@ def refresh() -> RefreshOutcome:
 
 
 # ---------------------------------------------------------------------------
-# Multi-user entry points (issue #72 [G2])
+# Multi-user entry points
 # ---------------------------------------------------------------------------
 
 def register_users(
@@ -541,7 +541,7 @@ def register_users(
 ) -> None:
     """
     Register a store per configured user, each pointed at that user's Studies,
-    Lichess token, and USCF member ID (issue #72).
+    Lichess token, and USCF member ID.
 
     Caches are per-user — a subdirectory of *data_dir* keyed by username — so
     one user's PGN/USCF/analysis caches never collide with another's.  The
@@ -549,7 +549,7 @@ def register_users(
     lazily on first access).
     """
     base = data_dir or ".user-data"
-    # Distinct usernames must not collapse to the same cache dir (#89 [F2]) —
+    # Distinct usernames must not collapse to the same cache dir —
     # else they'd silently share games.pgn/uscf_cache.json/etc.  Casefolded so
     # 'Daniel' vs 'daniel' is caught on case-insensitive filesystems too.
     claimed: dict[str, str] = {}  # casefolded dirname -> username that owns it
@@ -587,7 +587,7 @@ def register_users(
 
 def sync_user(username: str) -> None:
     """
-    Sync *username*'s store now (issue #72).
+    Sync *username*'s store now.
 
     Degrades gracefully: a user whose Studies are unreachable (and who has no
     cache) ends up with an empty store rather than crashing the app — coach and
@@ -605,7 +605,7 @@ def sync_user(username: str) -> None:
 
 def ensure_synced(username: str) -> None:
     """Sync *username*'s store the first time it is needed, not on every
-    request (issue #72)."""
+    request."""
     store = _registry.get(username)
     if store is not None and not store.initialized:
         sync_user(username)
@@ -636,7 +636,7 @@ def get_df() -> pd.DataFrame:
 
 def get_game_analysis(chapter_url: str) -> GameAnalysis:
     """
-    The engine analysis for the Game at *chapter_url* (issue #57 [F1]).
+    The engine analysis for the Game at *chapter_url*.
 
     Always returns a GameAnalysis — an empty one (``analyzed=False``) for a
     Game with no requested analysis, an unknown URL, or before the first Sync.
@@ -655,7 +655,7 @@ def get_game_analysis(chapter_url: str) -> GameAnalysis:
 
 def get_game_summary(chapter_url: str) -> str:
     """
-    The plain-English AI summary for the Game at *chapter_url* (issue #59 [F5]).
+    The plain-English AI summary for the Game at *chapter_url*.
 
     Always returns a string — ``""`` for a Game with no requested analysis, no
     configured API key, an unknown URL, or before the first Sync.
@@ -671,7 +671,7 @@ def get_game_summary(chapter_url: str) -> str:
 
 def get_awaiting_analysis() -> pd.DataFrame:
     """
-    The Games still awaiting computer analysis (issue #57 [F1]): a real Chapter
+    The Games still awaiting computer analysis: a real Chapter
     (one with a ChapterURL) whose Study export carried no engine evaluations.
 
     Returns a copy so callers never mutate the store.
@@ -686,7 +686,7 @@ def get_awaiting_analysis() -> pd.DataFrame:
 def get_mistake_type_distribution() -> dict[str, int]:
     """
     The tactical-vs-positional split of the player's mistakes across every
-    analysed Game (issue #58) — the Analysis page's headline aggregate.
+    analysed Game — the Analysis page's headline aggregate.
     """
     df = _current().df
     if df.empty or "Analysis" not in df.columns:
@@ -695,12 +695,12 @@ def get_mistake_type_distribution() -> dict[str, int]:
 
 
 def get_accuracy_trend() -> pd.DataFrame:
-    """Per-Game move accuracy over time, with rating (issue #61 [F3])."""
+    """Per-Game move accuracy over time, with rating."""
     return accuracy_trend(_current().df)
 
 
 def get_mistake_type_trend() -> pd.DataFrame:
-    """Tactical/positional mistake counts per analysed Game over time (#61)."""
+    """Tactical/positional mistake counts per analysed Game over time."""
     return mistake_type_trend(_current().df)
 
 
@@ -715,7 +715,7 @@ def get_mistake_move_histogram() -> pd.DataFrame:
 
 
 def has_any_analysis() -> bool:
-    """True once at least one Game carries requested computer analysis (#58)."""
+    """True once at least one Game carries requested computer analysis."""
     df = _current().df
     if df.empty or "Analyzed" not in df.columns:
         return False
@@ -728,13 +728,13 @@ def get_uscf_profile() -> UscfProfile | None:
 
 
 def get_uscf_matches() -> MatchResult:
-    """The last Sync's USCF Game Record ↔ Game matching (issue #28)."""
+    """The last Sync's USCF Game Record ↔ Game matching."""
     return _current().match_result
 
 
 def get_reconciliation() -> list[ReconciliationEntry]:
     """
-    Every open disagreement between the Studies and USCF (issue #30),
+    Every open disagreement between the Studies and USCF,
     dismissed entries excluded.
     """
     store = _current()
@@ -743,7 +743,7 @@ def get_reconciliation() -> list[ReconciliationEntry]:
     # No mid-Sync column guard needed: the snapshot is built off-store and
     # swapped once (_commit), so whenever uscf.available is true the store's df
     # is already fully enriched — the half-swapped window that this used to
-    # guard no longer exists (ADR 0006, issue #87 [1]).
+    # guard no longer exists (ADR 0006).
     return reconcile(
         store.df, store.match_result, store.uscf.official_series,
         dismissed=frozenset(store.dismissed),
@@ -752,7 +752,7 @@ def get_reconciliation() -> list[ReconciliationEntry]:
 
 def dismiss_reconciliation_entry(entry_id: str) -> None:
     """Dismiss a Reconciliation entry ("USCF is wrong" / "intentionally
-    skipped").  Persists best-effort in the USCF cache (issue #30)."""
+    skipped").  Persists best-effort in the USCF cache."""
     store = _current()
     store.dismissed.add(entry_id)
     UscfCache(store.uscf_cache_path).add_dismissal(entry_id)
@@ -770,18 +770,18 @@ def get_live_series() -> list[LiveRatingPoint]:
 
 
 def get_uscf_events() -> list[UscfEvent]:
-    """Every Rated Event the member has entered, chronological (issue #33)."""
+    """Every Rated Event the member has entered, chronological."""
     return _current().uscf.member_events
 
 
 def get_uscf_standings() -> dict[tuple[str, str], list[StandingEntry]]:
-    """The crosstables of played OTB Sections (issue #34), keyed by
+    """The crosstables of played OTB Sections, keyed by
     (event_id, section name)."""
     return _current().uscf.standings
 
 
 def get_opponent_profiles() -> dict[str, UscfProfile]:
-    """Opponents' current USCF profiles keyed by member ID (issue #35)."""
+    """Opponents' current USCF profiles keyed by member ID."""
     return _current().uscf.opponent_profiles
 
 
@@ -791,7 +791,7 @@ def get_uscf_achievements() -> list[UscfAchievement]:
 
 
 def get_new_achievements() -> list[UscfAchievement]:
-    """Achievements first seen by the last Sync — the ones to celebrate (#36)."""
+    """Achievements first seen by the last Sync — the ones to celebrate."""
     return _current().new_achievements
 
 
@@ -864,14 +864,14 @@ def is_loaded() -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Coach review accessors (issue #74 [G4])
+# Coach review accessors
 # ---------------------------------------------------------------------------
 
 def get_coach_chapter(chapter_url: str) -> CoachChapter | None:
     """The coach's Chapter matched to the Game at *chapter_url*, or None.
 
     None for a Game the coach never reviewed, an unknown URL, or when no coach
-    Studies are configured — so the Coach view degrades gracefully (issue #74).
+    Studies are configured — so the Coach view degrades gracefully.
     """
     if not chapter_url:
         return None
@@ -879,7 +879,7 @@ def get_coach_chapter(chapter_url: str) -> CoachChapter | None:
 
 
 def get_coach_ambiguities() -> list[dict]:
-    """Coach Chapters the matcher couldn't place unambiguously (issue #92): real
+    """Coach Chapters the matcher couldn't place unambiguously: real
     reviews rejected only because their moves fit more than one Game, or a Game
     two Chapters both claimed.  Surfaced on Reconciliation so a review the user
     paid for never silently vanishes.  Each carries the coach Study Chapter link.
@@ -893,7 +893,7 @@ def get_coach_ambiguities() -> list[dict]:
 
 def get_coach_notes() -> list[dict]:
     """
-    The Coach's Notes feed (issue #75 [G5]): every prose comment the coach wrote
+    The Coach's Notes feed: every prose comment the coach wrote
     on a matched Game, newest Game first, each carrying the link back to its
     Game.
 

@@ -1,7 +1,7 @@
 """
 tests/test_lessons_coach.py
 ===========================
-The Coach's Notes feed on the Lessons page (issue #75 [G5]).
+The Coach's Notes feed on the Lessons page.
 
 A second feed beside "My Lessons": the coach's prose on matched Chapters,
 newest first, each linking to its Game, kept visually distinct.  Only matched

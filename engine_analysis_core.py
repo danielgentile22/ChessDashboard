@@ -2,7 +2,7 @@
 engine_analysis_core.py
 =======================
 Pure interpretation of the engine analysis Lichess embeds in an analysed
-Chapter's Study export (PRD #54, issue #57 [F1] — the spine).
+Chapter's Study export.
 
 When you request computer analysis on a Chapter on Lichess, the next Sync's
 Study export carries, per move, an ``[%eval]`` evaluation, a natural-language
@@ -24,7 +24,7 @@ analyze_game              One Game's movetext → GameAnalysis.
 enrich_games_with_analysis  Attach a GameAnalysis to every row of a Games df.
 MoveEval / CriticalMoment / GameAnalysis  The result shapes.
 
-Verified facts (issue #57)
+Verified facts
 --------------------------
 * Win% from centipawns uses Lichess's canonical
   ``50 + 50 * (2/(1+exp(-0.00368208*cp)) - 1)``; checked against published
@@ -147,7 +147,7 @@ class CriticalMoment:
 
 @dataclass
 class Mistake:
-    """One classified entry in the player's error profile (issue #58).
+    """One classified entry in the player's error profile.
 
     A single non-``none`` move the *player* made, tagged with how bad it was
     (``severity``), where in the Game it happened (``phase`` and ``move_number``),
@@ -180,7 +180,7 @@ class GameAnalysis:
     critical_moment: CriticalMoment | None = None
     error_profile: list[Mistake] = field(default_factory=list)
     accuracy: float | None = None  # the player's 0–100 move accuracy, if known
-    # The canonical Tags the error profile earns this Game (issue #62 [F4]) —
+    # The canonical Tags the error profile earns this Game —
     # the engine's own contribution to the Game's Tags, derived, never invented.
     emitted_tags: list[str] = field(default_factory=list)
 
@@ -447,7 +447,7 @@ def classify_severity(win_pct_drop: float) -> str | None:
     The same 0.1 / 0.2 / 0.3 win-probability ladder the headline uses, but a
     swing below the inaccuracy line is *not* an entry in the error profile — it
     returns None rather than the headline's soft "slip".  Severity is recomputed
-    from the swing, never read from Lichess's text word (issue #58), so a move
+    from the swing, never read from Lichess's text word, so a move
     Lichess labels a "Mistake" whose recomputed drop is only ~15% is an
     *inaccuracy* here — the profile stays internally consistent across moves.
     """
@@ -692,7 +692,7 @@ def _mistake_type(
     played: list[chess.Move],
     index: int,
 ) -> str:
-    """Whether a mistake was ``"tactical"`` or ``"positional"`` (issue #58).
+    """Whether a mistake was ``"tactical"`` or ``"positional"``.
 
     Tactical when the engine's best move was itself a forcing tactic, or when the
     played move dropped material to a forcing sequence within ~3 plies; otherwise
@@ -709,7 +709,7 @@ def _mistake_type(
 def _build_error_profile(
     game: chess.pgn.Game, moves: list[MoveEval], player_color: str
 ) -> list[Mistake]:
-    """The player's own non-``none`` moves, each classified (issue #58).
+    """The player's own non-``none`` moves, each classified.
 
     Empty when the player's colour is unknown (headless use): attribution needs a
     colour, and the profile never guesses whose mistakes are whose.  Recorded for
@@ -847,16 +847,17 @@ def enrich_games_with_analysis(df: pd.DataFrame) -> pd.DataFrame:
             analysis = GameAnalysis(chapter_url=chapter_url)
         analyses.append(analysis)
 
-    enriched["Analysis"] = analyses
+    enriched["Analysis"] = pd.Series(analyses, index=enriched.index, dtype=object)
     enriched["Analyzed"] = [a.analyzed for a in analyses]
 
     # Engine-emitted Tags flow into the existing Tags column, with a parallel
-    # source map per Game recording mine-vs-engine (issue #62 [F4], ADR 0002).
+    # source map per Game recording mine-vs-engine (ADR 0002).
     merged = [_merge_engine_tags(hand, a.emitted_tags)
               for hand, a in zip(hand_tags, analyses)]
     if "Tags" in enriched.columns:
         enriched["Tags"] = [m[0] for m in merged]
-    enriched["TagSources"] = [m[1] for m in merged]
+    enriched["TagSources"] = pd.Series(
+        [m[1] for m in merged], index=enriched.index, dtype=object)
     return enriched
 
 
@@ -864,7 +865,7 @@ def _merge_engine_tags(
     hand_tags: list[str], emitted_tags: list[str]
 ) -> tuple[list[str], dict[str, str]]:
     """Union a Game's hand-written Tags with the engine's emitted Tags, plus a
-    per-Tag source map (issue #62 [F4]).
+    per-Tag source map.
 
     Hand-written Tags keep their order and their ``"mine"`` source — even when
     the engine emits the same Tag, his stays his (ADR 0002: nothing he wrote
@@ -888,12 +889,12 @@ def _merge_engine_tags(
 # engine can emit from an error profile, in taxonomy order.  ``#calculation``
 # and ``#time-trouble`` are deliberately absent: the engine has no signal that
 # distinguishes a miscalculation from a missed tactic, and the Study export
-# carries no clock data — so those stay hand-written only (issue #62, ADR 0004).
+# carries no clock data — so those stay hand-written only (ADR 0004).
 _EMITTED_TAG_ORDER = ["opening", "tactics", "endgame", "blunder", "strategy"]
 
 
 def tags_from_error_profile(error_profile: Iterable[Mistake]) -> list[str]:
-    """The canonical Tags a Game's error profile earns it (issue #62 [F4]).
+    """The canonical Tags a Game's error profile earns it.
 
     Maps the player's classified mistakes into the existing Tag taxonomy so an
     analysed Game tags itself — no hand-written comment required.  Each mistake
@@ -921,7 +922,7 @@ def mistake_type_distribution(analyses: Iterable[GameAnalysis]) -> dict[str, int
     """The tactical-vs-positional split of the player's mistakes across *analyses*.
 
     The Analysis page's first aggregate — "the single biggest weakness at a
-    glance" (issue #58).  Only analysed Games contribute; a Game still awaiting
+    glance".  Only analysed Games contribute; a Game still awaiting
     its computer analysis carries an empty profile and adds nothing, so it is
     excluded from the distribution math without any special-casing.
     """

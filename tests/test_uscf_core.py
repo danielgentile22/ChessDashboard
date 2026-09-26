@@ -82,7 +82,7 @@ def uscf_game(opponent_id="20000056", opponent_first="BOB", opponent_last="BAKER
     }
 
 # ---------------------------------------------------------------------------
-# Member profile parsing (issue #25)
+# Member profile parsing
 # ---------------------------------------------------------------------------
 
 class TestParseMemberProfile:
@@ -137,7 +137,7 @@ class TestParseMemberProfile:
 
 
 # ---------------------------------------------------------------------------
-# Membership expiration warning (issue #25)
+# Membership expiration warning
 #
 # Exercised with fixture variants: Daniel renewed during planning (now
 # 2028-07-31), so live data never triggers the warning.
@@ -191,7 +191,7 @@ class TestMembershipAlert:
 
 
 # ---------------------------------------------------------------------------
-# The Official Rating series (issue #27)
+# The Official Rating series
 #
 # One integer per supplement month, starting at the first supplement —
 # earlier months have no official value and must never be invented.
@@ -247,7 +247,7 @@ class TestBuildOfficialSeries:
 
 
 # ---------------------------------------------------------------------------
-# USCF Game Records (issue #28)
+# USCF Game Records
 #
 # Raw /members/{id}/games items → typed records the matching engine consumes.
 # ---------------------------------------------------------------------------
@@ -271,7 +271,7 @@ class TestBuildGameRecords:
 
 
 # ---------------------------------------------------------------------------
-# The Live Rating series (issue #27)
+# The Live Rating series
 #
 # One pre→post pair per Regular-rated Section, decimals preserved,
 # chronological. The chain is continuous: each Section's post-rating IS the
@@ -357,7 +357,7 @@ class TestBuildLiveSeries:
 
 
 # ---------------------------------------------------------------------------
-# The dual-line rating trend (issue #31)
+# The dual-line rating trend
 #
 # rating_trend_series feeds the Trends chart: both rating series, trimmed to
 # the global date-range filter.  The chart is the one place the lens hides
@@ -381,7 +381,7 @@ class TestRatingTrendSeries:
     def test_the_date_filter_trims_both_series(
         self, uscf_supplements_json, uscf_sections_json
     ):
-        """The chart respects the global date filter (issue #31).  Dash sends
+        """The chart respects the global date filter.  Dash sends
         the range as ISO strings; Q1 2026 keeps 3 supplements and 7 Sections."""
         official = uscf_core.build_official_series(uscf_supplements_json["items"])
         live = uscf_core.build_live_series(uscf_sections_json["items"])
@@ -432,7 +432,7 @@ class TestRatingTrendSeries:
     def test_the_divergence_the_chart_exists_to_show(
         self, uscf_supplements_json, uscf_sections_json
     ):
-        """The payoff (PRD #24): the June supplement (1545) reflects ACC April;
+        """The payoff: the June supplement (1545) reflects ACC April;
         ACC May missed its cutoff — so Official and Live visibly diverge today."""
         trend_official, trend_live = uscf_core.rating_trend_series(
             uscf_core.build_official_series(uscf_supplements_json["items"]),
@@ -444,7 +444,7 @@ class TestRatingTrendSeries:
 
 
 # ---------------------------------------------------------------------------
-# The supplement ↔ chain property (issue #31)
+# The supplement ↔ chain property
 #
 # The two series describe one career, so they must agree: every published
 # supplement value is (within USCF's own rounding) the post-rating of the
@@ -471,7 +471,7 @@ class TestSupplementChainProperty:
 
 
 # ---------------------------------------------------------------------------
-# The matching engine — primary pass: opponent ID + result (issue #28)
+# The matching engine — primary pass: opponent ID + result
 # ---------------------------------------------------------------------------
 
 class TestMatchGamesById:
@@ -513,7 +513,7 @@ class TestMatchGamesById:
 
     def test_chapter_without_fide_id_never_matches_by_id(self):
         """A chapter where Daniel never typed the opponent's member ID cannot
-        match by ID — only the name-fallback pass (issue #29) can claim it,
+        match by ID — only the name-fallback pass can claim it,
         and it says so."""
         df = games_df(chapter(opponent="Vera Clark", opponent_id="",
                               color="White", result="1-0"))
@@ -543,7 +543,7 @@ class TestMatchGamesById:
 
 class TestRepeatOpponentDisambiguation:
     """
-    Issue #28: repeat opponents with identical results disambiguate via color
+    Repeat opponents with identical results disambiguate via color
     and the Rated Event date window — tiebreakers, never match requirements.
     """
 
@@ -623,7 +623,7 @@ class TestRepeatOpponentDisambiguation:
         assert result.unmatched_chapter_urls == (df.iloc[0]["ChapterURL"],)
 
     def test_greedy_pairing_would_steal_the_record_the_other_game_needs(self):
-        """The #92 case: greedy-by-best-pair gives G0 the record G1 needed,
+        """Greedy-by-best-pair gives G0 the record G1 needed,
         forcing G1 onto an event whose window doesn't contain its date.  The
         optimal assignment keeps each Game on the event that actually fits."""
         df = games_df(
@@ -678,7 +678,7 @@ class TestMatchingPolicies:
     def test_color_disagreement_does_not_prevent_a_match(self):
         """The synthetic Davis case: the chapter says Daniel played Black, USCF
         says White.  Color is itself a fact that can conflict between sources —
-        it is never a match requirement (PRD #24)."""
+        it is never a match requirement."""
         df = games_df(chapter(opponent="Liam Davis", opponent_id="20000164",
                               color="Black", result="1/2-1/2", date="2026.02.20"))
         records = uscf_core.build_game_records([
@@ -697,7 +697,7 @@ class TestMatchingPolicies:
         assert df.iloc[0]["Color"] == "Black"
 
     def test_online_rated_records_never_match_chapters(self):
-        """The Study is OTB-only by design (PRD #24): an online-rated (OR)
+        """The Study is OTB-only by design: an online-rated (OR)
         record never becomes a Game, even when opponent and result line up.
         It surfaces in Reconciliation as a skippable USCF-only item."""
         df = games_df(chapter(opponent="Carter Harris", opponent_id="20000166",
@@ -733,8 +733,8 @@ class TestMatchingPolicies:
 
 
 # ---------------------------------------------------------------------------
-# The matching engine — fallback pass: normalized name + result + date window
-# (issue #29).  Only for chapters without a typed opponent FideId.
+# The matching engine — fallback pass: normalized name + result + date window.
+# Only for chapters without a typed opponent FideId.
 # ---------------------------------------------------------------------------
 
 class TestMatchGamesByName:
@@ -875,7 +875,7 @@ class TestMatchGamesByName:
 
     def test_accented_opponent_name_matches_uscfs_ascii_record(self):
         """USCF stores plain ASCII ('JOSE GARCIA'); the chapter carries the
-        accented spelling.  Folding diacritics lets the name pass match (#92)."""
+        accented spelling.  Folding diacritics lets the name pass match."""
         df = games_df(chapter(opponent="José García", opponent_id="",
                               color="White", result="1-0", date="2026.04.17"))
         records = uscf_core.build_game_records([
@@ -1005,14 +1005,14 @@ class TestMatchingAgainstRealData:
 
 
 # ---------------------------------------------------------------------------
-# Enrichment: matched Games gain their USCF Game Record facts as columns
-# (issue #28) — "match & enrich", the Game stays the central entity (ADR 0003)
+# Enrichment: matched Games gain their USCF Game Record facts as columns:
+# "match & enrich", the Game stays the central entity (ADR 0003)
 # ---------------------------------------------------------------------------
 
 class TestEnrichGames:
     def test_empty_df_still_has_the_enrichment_columns(self):
         """ADR 0003: enrichment columns always exist so pages never column-guard,
-        even in the no-games state (issue #92).  A consumer that trusts the
+        even in the no-games state.  A consumer that trusts the
         contract (df[df['Forfeit']]) must not KeyError on the empty df."""
         import pandas as pd
         enriched = uscf_core.enrich_games(pd.DataFrame(), uscf_core.MatchResult())
@@ -1059,7 +1059,7 @@ class TestEnrichGames:
         assert game["UscfOpponentId"] == ""
 
     def test_matched_games_carry_their_rated_event_id(self):
-        """The Rated Event ID (issue #33): names are ambiguous and carry USCF's
+        """The Rated Event ID: names are ambiguous and carry USCF's
         own typos — grouping and standings URLs need the ID."""
         enriched, _ = self._enriched_pair()
 
@@ -1092,7 +1092,7 @@ class TestEnrichGames:
         assert enriched.empty
 
     def test_color_conflicts_are_flagged_on_the_matched_game(self):
-        """The synthetic Davis case (issue #30): chapter says Black, USCF says
+        """The synthetic Davis case: chapter says Black, USCF says
         White.  The Game stays matched and displays the Lichess version — the
         disagreement is flagged, never hidden."""
         df = games_df(
@@ -1118,7 +1118,7 @@ class TestEnrichGames:
 
 
 # ---------------------------------------------------------------------------
-# Forfeit detection (issue #29)
+# Forfeit detection
 #
 # A Game with no USCF Game Record after both passes AND at most one move is a
 # Forfeit: the opponent never showed, so USCF correctly never rated it
@@ -1169,7 +1169,7 @@ class TestForfeitDetection:
 
 
 # ---------------------------------------------------------------------------
-# Reconciliation (issue #30): every disagreement between the Studies and USCF
+# Reconciliation: every disagreement between the Studies and USCF
 # becomes a visible, actionable entry.
 # ---------------------------------------------------------------------------
 
@@ -1352,7 +1352,7 @@ class TestReconcileRatingMismatches:
     def test_gap_month_event_checks_against_the_supplement_in_effect(self):
         """An event in a gap month (no supplement dated that month) validates the
         typed rating against the latest earlier supplement — the same value the
-        Official lens shows — instead of silently skipping the check (#92)."""
+        Official lens shows — instead of silently skipping the check."""
         df = games_df(chapter(opponent_id="20000056", color="White",
                               result="1-0", date="2025.10.15",
                               player_rating="1100"))
@@ -1453,7 +1453,7 @@ class TestReconcileDismissals:
 class TestReconcileAgainstRealData:
     """The full Reconciliation ground truth for the captured fixture pair.
 
-    Note: planning (PRD #24 / issue #30) predicted 2 color conflicts; the
+    Note: planning predicted 2 color conflicts; the
     captured data actually contains 3 — the Baker April chapter (chapter says
     White, USCF says Black) was missed by the planning experiment.  The data
     is the authority; the discrepancy is flagged for Daniel in the phase PR.
@@ -1612,7 +1612,7 @@ class TestReconcileEdgeCases:
 
 
 # ---------------------------------------------------------------------------
-# Member events → typed Rated Events (issue #33)
+# Member events → typed Rated Events
 # ---------------------------------------------------------------------------
 
 class TestBuildMemberEvents:
@@ -1653,7 +1653,7 @@ class TestBuildMemberEvents:
 
 
 # ---------------------------------------------------------------------------
-# Series → Rated Event grouping (issue #33): the Events page's data
+# Series → Rated Event grouping: the Events page's data
 # ---------------------------------------------------------------------------
 
 @pytest.fixture(scope="module")
@@ -1677,7 +1677,7 @@ class TestSeriesSummary:
     def test_the_club_ladder_is_one_series_with_twelve_rated_events(
         self, real_series_inputs
     ):
-        """The tracer bullet (issue #33's own example): 'ACC Friday Ladder' is
+        """The tracer bullet: 'ACC Friday Ladder' is
         one Series containing its 12 monthly Rated Events, chronological."""
         summary = uscf_core.series_summary(
             real_series_inputs.df, real_series_inputs.live, real_series_inputs.events,
@@ -1708,7 +1708,7 @@ class TestSeriesSummary:
         self, summary
     ):
         """Each Rated Event shows USCF's official name (typos included), dates,
-        Section(s), score, game count, and the live pre → post (issue #33)."""
+        Section(s), score, game count, and the live pre → post."""
         thanksgiving = _series_named(summary, "2nd Annual Thanksgiving Open (U1600)")
         event = thanksgiving["rated_events"][0]
 
@@ -1732,7 +1732,7 @@ class TestSeriesSummary:
         assert first["post"] == 695.23
 
     def test_a_rated_event_with_two_played_sections_shows_both(self, summary):
-        """The DMV All Ages case (issue #33): one Rated Event, two Sections
+        """The DMV All Ages case: one Rated Event, two Sections
         played — both listed, the rating change spanning both in chain order."""
         adults_only = _series_named(summary, "2nd Annual Adults Only (U1800)")
         event = adults_only["rated_events"][0]
@@ -1780,7 +1780,7 @@ class TestSeriesSummary:
         assert dates == sorted(dates)
 
     def test_each_rated_event_carries_clickable_game_rows(self, summary):
-        """Game rows carry ChapterURLs so the page can click through (issue #11)."""
+        """Game rows carry ChapterURLs so the page can click through."""
         ladder = _series_named(summary, "ACC Friday Ladder")
         may = ladder["rated_events"][-1]
 
@@ -1789,7 +1789,7 @@ class TestSeriesSummary:
 
     def test_game_rows_sort_by_round_numerically(self):
         """Round 10 belongs after round 2, not between 1 and 2 — the invariant
-        the old Events detail panel enforced (issue #17's lexical-sort fix)."""
+        the old Events detail panel enforced."""
         df = games_df(
             chapter(opponent_id="20000056", result="1-0", date="2026.05.01"),
             chapter(opponent_id="20000061", result="1-0", date="2026.05.01"),
@@ -1862,7 +1862,7 @@ class TestSeriesSummary:
 
 class TestUnplayedEvents:
     def test_the_rockville_case(self, real_series_inputs):
-        """Entered, never played (issue #33): Rockville has a Section record but
+        """Entered, never played: Rockville has a Section record but
         zero Games.  The online-only DMVCHESS ladder also has no Games — its
         games are online-rated and never become Chapters by design."""
         unplayed = uscf_core.unplayed_events(
@@ -1893,7 +1893,7 @@ class TestUnplayedEvents:
 
 
 # ---------------------------------------------------------------------------
-# Standings → typed crosstables (issue #34)
+# Standings → typed crosstables
 # ---------------------------------------------------------------------------
 
 class TestBuildStandings:
@@ -1924,7 +1924,7 @@ class TestBuildStandings:
         self, uscf_standings_json
     ):
         """Daniel's ACC MAY rounds: played 1, 3, 4, 5 (unpaired in 2) — the
-        real round numbers issue #34 attaches to Games."""
+        real round numbers the crosstables attach to Games."""
         standings = uscf_core.build_standings(
             uscf_standings_json[("202605290393", 1)]["items"])
         daniel = next(s for s in standings if s.member_id == "12345678")
@@ -1939,7 +1939,7 @@ class TestBuildStandings:
 
     def test_dual_rated_sections_use_the_regular_rating(self, uscf_standings_json):
         """The Thanksgiving Open was dual-rated: every player has Q and R
-        records — Regular is the backbone (PRD #24).  Daniel's R record there
+        records — Regular is the backbone.  Daniel's R record there
         (1155.4 → 1229.8) is exactly what the Live series chain says; his Q
         record (1013.59 → 1091.53) must never leak in."""
         standings = uscf_core.build_standings(
@@ -1982,7 +1982,7 @@ class TestBuildStandings:
 
 
 # ---------------------------------------------------------------------------
-# Real round numbers from crosstables (issue #34)
+# Real round numbers from crosstables
 # ---------------------------------------------------------------------------
 
 # (event_id, section_number) → section name, for keying standings the way the
@@ -2018,7 +2018,7 @@ class TestAttachRoundNumbers:
     def test_ladder_games_get_their_real_rounds_not_the_typed_ones(
         self, real_enriched, real_standings
     ):
-        """The whole point of issue #34: Daniel hand-types continuous ladder
+        """The whole point: Daniel hand-types continuous ladder
         rounds (24, 25, 26, 27 for ACC MAY); USCF's crosstable says those were
         really rounds 1, 3, 4, 5 of that Rated Event."""
         attached = uscf_core.attach_round_numbers(
@@ -2146,7 +2146,7 @@ class TestAttachRoundNumbers:
 
 
 # ---------------------------------------------------------------------------
-# Norms and awards → achievements (issue #36)
+# Norms and awards → achievements
 #
 # build_achievements turns raw /norms and /awards responses into one
 # chronological list of typed UscfAchievement records — what the Milestones
@@ -2238,7 +2238,7 @@ class TestBuildAchievements:
 
 
 class TestAchievementMilestones:
-    """Achievements as Milestone-timeline entries (issue #36): what the
+    """Achievements as Milestone-timeline entries: what the
     Overview page renders, gold-flagged and date-filterable."""
 
     @pytest.fixture()
@@ -2274,7 +2274,7 @@ class TestAchievementMilestones:
 
 
 # ---------------------------------------------------------------------------
-# The rating lens (issue #32)
+# The rating lens
 #
 # apply_rating_lens rewrites a Games DataFrame's player-rating columns per
 # the chosen basis, so that every rating-derived stat downstream follows the
@@ -2286,8 +2286,8 @@ class TestAchievementMilestones:
 #              supplement have no value — never invented.
 #   Live     — the matched Section's pre-rating, decimals preserved;
 #              unmatched Games fall back to the Official basis.  Opponent
-#              ratings come from crosstable pre-ratings where cached
-#              (issue #35), falling back to typed values.
+#              ratings come from crosstable pre-ratings where cached,
+#              falling back to typed values.
 #
 # The lens never hides Games.
 # ---------------------------------------------------------------------------
@@ -2330,7 +2330,7 @@ class TestOfficialLens:
         assert (may_games["PlayerRating"] == "1470").all()
 
     def test_the_event_start_date_convention(self, real_career):
-        """Issue #32's own example: the Thanksgiving Open started Oct 31, so
+        """The Thanksgiving Open started Oct 31, so
         even its games played Nov 1–2 use the October supplement (1005) —
         never November's (1133)."""
         lensed = _lensed(real_career, "official")
@@ -2433,7 +2433,7 @@ class TestLiveLens:
 
     def test_unmatched_games_fall_back_to_the_official_basis(self, real_career):
         """A Game with no USCF Game Record has no Section to take a pre-rating
-        from → it falls back to the Official basis (issue #32).  The Forfeit
+        from → it falls back to the Official basis.  The Forfeit
         (2025-11-02) → November's supplement, 1133."""
         lensed = _lensed(real_career, "live")
 
@@ -2443,7 +2443,7 @@ class TestLiveLens:
         assert forfeit["PlayerRating"] == "1133"
 
 
-# The crosstable-backed opponent ratings (issue #35): the Live lens uses
+# The crosstable-backed opponent ratings: the Live lens uses
 # what opponents were really rated walking into the Section, not what Daniel
 # typed on the pairing sheet.
 class TestOpponentRatingsUnderTheLens:
@@ -2456,7 +2456,7 @@ class TestOpponentRatingsUnderTheLens:
     def test_live_lens_uses_crosstable_opponent_ratings(
         self, real_career, real_standings
     ):
-        """Issue #35 closes the Phase C limitation: Baker walked into ACC
+        """Baker walked into ACC
         MAY 2026 rated 1432.59 — under the Live lens his rating reads 1433,
         not the 1465 Daniel typed."""
         lensed = self._lensed_with_standings(real_career, real_standings, "live")
@@ -2483,7 +2483,7 @@ class TestOpponentRatingsUnderTheLens:
     def test_official_lens_keeps_the_typed_pairing_sheet_values(
         self, real_career, real_standings
     ):
-        """The Official world view is the pairing sheet (PRD #24): typed
+        """The Official world view is the pairing sheet: typed
         opponent ratings stay, even with crosstables available."""
         lensed = self._lensed_with_standings(real_career, real_standings, "official")
 
@@ -2541,7 +2541,7 @@ class TestOpponentRatingsUnderTheLens:
 class TestRatingLensInvariants:
 
     def test_the_lens_never_hides_games(self, real_career):
-        """A lens, not a filter (PRD #24): every Game stays, in the same order,
+        """A lens, not a filter: every Game stays, in the same order,
         with everything except the player-rating columns untouched."""
         lensed = _lensed(real_career, "official")
 

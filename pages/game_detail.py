@@ -1,10 +1,10 @@
 """
 pages/game_detail.py
 ====================
-The Game detail view (issue #11) — one Game, in full.
+The Game detail view — one Game, in full.
 
 An interactive board rendered by Lichess's open-source pgn-viewer (a local
-asset — issue #60 [F6]), behind a Game / My Analysis view switcher: Game is the
+asset), behind a Game / My Analysis view switcher: Game is the
 bare replay, My Analysis (only when Daniel annotated the Chapter himself) plays
 his variations and comments in place.  Alongside it sit the Game's Lessons,
 Tags, and metadata, plus an "Open on Lichess" button.
@@ -86,7 +86,7 @@ def _metadata_card(game: pd.Series) -> html.Div:
 
 def _uscf_facts_card(game: pd.Series) -> html.Div | None:
     """
-    The USCF half of a matched Game (issue #28): what USCF officially recorded
+    The USCF half of a matched Game: what USCF officially recorded
     — Rated Event, Section, rating system, and the opponent as USCF knows them,
     linking to their page on the ratings site.
 
@@ -97,7 +97,7 @@ def _uscf_facts_card(game: pd.Series) -> html.Div | None:
 
     system_code = str(game.get("UscfRatingSystem") or "")
     opponent_id = str(game.get("UscfOpponentId") or "")
-    # How the match was made (issue #29): name matches deserve an eyeball
+    # How the match was made: name matches deserve an eyeball
     matched_by = {"id": "opponent ID", "name": "opponent name"}.get(
         str(game.get("UscfMatchedBy") or ""), ""
     )
@@ -109,7 +109,7 @@ def _uscf_facts_card(game: pd.Series) -> html.Div | None:
         _meta_row("Matched by", matched_by),
     ]
 
-    # The sources disagree (issue #30): badge it and point at Reconciliation.
+    # The sources disagree: badge it and point at Reconciliation.
     # The page itself keeps displaying the Lichess version of every fact.
     conflict_badge = None
     if game.get("UscfColorConflict"):
@@ -141,7 +141,7 @@ def _uscf_facts_card(game: pd.Series) -> html.Div | None:
 
 def _forfeit_tag(game: pd.Series) -> html.Div | None:
     """
-    The visible Forfeit tag (issue #29): this Chapter exists, but no game was
+    The visible Forfeit tag: this Chapter exists, but no game was
     played — the opponent never showed, so USCF never rated it.
     """
     if not game.get("Forfeit"):
@@ -157,8 +157,7 @@ def _forfeit_tag(game: pd.Series) -> html.Div | None:
 
 
 def _awaiting_hint(tail: str) -> html.Div:
-    """The quiet 'Awaiting analysis' degrade for an un-analysed Game (ADR 0004,
-    issue #96); *tail* completes the teach-the-one-click sentence."""
+    """The quiet 'Awaiting analysis' degrade for an un-analysed Game (ADR 0004); *tail* completes the teach-the-one-click sentence."""
     return html.Div(className="awaiting-analysis-hint", children=[
         html.Span("Awaiting analysis", className="awaiting-analysis-label"),
         html.Span(
@@ -170,7 +169,7 @@ def _awaiting_hint(tail: str) -> html.Div:
 
 def _critical_moment_section(game: pd.Series) -> html.Div | None:
     """
-    The Game's critical-moment headline (issue #57 [F1]) — the single biggest
+    The Game's critical-moment headline — the single biggest
     win-probability swing, framed for Daniel, shown alongside the board.
 
     An analysed Game shows the verdict ("Won after your opponent's blunder on
@@ -194,7 +193,7 @@ def _critical_moment_section(game: pd.Series) -> html.Div | None:
             html.Span(" · ".join(detail), className="critical-moment-detail"),
         ])
 
-    # Not analysed — never blank; teach the one click (PRD #54).
+    # Not analysed — never blank; teach the one click.
     if not chapter_url.strip():
         return None
     return _awaiting_hint(
@@ -225,7 +224,7 @@ def _lessons_card(game: pd.Series) -> html.Div:
 
     tags = game.get("Tags") or []
     if tags:
-        # Engine-emitted Tags (issue #62 [F4]) render distinguishably from the
+        # Engine-emitted Tags render distinguishably from the
         # ones Daniel hand-wrote, via the per-Game source map.
         body.append(html.Div(
             className="tag-strip",
@@ -241,7 +240,7 @@ def _game_pgn(game: pd.Series, movetext: str) -> str:
     """
     Assemble a self-contained PGN (headers + movetext) for the pgn-viewer.
 
-    The board is rendered locally by Lichess's pgn-viewer (issue #60 [F6]), so
+    The board is rendered locally by Lichess's pgn-viewer, so
     it needs the Game as a standalone PGN rather than an embed URL.  The headers
     give the viewer the players, result, and date; *movetext* supplies the moves
     (clean for the Game view, annotated for My Analysis).
@@ -266,7 +265,7 @@ def _game_pgn(game: pd.Series, movetext: str) -> str:
         headers += [("FEN", setup_fen), ("SetUp", "1")]
     # PGN tag values must escape backslash and double-quote, else an opponent or
     # event name with a quote (e.g. '2025 "Summer" Open') produces a malformed
-    # tag pair that breaks the viewer for all three board views (#93).
+    # tag pair that breaks the viewer for all three board views.
     def esc(v: object) -> str:
         return str(v).replace("\\", "\\\\").replace('"', '\\"')
     head = "".join(f'[{k} "{esc(v)}"]\n' for k, v in headers if str(v or "").strip())
@@ -292,7 +291,7 @@ def _correction_row(move_eval) -> html.Div | None:
 
 def _eval_chart(analysis) -> dcc.Graph:
     """The engine's evaluation across the Game, as a win-probability advantage
-    line (issue #63 [F7]).
+    line.
 
     One point per played move: White's win% from that move's evaluation, so 50%
     is dead level, the line rising as White takes over and falling as Black does.
@@ -338,7 +337,7 @@ def _judgment_row(mistake, move_eval) -> html.Div:
 
 def _engine_section(game: pd.Series) -> html.Div:
     """
-    The Engine view (issue #63 [F7]) — the third board-switcher view, where
+    The Engine view — the third board-switcher view, where
     Daniel reviews where he went wrong and what was better.
 
     Shows the engine's evaluation across the Game, his move judgments (the F2
@@ -393,7 +392,7 @@ def _engine_section(game: pd.Series) -> html.Div:
 def _board_section(game: pd.Series) -> html.Div:
     """
     The Game's interactive board, rendered by Lichess's open-source pgn-viewer
-    (a local asset — issue #60 [F6]), replacing the old iframe embed.
+    (a local asset), replacing the old iframe embed.
 
     The mount div carries the moves as a PGN; ``assets/lpv-init.js`` reads it
     and instantiates the viewer, themed via the shared ``--cs-*`` tokens.  A
@@ -420,7 +419,7 @@ def _board_section(game: pd.Series) -> html.Div:
     # The view switcher: Game (the bare replay) is always the default.  My
     # Analysis is offered only when Daniel annotated this Chapter himself —
     # his variations or comments — so unannotated Games aren't cluttered with
-    # an empty tab (issue #60 [F6]).
+    # an empty tab.
     switches = [
         html.Button("Game", className="lpv-switch active",
                     **{"data-view": "game"}),
@@ -432,14 +431,14 @@ def _board_section(game: pd.Series) -> html.Div:
                         **{"data-view": "analysis"})
         )
 
-    # The Engine view (issue #63 [F7]) is always offered: an analysed Game
+    # The Engine view is always offered: an analysed Game
     # shows its evals, judgments, and corrections; an unanalysed one degrades
     # to an awaiting-analysis state inside the panel.
     switches.append(
         html.Button("Engine", className="lpv-switch", **{"data-view": "engine"})
     )
 
-    # The Coach view (issue #74 [G4]) is offered only when the coach reviewed
+    # The Coach view is offered only when the coach reviewed
     # this Game — his annotated line, with all his variations and notes, played
     # in the same board.  A Game with no coach match simply has no Coach tab
     # (gracefully, never an error); coach material is private, so it renders
@@ -493,22 +492,22 @@ def layout(chapter_id: str | None = None, **kwargs) -> html.Div:
             html.Div(outcome, className=f"outcome-badge {outcome.lower()}"),
         ]),
 
-        # No game was actually played (issue #29) — say so prominently
+        # No game was actually played — say so prominently
         _forfeit_tag(game),
 
-        # The why-I-won/lost verdict in context with the board (issue #57)
+        # The why-I-won/lost verdict in context with the board
         _critical_moment_section(game),
 
         html.Div(className="game-detail-grid", children=[
             # The Chapter's interactive board — annotations and variations
-            # playable in place, in dark theme (issue #43)
+            # playable in place, in dark theme
             board_card,
 
             # Everything known about the Game, alongside the board
             html.Div(className="game-detail-side", children=[
                 _lessons_card(game),
                 _metadata_card(game),
-                # The USCF half, when this Game is matched (issue #28)
+                # The USCF half, when this Game is matched
                 _uscf_facts_card(game),
                 html.A(
                     [html.I(className="bi bi-box-arrow-up-right"), " Open on Lichess"],

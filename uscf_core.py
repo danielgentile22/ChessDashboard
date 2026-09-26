@@ -19,16 +19,16 @@ build_official_series   raw supplement items → the Official Rating series.
 build_live_series       raw section items → the Live Rating series (continuous chain).
 rating_trend_series     both series trimmed to a date range (the Trends chart's data).
 build_game_records      raw game items → typed USCF Game Records.
-build_member_events     raw event items → typed Rated Events (issue #33).
-build_standings         raw standings items → typed crosstables (issue #34).
-build_achievements      raw norm + award items → typed UscfAchievements (issue #36).
-achievement_milestones  achievements → Milestone-timeline entries (issue #36).
+build_member_events     raw event items → typed Rated Events.
+build_standings         raw standings items → typed crosstables.
+build_achievements      raw norm + award items → typed UscfAchievements.
+achievement_milestones  achievements → Milestone-timeline entries.
 match_games             USCF Game Records ↔ Games (the matching engine).
 enrich_games            Games df + MatchResult → df with USCF enrichment columns.
-attach_round_numbers    Games df + crosstables → df with real round numbers (issue #34).
+attach_round_numbers    Games df + crosstables → df with real round numbers.
 apply_rating_lens       Games df with ratings rewritten per the Official/Live lens.
-series_summary          Games grouped Series → Rated Event (issue #33).
-unplayed_events         Rated Events entered but never played (issue #33).
+series_summary          Games grouped Series → Rated Event.
+unplayed_events         Rated Events entered but never played.
 reconcile               Every disagreement between the Studies and USCF.
 ordinal                 5 → '5th' (placements, career-win milestones).
 UscfProfile             Who the member is according to USCF.
@@ -36,9 +36,9 @@ UscfRating              One rating system's entry (rating, provisional, floor).
 OfficialRatingPoint     One supplement month's Official Rating.
 LiveRatingPoint         One Section's pre→post Live Rating change.
 UscfGameRecord          USCF's official record of one rated game (CONTEXT.md).
-UscfEvent               One Rated Event the member entered (issue #33).
-StandingEntry           One player's crosstable row (issue #34).
-RoundOutcome            One round in a crosstable row (issue #34).
+UscfEvent               One Rated Event the member entered.
+StandingEntry           One player's crosstable row.
+RoundOutcome            One round in a crosstable row.
 UscfAchievement         One official achievement — a norm or an award.
 GameMatch               One Game ↔ USCF Game Record pairing.
 MatchResult             Everything matching produced: matches + both leftovers.
@@ -50,6 +50,7 @@ import re
 import unicodedata
 from dataclasses import dataclass
 from datetime import date, datetime
+from typing import Any
 
 import pandas as pd
 
@@ -165,7 +166,7 @@ def parse_member_profile(raw: dict) -> UscfProfile:
 
 
 # ---------------------------------------------------------------------------
-# The Official Rating series (issue #27)
+# The Official Rating series
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -202,7 +203,7 @@ def build_official_series(supplement_items: list[dict]) -> list[OfficialRatingPo
 
 
 # ---------------------------------------------------------------------------
-# The Live Rating series (issue #27)
+# The Live Rating series
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -230,7 +231,7 @@ def build_live_series(section_items: list[dict]) -> list[LiveRatingPoint]:
     """
     points = []
     for item in section_items:
-        # Only Sections that move the Regular rating (the backbone — PRD #24)
+        # Only Sections that move the Regular rating (the backbone)
         if item.get("ratingSystem") not in ("R", "D"):
             continue
         record = next(
@@ -300,7 +301,7 @@ def _chain_group(
 
 
 # ---------------------------------------------------------------------------
-# The dual-line rating trend (issue #31)
+# The dual-line rating trend
 # ---------------------------------------------------------------------------
 
 def rating_trend_series(
@@ -344,7 +345,7 @@ def _coerce_date(value: str | date | None) -> date | None:
 
 
 # ---------------------------------------------------------------------------
-# USCF Game Records (issue #28)
+# USCF Game Records
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -388,7 +389,7 @@ def build_game_records(game_items: list[dict]) -> list[UscfGameRecord]:
 
 
 # ---------------------------------------------------------------------------
-# Member events → typed Rated Events (issue #33)
+# Member events → typed Rated Events
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -433,12 +434,12 @@ def build_member_events(event_items: list[dict]) -> list[UscfEvent]:
 
 
 # ---------------------------------------------------------------------------
-# Standings → typed crosstables (issue #34)
+# Standings → typed crosstables
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class RoundOutcome:
-    """One round in a player's crosstable row (issue #34)."""
+    """One round in a player's crosstable row."""
 
     round_number: int
     outcome: str            # Win | Loss | Draw | WinForfeit | Forfeit
@@ -450,7 +451,7 @@ class RoundOutcome:
 
 @dataclass(frozen=True)
 class StandingEntry:
-    """One player's row in a Rated Event Section's crosstable (issue #34)."""
+    """One player's row in a Rated Event Section's crosstable."""
 
     ordinal: int            # final placement: 1 = the Section winner
     member_id: str
@@ -464,10 +465,10 @@ class StandingEntry:
 def build_standings(standing_items: list[dict]) -> list[StandingEntry]:
     """
     Interpret raw standings items as a typed crosstable, ordered by final
-    placement (issue #34).
+    placement.
 
     Dual-rated Sections carry Quick and Regular records per player — Regular
-    is the backbone (PRD #24).  Players who walked in unrated have no
+    is the backbone.  Players who walked in unrated have no
     pre-rating: None, never invented.
     """
     entries = []
@@ -523,7 +524,7 @@ def attach_round_numbers(
 ) -> pd.DataFrame:
     """
     Return a copy of *df* with the ``UscfRound`` column: each Game's real
-    round number from its Rated Event Section's crosstable (issue #34).
+    round number from its Rated Event Section's crosstable.
 
     Matched Games look up the member's crosstable row for their Section and
     find the round played against their opponent.  Forfeit Games have no USCF
@@ -595,12 +596,12 @@ def _real_round(
 
 
 # ---------------------------------------------------------------------------
-# Series → Rated Event grouping (issue #33): the Events page's data
+# Series → Rated Event grouping: the Events page's data
 # ---------------------------------------------------------------------------
 
 # The game facts each Rated Event / unmatched row carries for the page's
 # game tables (the same columns the old tournament-detail table used).
-# UscfRound (issue #34) rides along when the df has been through
+# UscfRound rides along when the df has been through
 # attach_round_numbers — _game_rows tolerates its absence.
 _GAME_ROW_COLUMNS = ["Date", "RoundNum", "UscfRound", "Color", "Opponent",
                      "OpponentRating", "Result", "Outcome", "Termination",
@@ -613,7 +614,7 @@ def series_summary(
     member_events: list[UscfEvent],
 ) -> list[dict]:
     """
-    The Events page's data (issue #33): Games grouped **Series → Rated Event**.
+    The Events page's data: Games grouped **Series → Rated Event**.
 
     The Series is Daniel's name for the thing (the PGN Event header); each
     Series contains the Rated Events its matched Games belong to, in
@@ -622,7 +623,7 @@ def series_summary(
     hasn't rated) stay under their Series as unmatched rows — enrichment
     never hides Games (ADR 0003).
 
-    Tournament scores follow the Forfeit rule (issue #29): a Forfeit win
+    Tournament scores follow the Forfeit rule: a Forfeit win
     counts toward the score but is never a "game" or a win-rate event.
     """
     if df.empty:
@@ -645,7 +646,7 @@ def series_summary(
     for series_name, games in d[d["Event"].str.strip() != ""].groupby("Event"):
         games = games.sort_values(["Date_dt", "Index"], na_position="last")
         rated_events = [
-            _rated_event_group(event_id, event_games, events_by_id, live_by_event)
+            _rated_event_group(str(event_id), event_games, events_by_id, live_by_event)
             for event_id, event_games in games[games["UscfEventId"] != ""]
                                               .groupby("UscfEventId")
         ]
@@ -675,7 +676,7 @@ def unplayed_events(
 ) -> list[UscfEvent]:
     """
     Rated Events entered but with no Games anywhere in *df* — the
-    "entered, never played" group (issue #33's Rockville case, plus
+    "entered, never played" group (a missed event like Rockville, plus
     online-only events whose games are never Chapters by design).
 
     Pass the FULL Games df, not a filtered one: a date filter must never turn
@@ -736,7 +737,7 @@ def _outcome_counts(games: pd.DataFrame) -> dict:
     """Game/forfeit counts and the tournament score for a group of Games.
 
     Forfeits count toward the score (a forfeit win is a tournament point) but
-    never as games or wins — the Forfeit rule from issue #29."""
+    never as games or wins — the Forfeit rule."""
     real = games[~games["Forfeit"]]
     win = int((real["Outcome"] == "Win").sum())
     draw = int((real["Outcome"] == "Draw").sum())
@@ -752,7 +753,7 @@ def _outcome_counts(games: pd.DataFrame) -> dict:
 
 def _longest_win_streak(games: pd.DataFrame) -> int:
     """The longest run of consecutive wins (date order), Forfeits excluded —
-    a no-show never extends a Streak (issue #29)."""
+    a no-show never extends a Streak."""
     best = current = 0
     for outcome in games[~games["Forfeit"]]["Outcome"]:
         current = current + 1 if outcome == "Win" else 0
@@ -778,13 +779,13 @@ def _game_rows(games: pd.DataFrame) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Norms and awards → achievements (issue #36)
+# Norms and awards → achievements
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class UscfAchievement:
     """
-    One official USCF achievement — a norm or an award (issue #36).
+    One official USCF achievement — a norm or an award.
 
     Norms and awards are member-level facts (they don't belong to any Game),
     so they join the Milestones timeline as their own entries rather than
@@ -805,7 +806,7 @@ def build_achievements(
 ) -> list[UscfAchievement]:
     """
     Interpret raw /norms and /awards items as one chronological achievement
-    list (issue #36).
+    list.
 
     Parsing is tolerant (ADR 0003): missing events, dates, or unrecognized
     award categories degrade to less-specific entries, never to errors.
@@ -865,7 +866,7 @@ def achievement_milestones(
     date_end: str | date | None = None,
 ) -> list[dict]:
     """
-    Achievements as Milestone-timeline entries (issue #36) — the same dict
+    Achievements as Milestone-timeline entries — the same dict
     shape ``compute_milestones`` produces, so the Overview renders both
     through one code path.  ``kind="uscf"`` flags them for the gold treatment
     (the design language reserves gold for achievements).
@@ -902,8 +903,8 @@ def _split_camel_case(value: str) -> str:
 
 
 def ordinal(n: int) -> str:
-    """25 → '25th', 1 → '1st', 22 → '22nd' — career-win milestones (issue #36)
-    and crosstable placements (issue #34) share this wording."""
+    """25 → '25th', 1 → '1st', 22 → '22nd' — career-win milestones
+    and crosstable placements share this wording."""
     if 11 <= n % 100 <= 13:
         suffix = "th"
     else:
@@ -912,7 +913,7 @@ def ordinal(n: int) -> str:
 
 
 # ---------------------------------------------------------------------------
-# The matching engine (issues #28 / #29)
+# The matching engine
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -930,7 +931,7 @@ class MatchResult:
     Everything the matching engine produced.
 
     Unmatched Games and unmatched USCF Game Records are exposed, never
-    silently dropped — Reconciliation (issue #30) is built from them.
+    silently dropped — Reconciliation is built from them.
     """
 
     matches: tuple[GameMatch, ...] = ()
@@ -949,7 +950,7 @@ class MatchResult:
 
 
 # Rating systems whose games are played over the board.  Online systems
-# (OR/OQ/OB) never match chapters: the Study is OTB-only by design (PRD #24);
+# (OR/OQ/OB) never match chapters: the Study is OTB-only by design;
 # online records surface in Reconciliation as skippable USCF-only items.
 _OTB_RATING_SYSTEMS = ("R", "D")
 
@@ -962,7 +963,7 @@ _WINDOW_GRACE = pd.Timedelta(days=7)
 
 def match_games(df: pd.DataFrame, records: list[UscfGameRecord]) -> MatchResult:
     """
-    Match USCF Game Records to Games (issues #28 / #29).
+    Match USCF Game Records to Games.
 
     Primary pass — opponent USCF member ID + result.  Repeat opponents with
     identical results are disambiguated by color, then the Rated Event date
@@ -1028,7 +1029,7 @@ def _name_pass(
     matched_urls: set[str],
 ) -> list[GameMatch]:
     """
-    The fallback matching pass (issue #29): normalized opponent name + result
+    The fallback matching pass: normalized opponent name + result
     + Rated Event date window, for chapters without a typed FideId.
 
     Strictly unambiguous: a chapter matches only when exactly one record fits
@@ -1039,7 +1040,7 @@ def _name_pass(
     record_claimants: dict[int, list[str]] = {}
 
     # Normalize each record's opponent name once (loop-invariant across chapters)
-    # instead of re-running the regex per chapter × record pair (issue #87 [11]).
+    # instead of re-running the regex per chapter × record pair.
     otb_records = [
         (_normalize_name(record.opponent_name), i, record)
         for i, record in enumerate(records)
@@ -1087,7 +1088,7 @@ def _names_match_normalized(chapter_name: str, record_name: str) -> bool:
     """Whether two already-normalized opponent names are the same person.
 
     Split out so callers that compare one name against many records can
-    normalize each side once instead of per pair (issue #87 [11])."""
+    normalize each side once instead of per pair."""
     if not chapter_name or not record_name:
         return False
     if chapter_name == record_name:
@@ -1246,15 +1247,15 @@ def _opponent_id(game: pd.Series) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Enrichment (issue #28): matched Games gain their USCF facts as columns
+# Enrichment: matched Games gain their USCF facts as columns
 # ---------------------------------------------------------------------------
 
 # Enrichment columns and their unmatched-Game values.  Always present after
 # enrich_games so pages never have to check whether a column exists.
-_ENRICHMENT_DEFAULTS = {
+_ENRICHMENT_DEFAULTS: dict[str, Any] = {
     "UscfMatched": False,
     "UscfMatchedBy": "",
-    "UscfEventId": "",        # the Rated Event's USCF ID (issue #33)
+    "UscfEventId": "",        # the Rated Event's USCF ID
     "UscfEventName": "",
     "UscfSection": "",
     "UscfRatingSystem": "",
@@ -1265,23 +1266,23 @@ _ENRICHMENT_DEFAULTS = {
     "Forfeit": False,
 }
 
-# "At most one move" (CONTEXT.md / issue #29): the threshold below which an
+# "At most one move" (CONTEXT.md): the threshold below which an
 # unmatched Game is a Forfeit rather than a game USCF hasn't rated yet.
 _FORFEIT_MAX_MOVES = 1
 
 
 def enrich_games(df: pd.DataFrame, result: MatchResult) -> pd.DataFrame:
     """
-    Return a copy of *df* with USCF enrichment columns (issues #28 / #29).
+    Return a copy of *df* with USCF enrichment columns.
 
-    Match & enrich (PRD #24): the Game stays the central entity; its USCF Game
+    Match & enrich: the Game stays the central entity; its USCF Game
     Record's facts ride along as columns.  Unmatched Games get the defaults —
     enrichment never filters, hides, or restructures Games (ADR 0003).
 
-    Forfeit detection (issue #29): an unmatched Game with at most one move is
+    Forfeit detection: an unmatched Game with at most one move is
     a Forfeit — the opponent never showed, so USCF correctly never rated it.
 
-    Conflict flagging (issue #30): a matched Game whose color disagrees with
+    Conflict flagging: a matched Game whose color disagrees with
     USCF's record keeps displaying the Lichess version, with UscfColorConflict
     set so the UI can badge it.
     """
@@ -1298,7 +1299,7 @@ def enrich_games(df: pd.DataFrame, result: MatchResult) -> pd.DataFrame:
     for column, default in _ENRICHMENT_DEFAULTS.items():
         enriched[column] = default
 
-    facts_by_url = {
+    facts_by_url: dict[str, dict[str, Any]] = {
         m.chapter_url: {
             "UscfMatched": True,
             "UscfMatchedBy": m.matched_by,
@@ -1321,7 +1322,7 @@ def enrich_games(df: pd.DataFrame, result: MatchResult) -> pd.DataFrame:
     enriched["Forfeit"] = (
         ~enriched["UscfMatched"] & (enriched["FullMoves"] <= _FORFEIT_MAX_MOVES)
     )
-    # Disagreement between sources is flagged, never silently resolved (#30).
+    # Disagreement between sources is flagged, never silently resolved.
     # A record missing its color ('') is absence of data, not a disagreement.
     enriched["UscfColorConflict"] = (
         enriched["UscfMatched"]
@@ -1332,7 +1333,7 @@ def enrich_games(df: pd.DataFrame, result: MatchResult) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# The rating lens (issue #32)
+# The rating lens
 # ---------------------------------------------------------------------------
 
 # The two lenses — also the values of the UI's [Official | Live] toggle.
@@ -1353,7 +1354,7 @@ def attach_rating_bases(
     A Game's Official/Live/opponent-Live basis depends only on its matched
     record, its date, and the USCF series — none of which change between Syncs.
     Computing them here lets ``apply_rating_lens`` be a vectorized column pick on
-    every filter callback instead of an ``iterrows`` loop (issue #87 [6]).
+    every filter callback instead of an ``iterrows`` loop.
 
     Returns *df* unchanged when there is no USCF data at all (both series empty),
     matching ``apply_rating_lens``'s own no-USCF passthrough.
@@ -1364,7 +1365,7 @@ def attach_rating_bases(
     out = df.copy()
     live_by_section = {(p.event_id, p.section_name): p.pre for p in live_series}
     records_by_url = {m.chapter_url: m.record for m in match_result.matches}
-    # The opponents' crosstable pre-ratings (issue #35), one flat lookup:
+    # The opponents' crosstable pre-ratings, one flat lookup:
     # (event_id, section_name, member_id) → pre-rating
     opponent_pre = {
         (event_id, section_name, entry.member_id): entry.pre_rating
@@ -1408,12 +1409,12 @@ def apply_rating_lens(
     date (Daniel's long-standing convention); a Game with no USCF Game Record
     uses the supplement at its own date; Games before the first supplement
     have no value — never invented.  Opponent ratings are the typed
-    pairing-sheet values (PRD #24).
+    pairing-sheet values.
 
     Live — the matched Section's pre-rating, rounded to a whole number;
     a Game with no matched Section falls back to the Official basis.
-    Opponent ratings come from crosstable pre-ratings where cached
-    (issue #35), falling back to typed values — so rating-diff and upsets
+    Opponent ratings come from crosstable pre-ratings where cached,
+    falling back to typed values — so rating-diff and upsets
     are fully consistent with the displayed ratings.
 
     The lens never hides Games: only the rating columns (and the RatingDiff
@@ -1442,7 +1443,7 @@ def apply_rating_lens(
     out["PlayerRating"] = [_rating_display(v) for v in values]
 
     # Opponent ratings only move under the Live lens, and only when crosstables
-    # were cached (issue #35); otherwise the typed values from enrich stand.
+    # were cached; otherwise the typed values from enrich stand.
     has_opponent_data = lens == LIVE_LENS and any(
         entries for entries in (standings or {}).values()
     )
@@ -1467,7 +1468,7 @@ def _opponent_live_basis(
 ) -> float | int | None:
     """
     An opponent's Live Rating: their crosstable pre-rating for the Section the
-    Game was played in, rounded (issue #35) — or the typed value when no
+    Game was played in, rounded — or the typed value when no
     crosstable is cached / the opponent isn't in it.
     """
     if record is not None:
@@ -1549,7 +1550,7 @@ def _rating_display(value: int | float | None) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Reconciliation (issue #30)
+# Reconciliation
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -1577,7 +1578,7 @@ def reconcile(
     dismissed: frozenset[str] | set[str] = frozenset(),
 ) -> list[ReconciliationEntry]:
     """
-    Every disagreement between the Studies and USCF (issue #30), as actionable
+    Every disagreement between the Studies and USCF, as actionable
     entries.  *df* is the enriched Games DataFrame (enrich_games output).
 
     Dismissed entries (their entry_ids in *dismissed*) are excluded — they are

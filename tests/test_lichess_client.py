@@ -90,7 +90,7 @@ class TestFetchStudyPgn:
     def test_mid_download_error_raises_unreachable(self):
         """A drop mid-download (ChunkedEncodingError) subclasses RequestException,
         not ConnectionError — it must stay typed so sync_studies' per-Study
-        degrade survives a flaky download (issue #87 [4])."""
+        degrade survives a flaky download."""
         with mock.patch(
             "lichess_client.requests.get",
             side_effect=requests.exceptions.ChunkedEncodingError("reset"),
@@ -99,7 +99,7 @@ class TestFetchStudyPgn:
                 fetch_study_pgn("abcdWXYZ")
 
     def test_rate_limited_raises_distinct_error(self):
-        """A 429 is its own error so callers can stop hammering (issue #87 [5])."""
+        """A 429 is its own error so callers can stop hammering."""
         with mock.patch(
             "lichess_client.requests.get", return_value=_response(429, "")
         ):
@@ -109,7 +109,7 @@ class TestFetchStudyPgn:
     def test_a_server_error_is_a_lichess_error_not_a_crash(self):
         """A 5xx (any other non-200) stays a LichessError so sync_studies'
         per-Study `except LichessError` degrade catches it instead of taking
-        down startup/refresh (issue #87 [5])."""
+        down startup/refresh."""
         with mock.patch(
             "lichess_client.requests.get", return_value=_response(503, "")
         ):

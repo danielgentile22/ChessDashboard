@@ -1,7 +1,7 @@
 """
 tests/test_engine_analysis_core.py
 ==================================
-The priority suite for the engine-analysis spine (issue #57 [F1]).
+The priority suite for the engine-analysis spine.
 
 External behaviour only: given a real analysed Game's PGN, the right win%
 values, swings, critical moment, and best moves come out — never the internal
@@ -101,7 +101,7 @@ class TestSeverityThresholds:
     """``classify_severity`` is the 0.1 / 0.2 / 0.3 win-probability ladder,
     with a sub-inaccuracy swing being *no* mistake at all (None).
 
-    Daniel's decision (issue #58): severity is recomputed from the win%-drop,
+    Daniel's decision: severity is recomputed from the win%-drop,
     never read from Lichess's text word.  So a move Lichess *labels* a mistake
     but whose recomputed drop is only ~15% is an *inaccuracy* here, and a ~5%
     swing Lichess calls an inaccuracy is not an error-profile entry at all.
@@ -178,7 +178,7 @@ class TestPhaseDetection:
 
 class TestAliceAnderson:
     """The known fixture: d3?! inaccuracy, g5? mistake, Bd4?? blunder, the
-    −4.38 swing as the critical moment (issue #57)."""
+    −4.38 swing as the critical moment."""
 
     def test_game_is_analyzed_with_one_eval_per_ply(self):
         ga = _alice()
@@ -257,7 +257,7 @@ class TestErrorProfile:
 
     On the analysed Alice Anderson Game, Daniel is Black and *won* (0-1); his one
     qualifying move is 15...g5, recorded even in a win so the improvement signal
-    isn't polluted by the result (issue #58).  His opponent's 16. Bd4?? blunder
+    isn't polluted by the result.  His opponent's 16. Bd4?? blunder
     and 3. d3?! inaccuracy are *not* his mistakes and stay out of his profile.
     """
 
@@ -350,7 +350,7 @@ MISSED_TACTIC = (
 
 
 class TestMistakeType:
-    """The deterministic tactical/positional heuristic (issue #58)."""
+    """The deterministic tactical/positional heuristic."""
 
     def test_hanging_material_to_a_forcing_capture_is_tactical(self):
         # White grabs a pawn and is punished by a forcing recapture of the queen.
@@ -371,7 +371,7 @@ class TestMistakeType:
 
 
 # ---------------------------------------------------------------------------
-# Per-Game accuracy (the published Lichess accuracy formula, issue #61 [F3])
+# Per-Game accuracy (the published Lichess accuracy formula)
 # ---------------------------------------------------------------------------
 
 def _move(side: str, win_pct_drop: float) -> MoveEval:
@@ -423,7 +423,7 @@ class TestPlayerAccuracy:
 class TestMistakeTypeDistribution:
     """``mistake_type_distribution`` totals tactical vs positional mistakes across
     analysed Games — the "single biggest weakness at a glance" the page leads
-    with.  Unanalysed Games contribute nothing (issue #58)."""
+    with.  Unanalysed Games contribute nothing."""
 
     def test_counts_each_type_across_analyzed_games(self):
         tactical = analyze_game(
@@ -478,7 +478,7 @@ class TestDegradesCleanly:
 
 
 # ---------------------------------------------------------------------------
-# tags_from_error_profile (issue #62 [F4] — engine-emitted Tags)
+# tags_from_error_profile (engine-emitted Tags)
 # ---------------------------------------------------------------------------
 
 def _mistake(severity="inaccuracy", phase="middlegame", mistake_type="positional"):
@@ -616,7 +616,7 @@ class TestEnrich:
     def test_empty_df_still_gets_the_columns(self):
         out = enrich_games_with_analysis(pd.DataFrame())
         # TagSources must exist on the empty store too — the non-empty path always
-        # sets it, so the schema stays identical and accessors stay total (#5).
+        # sets it, so the schema stays identical and accessors stay total.
         assert list(out.columns) == ["Analysis", "Analyzed", "TagSources"]
         assert out.empty
 
@@ -631,7 +631,7 @@ class TestEnrich:
 
 
 # ---------------------------------------------------------------------------
-# Engine Tags flow into the Tags column, source-tagged (issue #62 [F4])
+# Engine Tags flow into the Tags column, source-tagged
 # ---------------------------------------------------------------------------
 
 # An analysed Game in which Daniel (Black) plays the 3...b6 inaccuracy — an
@@ -862,7 +862,7 @@ class TestSyncIntegration:
 
 
 # ---------------------------------------------------------------------------
-# Mate-score parsing (issue #91): [%eval #N] must saturate the win% curve
+# Mate-score parsing: [%eval #N] must saturate the win% curve
 # ---------------------------------------------------------------------------
 
 # White is mating (2. Qh5 #4) then Black is mating (2... Nc6 #-3); both are
@@ -876,7 +876,7 @@ MATE_PGN = (
 
 class TestMateScoreParsing:
     """A ``[%eval #N]`` mate score reads as a near-certain win for the mating
-    side, from either colour's perspective (issue #91)."""
+    side, from either colour's perspective."""
 
     def _move(self, ga, san):
         return next(m for m in ga.moves if m.san == san)
@@ -911,7 +911,7 @@ class TestMateScoreParsing:
 
 
 # ---------------------------------------------------------------------------
-# Missing-eval handling (issue #91): no carrying a stray/absent eval forward as
+# Missing-eval handling: no carrying a stray/absent eval forward as
 # a real, zero-drop, ~100%-accuracy move
 # ---------------------------------------------------------------------------
 
@@ -962,7 +962,7 @@ class TestMissingEvalHandling:
     def test_a_malformed_eval_directive_degrades_instead_of_raising(self):
         # A garbage [%eval xyz] must not crash analysis (the _node_cp
         # ValueError/KeyError branch): that ply reads eval-less, no phantom
-        # mistake, the rest of the game still analyses (issue #91).
+        # mistake, the rest of the game still analyses.
         pgn = (
             "1. e4 { [%eval 0.3] } 1... e5 { [%eval 0.2] } "
             "2. Nf3 { [%eval xyz] } 2... Nc6 { [%eval 0.1] } "
@@ -976,7 +976,7 @@ class TestMissingEvalHandling:
 
 
 # ---------------------------------------------------------------------------
-# Refutation sibling selection (issue #91): the engine's line, not the player's
+# Refutation sibling selection: the engine's line, not the player's
 # hand-written sideline serialised first
 # ---------------------------------------------------------------------------
 
@@ -1018,7 +1018,7 @@ class TestRefutationSiblingSelection:
 
 
 # ---------------------------------------------------------------------------
-# Castling-with-check best move (issue #91)
+# Castling-with-check best move
 # ---------------------------------------------------------------------------
 
 class TestCastlingBestMove:
@@ -1030,7 +1030,7 @@ class TestCastlingBestMove:
 
 
 # ---------------------------------------------------------------------------
-# Custom start position (issue #91): a Chapter beginning from a FEN reparses
+# Custom start position: a Chapter beginning from a FEN reparses
 # from that position instead of truncating against the standard start
 # ---------------------------------------------------------------------------
 

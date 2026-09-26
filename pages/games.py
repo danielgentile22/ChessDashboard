@@ -4,7 +4,7 @@ pages/games.py
 The Games page — every Game in the archive, filterable and sortable, with
 Open-on-Lichess links, Lesson indicators (💡), and Tags.
 
-Clicking any row opens that Game's detail view (issue #11).
+Clicking any row opens that Game's detail view.
 """
 from __future__ import annotations
 
@@ -61,7 +61,7 @@ def layout(**kwargs) -> html.Div:
     # Lesson indicator (💡) and Tags from chapter comments (ADR 0002)
     cols.append({"name": "💡", "id": "LessonIndicator"})
     cols.append({"name": "Tags", "id": "TagsDisplay"})
-    # The Game's USCF status (issues #28/#29): ✓ matched by ID, ≈ matched by
+    # The Game's USCF status: ✓ matched by ID, ≈ matched by
     # name, "Forfeit" for no-shows, blank for no USCF Game Record
     cols.append({"name": "USCF", "id": "USCF"})
     # Open-on-Lichess link — rendered as markdown so it's clickable
@@ -106,13 +106,13 @@ def update_games_table(colors, outcomes, terminations, start, end, events, moves
 
     Returns the trimmed player-centric records (plus the hidden ChapterURL that
     powers click-through navigation).  Both the desktop table and the mobile
-    card list (issue #48) are rendered from this one list, so they can never
+    card list are rendered from this one list, so they can never
     disagree.
     """
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
     # A populated DataFrame always carries every base + enrichment column (the
     # pages contract); only the pre-Sync empty store lacks them, so guard that
-    # once here instead of per-column (#93).
+    # once here instead of per-column.
     if df_f.empty:
         return []
     out = df_f[_DISPLAY_COLS].copy()
@@ -120,7 +120,7 @@ def update_games_table(colors, outcomes, terminations, start, end, events, moves
     out["TagsDisplay"] = df_f["Tags"].map(
         lambda tags: " ".join(f"#{t}" for t in tags)
     )
-    # The Game's USCF status (issues #28/#29/#30)
+    # The Game's USCF status
     out["USCF"] = [
         uscf_status_label(matched_by, forfeit, conflict)
         for matched_by, forfeit, conflict in zip(
@@ -129,7 +129,7 @@ def update_games_table(colors, outcomes, terminations, start, end, events, moves
     ]
     out["Lichess"] = df_f["ChapterURL"].map(lichess_link)
     # Not a displayed column — carried in the row data so clicking the row
-    # knows which Game to open (issue #11)
+    # knows which Game to open
     out["ChapterURL"] = df_f["ChapterURL"]
     return out.to_dict("records")
 
@@ -140,7 +140,7 @@ def update_games_table(colors, outcomes, terminations, start, end, events, moves
     FILTER_INPUTS,
 )
 def update_games(*filter_args):
-    """Feed the table and the mobile card list from one row build (issue #48).
+    """Feed the table and the mobile card list from one row build.
 
     The table consumes the rows directly; the card list is the same rows
     rendered as tappable cards — one data pipeline, two presentations.

@@ -1,7 +1,7 @@
 """
 tests/test_ai_summary.py
 ========================
-The AI-summary boundary (issue #59 [F5]) — the *only* place the dashboard
+The AI-summary boundary — the *only* place the dashboard
 touches the Anthropic API.
 
 These are boundary tests, in the spirit of the USCF-client tests: the network
@@ -40,7 +40,7 @@ def _alice():
 
 class TestPromptAssembly:
     """The prompt is built from precomputed facts — the model summarises, it
-    never evaluates the position itself (the hard boundary, issue #59)."""
+    never evaluates the position itself (the hard boundary)."""
 
     def test_prompt_carries_the_critical_moment_and_worst_error_facts(self):
         prompt = build_prompt(_alice())
@@ -79,7 +79,7 @@ class TestSummarize:
 
 class TestNoOpWithoutKey:
     """No key → the module does nothing, gracefully: the dashboard runs without
-    one (issue #59).  An unanalysed Game has no facts to summarise either."""
+    one.  An unanalysed Game has no facts to summarise either."""
 
     def test_no_api_key_returns_empty_and_never_calls_the_boundary(self):
         with mock.patch.object(ai_summary, "_call_anthropic") as seam:
@@ -98,7 +98,7 @@ class TestNoOpWithoutKey:
 
 class TestSilentDegradation:
     """Any client failure degrades silently — a Sync that reached Lichess still
-    succeeds (issue #59, ADR 0004)."""
+    succeeds (ADR 0004)."""
 
     def test_client_error_returns_empty_instead_of_raising(self):
         with mock.patch.object(
@@ -111,7 +111,7 @@ class TestSilentDegradation:
 
 class TestRateLimitRetry:
     """One bounded wait-and-retry rides out a transient 429/overload before
-    degrading to '' (issue #87 [9])."""
+    degrading to ''."""
 
     def test_retries_once_on_429_then_succeeds(self):
         rate_limited = mock.Mock(status_code=429, headers={"Retry-After": "0"})
@@ -143,7 +143,7 @@ class _FakeCache:
 
 
 class TestCachingByGameIdentity:
-    """An unchanged Game is served from the cache, never re-billed (issue #59)."""
+    """An unchanged Game is served from the cache, never re-billed."""
 
     def test_second_summary_of_an_unchanged_game_does_not_call_the_boundary(self):
         ga = _alice()
@@ -160,7 +160,7 @@ class TestCachingByGameIdentity:
 
 class TestCacheFingerprintCoversModelAndSystem:
     """Bumping the model (or rewording the system prompt) must invalidate the
-    cache so a stale summary isn't served forever (issue #91)."""
+    cache so a stale summary isn't served forever."""
 
     def test_fingerprint_changes_with_the_model(self):
         a = ai_summary._fingerprint("model-old", "same prompt")

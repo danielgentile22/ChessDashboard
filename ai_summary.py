@@ -1,7 +1,7 @@
 """
 ai_summary.py
 =============
-The AI-summary boundary (issue #59 [F5]) — the single, isolated place the
+The AI-summary boundary — the single, isolated place the
 dashboard touches the Anthropic API.
 
 Given a Game's already-computed ``GameAnalysis`` (its critical moment and the

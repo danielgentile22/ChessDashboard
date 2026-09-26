@@ -14,7 +14,7 @@ from unittest import mock
 import pandas as pd
 import pytest
 
-# Real USCF MUIR API responses captured live on 2026-06-02 (issue #25 / PRD #24).
+# Real USCF MUIR API responses captured live on 2026-06-02.
 # These are the canonical "real response shapes" the USCF tests run against.
 USCF_DATA_DIR = Path(__file__).parent / "data" / "uscf"
 
@@ -46,7 +46,7 @@ def no_network(monkeypatch):
 #   game 5: tags spread across comments, duplicated tag, [%clk] noise
 #   games 6-7: no comments
 #
-# Time control coverage (issue #17):
+# Time control coverage:
 #   games 1-3: classical USCF multi-stage control ("40/80, SD30; +30")
 #   games 4-6: rapid ("30+5")
 #   game 7:    no TimeControl header at all
@@ -305,11 +305,11 @@ def uscf_games_json() -> dict:
 @pytest.fixture(scope="session")
 def uscf_events_json() -> dict:
     """A real /members/{id}/events response: all 23 Rated Events Daniel has
-    entered (issue #33), with official dates, section counts, and player counts."""
+    entered, with official dates, section counts, and player counts."""
     return json.loads((USCF_DATA_DIR / "events.json").read_text())
 
 
-# The real crosstables captured for issue #34, keyed by (event_id, section
+# The real crosstables captured from USCF, keyed by (event_id, section
 # number).  Each covers a distinct real-world case:
 #   ACC MAY 2026 ............ a 116-player section with an Unpaired round
 #   DMV Under 1800 .......... a full-point bye (ByeFull) + the two-Section event
@@ -337,7 +337,7 @@ def uscf_standings_json() -> dict:
 @pytest.fixture(scope="session")
 def uscf_norms_json() -> dict:
     """A real /members/{id}/norms response: the FourthCategory norm from the
-    First Annual Oak Grove Open (issue #36).  Note: no pagination fields —
+    First Annual Oak Grove Open.  Note: no pagination fields —
     the norms endpoint returns bare items."""
     return json.loads((USCF_DATA_DIR / "norms.json").read_text())
 
@@ -345,7 +345,7 @@ def uscf_norms_json() -> dict:
 @pytest.fixture(scope="session")
 def uscf_awards_json() -> dict:
     """A real /members/{id}/awards response: the 25th-career-win WinMilestone
-    award (issue #36)."""
+    award."""
     return json.loads((USCF_DATA_DIR / "awards.json").read_text())
 
 
@@ -353,7 +353,7 @@ def uscf_awards_json() -> dict:
 def study_snapshot_df():
     """
     Daniel's real Study (63 chapters), captured the same day as games.json —
-    the matching engine's ground-truth fixture pair (issue #28).
+    the matching engine's ground-truth fixture pair.
 
     Parsed through the real PGN loader so matching tests see exactly what a
     Sync produces.
@@ -366,7 +366,7 @@ def study_snapshot_df():
 
 
 # ---------------------------------------------------------------------------
-# USCF Game Records that pair with SAMPLE_PGN (issues #28 / #29 / #30).
+# USCF Game Records that pair with SAMPLE_PGN.
 #
 # Records 1–5 match SAMPLE_PGN games 1–5 by opponent member ID + result.
 # Record 4 disagrees about the color (the chapter says Test Player was Black,
@@ -411,7 +411,7 @@ SAMPLE_USCF_GAMES = [
     # → game 5: beat Opponent D with White
     _sample_uscf_game("10000004", "OPPONENT", "D", "White", "Win",
                       "SUMMER CUP 2024", "202406160002", "2024-06-15", "2024-06-16"),
-    # → game 7 (no FideId typed): drew Opponent A — matches by name (issue #29)
+    # → game 7 (no FideId typed): drew Opponent A — matches by name
     _sample_uscf_game("10000001", "OPPONENT", "A", "White", "Draw",
                       "SUMMER CUP 2024", "202406160002", "2024-06-15", "2024-06-16"),
     # → no Game: a rated game whose Chapter was never added (USCF-only)
@@ -421,7 +421,7 @@ SAMPLE_USCF_GAMES = [
 
 
 # ---------------------------------------------------------------------------
-# Sample supplements + sections that pair with SAMPLE_PGN (issue #32).
+# Sample supplements + sections that pair with SAMPLE_PGN.
 #
 # SAMPLE_PGN's games are dated 2024, while the real captured supplements and
 # sections are 2025–26 — so without these, no sample Game would have any
@@ -465,7 +465,7 @@ SAMPLE_USCF_SECTIONS = [
 ]
 
 
-# The Rated Events that pair with SAMPLE_PGN (issue #33): the two events the
+# The Rated Events that pair with SAMPLE_PGN: the two events the
 # sample games/sections reference, in the real /members/{id}/events item shape.
 SAMPLE_USCF_EVENTS = [
     {"id": "202401070001", "name": "TEST OPEN JANUARY",
@@ -517,13 +517,13 @@ REAL_USCF_SECTIONS = json.loads((USCF_DATA_DIR / "sections.json").read_text())["
 REAL_USCF_EVENTS = json.loads((USCF_DATA_DIR / "events.json").read_text())["items"]
 REAL_USCF_NORMS = json.loads((USCF_DATA_DIR / "norms.json").read_text())["items"]
 REAL_USCF_AWARDS = json.loads((USCF_DATA_DIR / "awards.json").read_text())["items"]
-# The 5 captured crosstables (issue #34), as raw item lists keyed by
+# The 5 captured crosstables, as raw item lists keyed by
 # (event_id, section_number) — what the fetch_event_standings stub serves.
 REAL_USCF_STANDINGS = {
     key: json.loads((USCF_DATA_DIR / filename).read_text())["items"]
     for key, filename in USCF_STANDINGS_DATA.items()
 }
-# Two real opponent profiles (issue #35): Baker (beaten in ACC MAY 2026,
+# Two real opponent profiles: Baker (beaten in ACC MAY 2026,
 # rated 1400 now) and Clark (lost to in ACC MAY 2026, rated 1366 now).
 REAL_OPPONENT_PROFILES = {
     "20000056": json.loads((USCF_DATA_DIR / "opponent-bob-baker.json").read_text()),
@@ -532,7 +532,7 @@ REAL_OPPONENT_PROFILES = {
 
 # What UI fixtures feed by default: the real 2025–26 career (so the profile
 # card and the rating series are real) plus the 2024 sample items that cover
-# SAMPLE_PGN's Games (so the rating lens has values for them — issue #32).
+# SAMPLE_PGN's Games (so the rating lens has values for them).
 _UI_USCF_SUPPLEMENTS = SAMPLE_USCF_SUPPLEMENTS + REAL_USCF_SUPPLEMENTS
 _UI_USCF_SECTIONS = SAMPLE_USCF_SECTIONS + REAL_USCF_SECTIONS
 _UI_USCF_EVENTS = SAMPLE_USCF_EVENTS + REAL_USCF_EVENTS
@@ -556,11 +556,11 @@ def stub_ui_sources(pgn_text: str, uscf_profile: dict | Exception = None,
     pair with SAMPLE_PGN, so UI tests render against matched Games;
     *uscf_supplements* / *uscf_sections* / *uscf_events* default to the real
     career extended with the 2024 sample items that cover SAMPLE_PGN;
-    *uscf_norms* / *uscf_awards* default to the real captured achievements
-    (issue #36); *uscf_standings* defaults to the 5 real captured crosstables
+    *uscf_norms* / *uscf_awards* default to the real captured achievements;
+    *uscf_standings* defaults to the 5 real captured crosstables
     keyed by (event_id, section_number) — Sections without one degrade
-    gracefully, exactly like live (issue #34); *opponent_profiles* defaults
-    to the 2 real captured opponents (issue #35) — the rest degrade.
+    gracefully, exactly like live; *opponent_profiles* defaults
+    to the 2 real captured opponents — the rest degrade.
     """
     import sync
     from uscf_client import UscfUnreachableError
@@ -593,7 +593,7 @@ def stub_ui_sources(pgn_text: str, uscf_profile: dict | Exception = None,
         return fetch
 
     def fake_profile(member_id, **kwargs):
-        # The member's own profile, or a stubbed opponent's (issue #35)
+        # The member's own profile, or a stubbed opponent's
         if uscf_down is not None:
             raise uscf_down
         if str(uscf_profile.get("id", "")) == str(member_id):
@@ -691,7 +691,7 @@ def ui_data(sample_pgn_text):
 def real_career_ui(ui_app):
     """
     The data store loaded with Daniel's real fixture pair: the 63-chapter
-    Study snapshot matched against his real USCF record (issues #31/#32).
+    Study snapshot matched against his real USCF record.
 
     Pure real data — no 2024 sample items — so series lengths and values
     match the captured career exactly.

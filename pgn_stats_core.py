@@ -12,8 +12,8 @@ Parsing
   load_games_df            Parse a PGN file → tidy DataFrame + player name.
   load_games_from_text     Parse PGN text (Lichess Study export) → same output.
   extract_lessons_and_tags Extract Lessons / Tags from a game's comments (ADR 0002).
-  extract_mainline_san     A game's mainline moves as SAN strings (issue #16).
-  extract_movetext         Movetext with comments / [%eval] / variations kept (issue #57).
+  extract_mainline_san     A game's mainline moves as SAN strings.
+  extract_movetext         Movetext with comments / [%eval] / variations kept.
   apply_filters            Apply UI filter selections to the DataFrame.
 
 Overview
@@ -158,7 +158,7 @@ def infer_player_name_from_rows(rows: list[dict]) -> str:
 def chapter_id(chapter_url: str) -> str:
     """The Game's id — the last path segment of its ChapterURL (ADR 0001).
 
-    One home for the deep-link identity rule (issue #96): strip a trailing
+    One home for the deep-link identity rule: strip a trailing
     slash, take the final segment.  Both the URL builder and the coach-notes
     matcher derive the id this way.
     """
@@ -167,7 +167,7 @@ def chapter_id(chapter_url: str) -> str:
 
 def extract_mainline_san(game) -> list[str]:
     """
-    The game's mainline moves as SAN strings (issue #16).
+    The game's mainline moves as SAN strings.
 
     Variations are excluded — the repertoire tree reflects what was actually
     played, not what was analysed afterwards.
@@ -184,7 +184,7 @@ def extract_movetext(game) -> str:
     """
     A Game's movetext with everything the mainline-SAN view throws away kept
     intact: per-move comments, Lichess ``[%eval]`` annotations, NAGs, and
-    variations (issue #57 [F1]).
+    variations.
 
     ``extract_mainline_san`` deliberately discards all of that — the
     repertoire tree only wants what was played.  The engine-analysis pass
@@ -223,7 +223,7 @@ def _read_movetext(movetext: str, setup_fen: str = ""):
 def mainline_movetext(movetext: str, setup_fen: str = "") -> str:
     """
     *movetext* reduced to the bare played line — comments, ``[%eval]``
-    annotations, NAGs, and variations all stripped (issue #60 [F6]).
+    annotations, NAGs, and variations all stripped.
 
     This is the inverse of :func:`extract_movetext`: it feeds the Game-detail
     pgn-viewer its default "clean replay" view, where Daniel first sees the bare
@@ -325,7 +325,7 @@ def extract_lessons_and_tags(game) -> tuple[list[str], list[str]]:
 def has_my_analysis(movetext: str, setup_fen: str = "") -> bool:
     """
     Whether *movetext* carries Daniel's own annotations — the signal the
-    Game-detail view uses to offer a "My Analysis" board (issue #60 [F6]).
+    Game-detail view uses to offer a "My Analysis" board.
 
     True when he added something to the Chapter himself: a comment of his own,
     or shapes he drew on the board (``[%cal]`` arrows / ``[%csl]`` circles).
@@ -605,7 +605,7 @@ def apply_filters(
 
 def _without_forfeits(df: pd.DataFrame) -> pd.DataFrame:
     """
-    The Games that were actually played: Forfeits excluded (issue #29 — a
+    The Games that were actually played: Forfeits excluded (a
     forfeit win is not chess).
 
     The Forfeit column is enrichment (uscf_core.enrich_games); a DataFrame
@@ -695,7 +695,7 @@ def streaks(df: pd.DataFrame) -> dict:
 
 def current_form(df: pd.DataFrame) -> dict:
     """
-    Current form for the header indicators (issue #10): how the most recent
+    Current form for the header indicators: how the most recent
     Games have gone, ordered by date.
 
     Returns dict keys:
@@ -748,7 +748,7 @@ def kpi_stats(df: pd.DataFrame) -> dict:
     pr = performance_rating_stats(df)
     s = streaks(df)
 
-    # Favourite opening/family: opening stats, so Forfeits never count (#29)
+    # Favourite opening/family: opening stats, so Forfeits never count
     played = _without_forfeits(df)
     openings = played["Opening"].replace("", pd.NA).dropna()
     fav_opening = str(openings.value_counts().index[0]) if not openings.empty else "—"
@@ -826,7 +826,7 @@ def opponent_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
     if df.empty:
         return pd.DataFrame(columns=["Opponent", "Games", "Win", "Draw", "Loss", "WinRate"])
-    df = _without_forfeits(df)  # a forfeit win never counts as a win over an opponent (#29)
+    df = _without_forfeits(df)  # a forfeit win never counts as a win over an opponent
     pivot = (
         df.groupby(["Opponent", "Outcome"])
         .size().unstack(fill_value=0)
@@ -847,7 +847,7 @@ def head_to_head(df: pd.DataFrame, opponent: str) -> dict:
     as_white_(w/d/l), as_black_(w/d/l), avg_opp_rating, game_rows.
     """
     # A no-show is not an over-the-board result: the drill-down score, color
-    # split, and timeline exclude forfeits, matching opponent_summary (#29, #90).
+    # split, and timeline exclude forfeits, matching opponent_summary.
     d = _without_forfeits(df[df["Opponent"] == opponent]).copy()
     if d.empty:
         return {"total": 0, "win": 0, "draw": 0, "loss": 0, "game_rows": []}
@@ -883,7 +883,7 @@ def head_to_head(df: pd.DataFrame, opponent: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Scouting Report (issue #13)
+# Scouting Report
 # ---------------------------------------------------------------------------
 
 def scouting_report(df: pd.DataFrame, opponent: str) -> dict:
@@ -976,7 +976,7 @@ def opening_summary(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     _FC = ["ECO_Family", "FamilyName", "Games", "Win", "Draw", "Loss", "WinRate"]
     _OC = ["ECO", "Opening", "Games", "Win", "Draw", "Loss", "WinRate"]
 
-    df = _without_forfeits(df)  # one forced move is not repertoire data (#29)
+    df = _without_forfeits(df)  # one forced move is not repertoire data
     if df.empty:
         return pd.DataFrame(columns=_FC), pd.DataFrame(columns=_OC)
 
@@ -1044,7 +1044,7 @@ def opponent_rating_bucket_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
     if df.empty:
         return pd.DataFrame(columns=["Bucket", "Games", "Win", "Draw", "Loss", "WinRate"])
-    df = _without_forfeits(df)  # a forfeit win never counts in a rating bucket (#29)
+    df = _without_forfeits(df)  # a forfeit win never counts in a rating bucket
     d = df[df["RatingDiff"].notna()].copy()
     if d.empty:
         return pd.DataFrame(columns=["Bucket", "Games", "Win", "Draw", "Loss", "WinRate"])
@@ -1069,7 +1069,7 @@ def outcome_vs_rating_data(df: pd.DataFrame) -> pd.DataFrame:
     """
     if df.empty:
         return pd.DataFrame(columns=["OpponentRatingNum", "OutcomeNum", "Outcome", "Opponent", "Date"])
-    df = _without_forfeits(df)  # a no-show win is not a scored point on the scatter (#29)
+    df = _without_forfeits(df)  # a no-show win is not a scored point on the scatter
     d = df[
         df["OpponentRatingNum"].notna() & df["Outcome"].isin(["Win", "Draw", "Loss"])
     ].copy()
@@ -1091,7 +1091,7 @@ def game_length_data(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     """
     if df.empty:
         return pd.DataFrame(columns=["FullMoves", "Outcome"]), {}
-    df = _without_forfeits(df)  # a 0-move no-show is not a game that unfolded (#29)
+    df = _without_forfeits(df)  # a 0-move no-show is not a game that unfolded
     d = df[df["Outcome"].isin(["Win", "Draw", "Loss"]) & df["FullMoves"].notna()].copy()
     avgs = {
         o: round(float(d[d["Outcome"] == o]["FullMoves"].mean()), 1)
@@ -1117,7 +1117,7 @@ def activity_data(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     _ED = pd.DataFrame(columns=["DayOfWeek", "Games", "Win", "WinRate"])
     if df.empty:
         return _EM, _ED
-    df = _without_forfeits(df)  # a no-show win never lifts a month's/weekday's win rate (#29)
+    df = _without_forfeits(df)  # a no-show win never lifts a month's/weekday's win rate
     d = df[df["Date_dt"].notna() & df["Outcome"].isin(["Win", "Draw", "Loss"])].copy()
     if d.empty:
         return _EM, _ED
@@ -1147,7 +1147,7 @@ _DAILY_COLS = ["Date_dt", "Games", "Win", "Draw", "Loss", "Net", "Detail"]
 
 def daily_activity(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Per-day Game results for the activity heatmap calendar (issue #14).
+    Per-day Game results for the activity heatmap calendar.
 
     One row per calendar day that has dated Games, sorted by day.
     Columns:
@@ -1165,7 +1165,7 @@ def daily_activity(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty or "Date_dt" not in df.columns:
         return pd.DataFrame(columns=_DAILY_COLS)
 
-    df = _without_forfeits(df)  # a no-show win never turns a losing day green (#29)
+    df = _without_forfeits(df)  # a no-show win never turns a losing day green
     d = df[df["Date_dt"].notna() & df["Outcome"].isin(["Win", "Draw", "Loss"])].copy()
     if d.empty:
         return pd.DataFrame(columns=_DAILY_COLS)
@@ -1214,17 +1214,17 @@ def event_summary(df: pd.DataFrame) -> pd.DataFrame:
         draw = int((g["Outcome"] == "Draw").sum())
         loss = int((g["Outcome"] == "Loss").sum())
         games = int(len(g))
-        # W/D/L and Score keep forfeits (a forfeit win is a tournament point,
-        # #29), but the notable opponents you *faced* exclude no-shows — a
-        # forfeit is not the toughest opponent you beat (#35).
+        # W/D/L and Score keep forfeits (a forfeit win is a tournament point),
+        # but the notable opponents you *faced* exclude no-shows — a
+        # forfeit is not the toughest opponent you beat.
         rated = _without_forfeits(g)
         rated = rated[rated["OpponentRatingNum"].notna()].copy()
         hi_n = hi_o = lo_n = lo_o = ""
         hi_r: int | str = ""
         lo_r: int | str = ""
         if not rated.empty:
-            hr = rated.loc[rated["OpponentRatingNum"].idxmax()]
-            lr = rated.loc[rated["OpponentRatingNum"].idxmin()]
+            hr = rated.iloc[int(rated["OpponentRatingNum"].argmax())]
+            lr = rated.iloc[int(rated["OpponentRatingNum"].argmin())]
             hi_n, hi_r, hi_o = str(hr["Opponent"]), int(hr["OpponentRatingNum"]), str(hr["Outcome"])
             lo_n, lo_r, lo_o = str(lr["Opponent"]), int(lr["OpponentRatingNum"]), str(lr["Outcome"])
         rows.append({
@@ -1253,7 +1253,7 @@ def performance_rating_stats(df: pd.DataFrame) -> dict:
              "score": 0.0, "score_pct": 0.0, "rated_games": 0}
     if df.empty or "OpponentRatingNum" not in df.columns:
         return empty
-    df = _without_forfeits(df)  # a no-show win never scored against a rating (#29)
+    df = _without_forfeits(df)  # a no-show win never scored against a rating
     rated = df[
         df["OpponentRatingNum"].notna() & df["Outcome"].isin(["Win", "Draw", "Loss"])
     ].copy()
@@ -1281,7 +1281,7 @@ def performance_rating_stats(df: pd.DataFrame) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Repertoire tree (issue #16)
+# Repertoire tree
 # ---------------------------------------------------------------------------
 
 def _score_pct(win: int, draw: int, total: int) -> float:
@@ -1336,7 +1336,7 @@ def _move_nodes(game_list: list[tuple], ply: int, *,
 
 def repertoire_tree(df: pd.DataFrame, color: str, *, min_games: int = 3) -> dict:
     """
-    Daniel's personal opening explorer (issue #16): every Game as *color*,
+    Daniel's personal opening explorer: every Game as *color*,
     arranged move by move into a tree.
 
     Returns ``{"color", "games", "score_pct", "moves"}`` where ``moves`` is
@@ -1362,7 +1362,7 @@ def repertoire_tree(df: pd.DataFrame, color: str, *, min_games: int = 3) -> dict
     if df.empty or "Moves" not in df.columns:
         return empty
 
-    df = _without_forfeits(df)  # one forced move is not a repertoire branch (#29)
+    df = _without_forfeits(df)  # one forced move is not a repertoire branch
 
     # NaN-proof: a merged/hand-built frame can hold NaN where the parser
     # would put a list — that's "no moves", not a crash
@@ -1403,7 +1403,7 @@ def repertoire_tree(df: pd.DataFrame, color: str, *, min_games: int = 3) -> dict
 
 
 # ---------------------------------------------------------------------------
-# Time control / fatigue / upset analytics (issue #17)
+# Time control / fatigue / upset analytics
 # ---------------------------------------------------------------------------
 
 _TC_COLS = ["TimeControl", "Speed", "Minutes", "Games", "Win", "Draw", "Loss", "WinRate"]
@@ -1491,7 +1491,7 @@ _ROUND_COLS = ["Round", "Games", "Win", "Draw", "Loss", "WinRate", "ScorePct", "
 
 def round_performance(df: pd.DataFrame, *, min_games: int = 3) -> pd.DataFrame:
     """
-    W/D/L per round number (issue #17): does Daniel fade in late rounds?
+    W/D/L per round number: does Daniel fade in late rounds?
 
     One row per round number that has finished Games, sorted numerically
     (round 10 after round 9, not after round 1).
@@ -1501,14 +1501,14 @@ def round_performance(df: pd.DataFrame, *, min_games: int = 3) -> pd.DataFrame:
     a fatigue conclusion and should render dimmed).
 
     When a Game carries its real round number from the USCF crosstable
-    (UscfRound — issue #34), that takes precedence over the hand-typed Round
+    (UscfRound), that takes precedence over the hand-typed Round
     header; Games without one fall back to the typed round per Game.
     """
     if df.empty or "RoundNum" not in df.columns:
         return pd.DataFrame(columns=_ROUND_COLS)
 
-    d = _without_forfeits(df).copy()  # a forfeit win never counts toward a round's win rate (#29)
-    # Real round numbers (USCF crosstables) outrank hand-typed ones (issue #34)
+    d = _without_forfeits(df).copy()  # a forfeit win never counts toward a round's win rate
+    # Real round numbers (USCF crosstables) outrank hand-typed ones
     if "UscfRound" in d.columns:
         d["RoundNum"] = d["UscfRound"].fillna(d["RoundNum"])
 
@@ -1524,7 +1524,7 @@ def round_performance(df: pd.DataFrame, *, min_games: int = 3) -> pd.DataFrame:
 
 def time_control_summary(df: pd.DataFrame) -> pd.DataFrame:
     """
-    W/D/L per time control (issue #17): does Daniel play better slow or fast?
+    W/D/L per time control: does Daniel play better slow or fast?
 
     One row per distinct TimeControl header value, slowest first.
     Columns: TimeControl, Speed (Classical/Rapid/Blitz/Unknown),
@@ -1533,7 +1533,7 @@ def time_control_summary(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty or "TimeControl" not in df.columns:
         return pd.DataFrame(columns=_TC_COLS)
 
-    df = _without_forfeits(df)  # a forfeit win never counts toward a time control's win rate (#29)
+    df = _without_forfeits(df)  # a forfeit win never counts toward a time control's win rate
     d = df[df["Outcome"].isin(["Win", "Draw", "Loss"])].copy()
     if d.empty:
         return pd.DataFrame(columns=_TC_COLS)
@@ -1553,7 +1553,7 @@ _UPSET_ROW_COLS = ["Date", "Opponent", "OpponentRating", "PlayerRating",
 
 def upset_tracker(df: pd.DataFrame) -> dict:
     """
-    Giant kills and upset losses (issue #17).
+    Giant kills and upset losses.
 
     Returns ``{"wins": [...], "losses": [...]}``:
       wins   : Wins against higher-rated opponents, biggest rating margin first.
@@ -1562,7 +1562,7 @@ def upset_tracker(df: pd.DataFrame) -> dict:
     Each row carries Date, Opponent, both ratings, Margin (rating points),
     Event, Round, and ChapterURL so tables can click through to the Game.
     Games where either rating is unknown can't be ranked and are skipped.
-    Forfeits are never upsets (issue #35): a no-show win is not a giant kill,
+    Forfeits are never upsets: a no-show win is not a giant kill,
     the same rule that keeps them out of win rate, Streaks, and openings.
     """
     empty: dict = {"wins": [], "losses": []}
@@ -1587,7 +1587,7 @@ def upset_tracker(df: pd.DataFrame) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Lessons + Tags insights (issue #12)
+# Lessons + Tags insights
 # ---------------------------------------------------------------------------
 
 _LESSON_COLS = ["Lesson", "Tags", "TagSources", "Opponent", "Outcome", "Result",
@@ -1624,7 +1624,7 @@ def lessons_table(
         {
             "Lesson": lesson,
             "Tags": game["Tags"],
-            # The per-Tag source map (issue #62 [F4]) rides along so the Lesson
+            # The per-Tag source map rides along so the Lesson
             # card can mark engine-emitted Tags; absent on un-enriched dfs.
             "TagSources": game.get("TagSources") or {},
             "Opponent": game["Opponent"],
@@ -1674,7 +1674,7 @@ def tag_counts(df: pd.DataFrame) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Recurring weakness detection (issue #18)
+# Recurring weakness detection
 # ---------------------------------------------------------------------------
 
 def recurring_weaknesses(
@@ -1684,7 +1684,7 @@ def recurring_weaknesses(
     min_occurrences: int = 3,
 ) -> list[dict]:
     """
-    Recurring weaknesses (issue #18): Tags that keep showing up in recent
+    Recurring weaknesses: Tags that keep showing up in recent
     losses — the insight that makes Tags pay off.
 
     Looks at the last *loss_window* Losses and calls out every Tag that
@@ -1710,7 +1710,7 @@ def recurring_weaknesses(
         return []
 
     # A no-show is neither a real loss nor a real non-loss: forfeits corrupt
-    # both sides of the tag/loss association, so they never enter it (#29).
+    # both sides of the tag/loss association, so they never enter it.
     df = _without_forfeits(df)
     d = df.copy()
     d["_ds"] = d["Date_dt"].fillna(pd.Timestamp.max)
@@ -1771,12 +1771,12 @@ def recurring_weaknesses(
 
 
 # ---------------------------------------------------------------------------
-# Pre-game review (issue #19)
+# Pre-game review
 # ---------------------------------------------------------------------------
 
 def review_queue(df: pd.DataFrame, *, opponent: str | None = None) -> list[dict]:
     """
-    The Lessons to re-read in the five minutes before a round (issue #19),
+    The Lessons to re-read in the five minutes before a round,
     most relevant first.
 
     Priority order:
@@ -1844,7 +1844,7 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
         items.append({"date": _date(row), "game_num": int(row["_gn"]),
                       "description": desc, "kind": kind})
 
-    # Records must not credit no-shows (#29): a forfeit is neither a first win,
+    # Records must not credit no-shows: a forfeit is neither a first win,
     # a giant kill, nor a link in a win streak. Game numbering (_gn), the first
     # recorded game, and the every-10th markers keep the full frame — a forfeit
     # is still a game that happened, just not one that scores.
@@ -1869,13 +1869,13 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
     # Highest rated opponent beaten
     beaten = played[(played["Outcome"] == "Win") & played["OpponentRatingNum"].notna()]
     if not beaten.empty:
-        r = beaten.loc[beaten["OpponentRatingNum"].idxmax()]
+        r = beaten.iloc[int(beaten["OpponentRatingNum"].argmax())]
         _add(r, f"Beat highest-rated opponent: {r['Opponent']} ({int(r['OpponentRatingNum'])})", "peak")
 
     # Peak rating
     rated_g = d[d["PlayerRatingNum"].notna()]
     if not rated_g.empty:
-        r = rated_g.loc[rated_g["PlayerRatingNum"].idxmax()]
+        r = rated_g.iloc[int(rated_g["PlayerRatingNum"].argmax())]
         _add(r, f"Achieved peak rating: {int(r['PlayerRatingNum'])}", "peak")
 
     # Longest win streak
@@ -1911,17 +1911,17 @@ def _best_win(df: pd.DataFrame) -> tuple[int, str] | None:
     """(rating, opponent) of the highest-rated opponent beaten, or None."""
     if df.empty or "OpponentRatingNum" not in df.columns:
         return None
-    df = _without_forfeits(df)  # a no-show win is not a giant kill (#29, #35)
+    df = _without_forfeits(df)  # a no-show win is not a giant kill
     beaten = df[(df["Outcome"] == "Win") & df["OpponentRatingNum"].notna()]
     if beaten.empty:
         return None
-    best = beaten.loc[beaten["OpponentRatingNum"].idxmax()]
+    best = beaten.iloc[int(beaten["OpponentRatingNum"].argmax())]
     return int(best["OpponentRatingNum"]), str(best["Opponent"])
 
 
 def milestone_deltas(old_df: pd.DataFrame, new_df: pd.DataFrame) -> list[dict]:
     """
-    Personal bests set between two data snapshots (issue #15).
+    Personal bests set between two data snapshots.
 
     Compares the pre-Sync and post-Sync Games and reports every record that
     the new Games broke.  Nothing is persisted: the comparison is the whole
@@ -1945,7 +1945,7 @@ def milestone_deltas(old_df: pd.DataFrame, new_df: pd.DataFrame) -> list[dict]:
 
     # A baseline of 0 from real games still counts: someone whose archive has
     # no win streak yet deserves the banner for their first one. An all-forfeit
-    # old snapshot has no real games, though, so it is no baseline at all (#29).
+    # old snapshot has no real games, though, so it is no baseline at all.
     old_streak = streaks(old_df)["longest_streak_wins_only"]
     new_streak = streaks(new_df)["longest_streak_wins_only"]
     if not _without_forfeits(old_df).empty and new_streak > old_streak:

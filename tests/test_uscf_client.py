@@ -41,7 +41,7 @@ class TestFetchMemberProfile:
 
 
 class TestFetchRatingSupplements:
-    """The monthly Official Rating series endpoint (issue #27)."""
+    """The monthly Official Rating series endpoint."""
 
     def test_returns_the_supplement_items(self, uscf_supplements_json):
         with mock.patch(
@@ -58,7 +58,7 @@ class TestFetchRatingSupplements:
 
 
 class TestFetchMemberSections:
-    """The per-Section pre/post rating endpoint — the Live series (issue #27)."""
+    """The per-Section pre/post rating endpoint — the Live series."""
 
     def test_returns_the_section_items(self, uscf_sections_json):
         with mock.patch(
@@ -74,7 +74,7 @@ class TestFetchMemberSections:
 
 
 class TestFetchMemberGames:
-    """The games endpoint — every rated game with opponent and outcome (issue #28)."""
+    """The games endpoint — every rated game with opponent and outcome."""
 
     def test_returns_the_game_record_items(self, uscf_games_json):
         with mock.patch(
@@ -92,7 +92,7 @@ class TestFetchMemberGames:
 
 
 class TestFetchMemberEvents:
-    """The member events endpoint — every Rated Event entered (issue #33)."""
+    """The member events endpoint — every Rated Event entered."""
 
     def test_returns_the_event_items(self, uscf_events_json):
         with mock.patch(
@@ -110,8 +110,7 @@ class TestFetchMemberEvents:
 
 
 class TestFetchEventStandings:
-    """The standings endpoint — the full crosstable of one Rated Event Section
-    (issue #34)."""
+    """The standings endpoint — the full crosstable of one Rated Event Section."""
 
     def test_returns_every_player_in_the_section(self, uscf_standings_json):
         crosstable = uscf_standings_json[("202605290393", 1)]
@@ -129,7 +128,7 @@ class TestFetchEventStandings:
 
 
 class TestFetchMemberNorms:
-    """The norms endpoint — official achievements toward titles (issue #36)."""
+    """The norms endpoint — official achievements toward titles."""
 
     def test_returns_the_norm_items(self, uscf_norms_json):
         with mock.patch(
@@ -147,7 +146,7 @@ class TestFetchMemberNorms:
 
 
 class TestFetchMemberAwards:
-    """The awards endpoint — milestones USCF itself recognizes (issue #36)."""
+    """The awards endpoint — milestones USCF itself recognizes."""
 
     def test_returns_the_award_items(self, uscf_awards_json):
         with mock.patch(
@@ -236,7 +235,7 @@ class TestTypedErrors:
     def test_mid_body_transport_error_raises_unreachable(self):
         """A connection dropped mid-download (ChunkedEncodingError) subclasses
         RequestException, not ConnectionError — it must still stay typed so
-        sync_uscf's never-raises guarantee holds (issue #87 [2])."""
+        sync_uscf's never-raises guarantee holds."""
         with mock.patch(
             "uscf_client.requests.get",
             side_effect=requests.exceptions.ChunkedEncodingError("connection reset"),
@@ -246,7 +245,7 @@ class TestTypedErrors:
 
     def test_non_json_200_body_raises_uscf_error(self):
         """A 200 whose body isn't JSON (a Cloudflare interstitial/maintenance
-        page) is a typed UscfError, never a raw JSONDecodeError (issue #87 [2])."""
+        page) is a typed UscfError, never a raw JSONDecodeError."""
         resp = mock.Mock()
         resp.status_code = 200
         resp.json.side_effect = requests.exceptions.JSONDecodeError("no json", "", 0)

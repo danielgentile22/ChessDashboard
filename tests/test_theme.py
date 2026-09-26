@@ -1,7 +1,7 @@
 """
 tests/test_theme.py
 ===================
-Theme-tokens tests (issue #44 / PRD "Theme consistency" testing decision).
+Theme-tokens tests.
 
 The theme tokens in ``styles.py`` are the single source of truth for every
 color, font, and radius.  Both the Plotly chart theme and the CSS ``:root``
@@ -161,7 +161,7 @@ class TestInjection:
 
 
 # ---------------------------------------------------------------------------
-# Pretty hover labels across every chart (PR #53 review feedback)
+# Pretty hover labels across every chart
 #
 # Every chart's hover must be hand-written, not Plotly Express's raw
 # "key=value<br>" default, and its hover *chrome* (the label box) must come
@@ -244,7 +244,7 @@ def _all_page_figures():
 class TestPrettyHoverLabels:
     def test_no_chart_shows_the_raw_px_hover(self, ui_app, ui_data):
         """No trace may carry Plotly Express's raw "key=value" hover — every
-        hover is hand-written (the PR #53 review ask)."""
+        hover is hand-written."""
         offenders = []
         for name, fig in _all_page_figures():
             for trace in fig.data:

@@ -1,7 +1,7 @@
 """
 tests/test_game_detail_coach.py
 ===============================
-The Coach view on Game detail (issue #74 [G4]).
+The Coach view on Game detail.
 
 The board switcher gains a fourth tab, Coach, rendered with the same
 open-source pgn-viewer — but only when the coach reviewed that Game.  A Game

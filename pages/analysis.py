@@ -1,13 +1,13 @@
 """
 pages/analysis.py
 =================
-The Analysis page (issues #58 [F2] + #61 [F3]) — the view onto Daniel's
+The Analysis page — the view onto Daniel's
 engine-derived **error profile** and how it moves over time.
 
 It leads with one number that matters: the split of his mistakes into
 **tactical** (forcing shots missed or material dropped to a combination) and
 **positional** (slow eval bleeds) across every analysed Game — "the single
-biggest weakness at a glance".  Around it sit the trends [F3]: per-Game
+biggest weakness at a glance".  Around it sit the trends: per-Game
 **accuracy** over time with his rating, the **mistake-type trend** (do tactical
 errors fall as positional ones grow with his level?), a **phase × type matrix**
 (his worst specific combination), and a **move-number histogram** of where his
@@ -95,7 +95,7 @@ def _distribution_card(distribution: dict[str, int]) -> html.Div:
 
 
 # ---------------------------------------------------------------------------
-# The trends (issue #61 [F3]) — accuracy, type-over-time, phase×type, histogram
+# The trends — accuracy, type-over-time, phase×type, histogram
 # ---------------------------------------------------------------------------
 
 # The rating overlay is a neutral reference line (gold stays reserved for

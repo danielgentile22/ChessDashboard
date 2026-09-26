@@ -1,7 +1,7 @@
 """
 coach_match_core.py
 ===================
-The coach-chapter matching engine (issue #73 [G3]) — pure and
+The coach-chapter matching engine — pure and
 framework-agnostic, mirroring ``uscf_core``'s ``match_games`` / ``enrich_games``
 / leftovers shape.
 
@@ -112,8 +112,7 @@ class CoachMatchResult:
     Chapters that matched no Game split two ways.  ``ambiguous_chapters`` are
     real coach reviews rejected only because of ambiguity — a Chapter that fit
     more than one Game, or a Game two Chapters both claimed; these surface in
-    Reconciliation so a review the user paid for never silently vanishes (issue
-    #92).  ``unmatched_chapters`` are the coach's teaching extras that fit no
+    Reconciliation so a review the user paid for never silently vanishes.  ``unmatched_chapters`` are the coach's teaching extras that fit no
     Game at all — deliberately dropped from Games-scoped surfaces.
     """
 
@@ -184,7 +183,7 @@ def _strip_result(movetext: str) -> str:
     Chapters are analysis boards that rarely set a result).  The Coach board view
     wraps this movetext in the user's own headers, whose Result is authoritative
     (ADR 0001); leaving the token in makes the move list terminate on a result
-    that can contradict that header (issue #92)."""
+    that can contradict that header."""
     parts = movetext.rsplit(maxsplit=1)  # split on any whitespace (exporter wraps)
     if len(parts) == 2 and parts[1] in _RESULT_TOKENS:
         return parts[0]
@@ -295,7 +294,7 @@ def match_coach_chapters(
         else:
             # Had a candidate Game but ambiguity in either direction → no match,
             # not a guess.  Distinct from the zero-candidate extras so it can
-            # surface in Reconciliation rather than vanish silently (issue #92).
+            # surface in Reconciliation rather than vanish silently.
             ambiguous.add(ci)
 
     unmatched = tuple(
@@ -331,7 +330,7 @@ def _prefixes_match(a: tuple[str, ...], b: tuple[str, ...]) -> bool:
     within it (equal length, both below _PREFIX_PLIES so neither was truncated —
     both games actually finished on the same move).  A short overlap where only
     one side ended is an opening fragment (a teaching Chapter, or a coach's blitz
-    game sharing our opening) and must not false-match (issue #92)."""
+    game sharing our opening) and must not false-match."""
     overlap = min(len(a), len(b))
     if overlap < _MIN_OVERLAP or a[:overlap] != b[:overlap]:
         return False

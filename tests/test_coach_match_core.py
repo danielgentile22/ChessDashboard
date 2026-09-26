@@ -1,7 +1,7 @@
 """
 tests/test_coach_match_core.py
 ==============================
-The coach-chapter matching engine (issue #73 [G3]).
+The coach-chapter matching engine.
 
 Mirrors ``tests/test_uscf_core.py``: a pure module verified against captured
 fixtures.  The coach study PGN (``tests/data/coach-study.pgn``) carries
@@ -185,7 +185,7 @@ class TestResultLookup:
 
 
 # ---------------------------------------------------------------------------
-# Ambiguity vs teaching extras (issue #92): a review the coach wrote but the
+# Ambiguity vs teaching extras: a review the coach wrote but the
 # matcher couldn't place must surface, not vanish among the dropped extras.
 # ---------------------------------------------------------------------------
 
@@ -251,7 +251,7 @@ class TestAmbiguitySurfaces:
 class TestPrefixOverlapGate:
     def test_short_opening_fragment_does_not_false_match_a_full_game(self):
         """A 10-ply opening-lesson Chapter shares only the opening of a full
-        Game — below _PREFIX_PLIES and one side keeps going, so no match (#92)."""
+        Game — below _PREFIX_PLIES and one side keeps going, so no match."""
         full_game = _SHARED + ["Rc1", "Qc7", "f4", "exf4", "Bxf4", "Ne5"]  # 26 plies
         df = _games(("game-1", full_game))
         result = match_coach_chapters(df, [_chapter("Najdorf intro", _SHARED[:10])])
@@ -277,13 +277,13 @@ class TestDocumentOrderAndResultToken:
 
     def test_comments_are_in_pgn_document_order(self):
         """A sideline's comment reads right after its branch point, before the
-        mainline continues — not after every later mainline comment (#92)."""
+        mainline continues — not after every later mainline comment."""
         chapter = parse_coach_study(self._DOC_PGN)[0]
         assert [c.text for c in chapter.comments] == ["MAIN2", "SIDE2", "MAIN2b"]
 
     def test_movetext_has_no_trailing_result_token(self):
         """The Coach board wraps the user's authoritative Result header around
-        this movetext; a stray '*'/'1-0' terminator would contradict it (#92)."""
+        this movetext; a stray '*'/'1-0' terminator would contradict it."""
         for result_token in ("*", "1-0", "1/2-1/2"):
             pgn = (
                 f'[Event "x"]\n[Result "{result_token}"]\n'
