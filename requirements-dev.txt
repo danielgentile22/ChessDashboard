@@ -11,7 +11,7 @@ certifi==2026.6.17
 charset-normalizer==3.4.9
     # via requests
 chess==1.11.2
-    # via python-chess
+    # via chess-dashboard (pyproject.toml)
 click==8.4.2
     # via flask
 colorama==0.4.6 ; sys_platform == 'win32'
@@ -97,8 +97,6 @@ pytest==9.1.1
     #   chess-dashboard (pyproject.toml)
     #   pytest-cov
 pytest-cov==7.1.0
-    # via chess-dashboard (pyproject.toml)
-python-chess==1.999
     # via chess-dashboard (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
