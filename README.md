@@ -14,13 +14,13 @@ git clone https://github.com/danielgentile22/ChessDashboard.git chess-dashboard 
 make demo        # → http://localhost:8050
 ```
 
-**Live:** [chess-dashboard.fly.dev](https://chess-dashboard.fly.dev) (my real games and stats)
+**Live:** [chess-dashboard.fly.dev](https://chess-dashboard.fly.dev) shows my real games and stats. Choose **Continue as guest** to look around read-only.
 
 Why it's technically interesting:
 
 - **Two unreliable sources, one honest view.** Lichess Studies are the source of truth; the undocumented USCF ratings API is enrichment that can never fail a sync. A matching engine pairs every game with its official USCF record (by member ID, then fuzzy name+date), and every disagreement between the sources lands on a Reconciliation page instead of being silently "corrected".
 - **Enrichment pipeline:** engine evals, error profiles, auto-derived weakness tags, Anthropic-generated plain-English game summaries, and coach-review chapters (matched to games *by the moves played*) all attach to games as optional layers; any layer being unavailable degrades gracefully.
-- **Multi-user with per-user isolation.** An opt-in login gate turns the same codebase into a coach/student deployment, each user seeing only their own store (`docs/decisions/0005`).
+- **Owner and guest access.** The deployed site has an owner login and a read-only guest mode, enforced on the server: a guest can browse everything but cannot trigger a Sync (which spends API tokens) or change anything. An opt-in multi-user mode turns the same codebase into a coach/student deployment, each user seeing only their own store (`docs/decisions/0005`).
 - **Deliberate architecture:** pure, framework-agnostic core modules with mirrored HTTP-client boundaries, ~20 test modules covering them, seven [ADRs](docs/decisions/) recording the load-bearing decisions, CI on every push, deployed on Fly.io.
 
 | | |
@@ -84,7 +84,7 @@ Boots entirely from a committed, anonymized game history (`tests/data/demo-games
 
 ### Prerequisites
 
-- Python 3.10 or newer
+- Python 3.11 or newer
 - A Lichess Study containing your games (one Game per Chapter), e.g. `https://lichess.org/study/abcdWXYZ` → study ID `abcdWXYZ`
 
 ### Install with Make (recommended)
@@ -123,7 +123,7 @@ python app.py --study abcdWXYZ
 | `--host` | `127.0.0.1` | Host to bind to |
 | `--port` | `8050` | Port to listen on |
 | `--debug` | off | Enable Dash hot-reload mode |
-| `--demo` | off | Boot entirely from the committed anonymized seed (`tests/data/demo-games.pgn`), with no network calls and no auth |
+| `--demo` | off | Boot entirely from the committed anonymized seed (`tests/data/demo-games.pgn`), read-only, with no network calls and no login |
 
 When your archive grows past Lichess's 64-chapter Study limit, designate the next Study too:
 
@@ -141,6 +141,8 @@ python app.py --study abcdWXYZ --player "Last, First"
 
 ### Environment variables
 
+Every variable is listed with a comment in [`.env.example`](.env.example). The app reads plain environment variables, so load a filled-in copy with `set -a; source .env; set +a`.
+
 | Variable | Description |
 |---|---|
 | `LICHESS_STUDY_IDS` | Comma-separated Lichess study IDs to Sync from (e.g. `abcdWXYZ,abcd1234`) |
@@ -151,12 +153,13 @@ python app.py --study abcdWXYZ --player "Last, First"
 | `USCF_CACHE_PATH` | USCF response cache, used as fallback when USCF is unreachable (default: `uscf_cache.json`) |
 | `ANTHROPIC_API_KEY` | Optional Anthropic key for the plain-English AI game summaries; unset → the summary step is a no-op and the dashboard runs unchanged |
 | `ANALYSIS_CACHE_PATH` | AI-summary cache so unchanged Games aren't re-billed (default: `analysis_cache.json`) |
-| `USCF_DASHBOARD_USERS` | JSON array of user records to enable multi-user login + coach review (PRD #55); empty → single-user, ungated. See [Multi-user access & coach review](docs/features.md#multi-user-access--coach-review) |
-| `SECRET_KEY` | Signs the login session cookie; **must** be a stable secret in any multi-user deployment |
+| `OWNER_PASSWORD_HASH` | Turns on the owner/guest login for a single-user deployment. A password hash from `python -m user_config hash`; unset → no login, and anyone who can reach the app can Sync |
+| `SECRET_KEY` | Signs the login session cookie. Required, and must be a stable secret, whenever a login is on (the app refuses to start without one) |
+| `USCF_DASHBOARD_USERS` | JSON array of user records to enable multi-user login + coach review; empty → single-user. See [Multi-user access & coach review](docs/features.md#multi-user-access--coach-review) |
 | `DATA_DIR` | Where each user's disposable caches live, one subdir per user (default: `.user-data`) |
-| `DEMO_MODE` | Truthy (`1`/`true`) boots demo mode: committed seed only, no network calls, no auth gate (default: off) |
+| `DEMO_MODE` | Truthy (`1`/`true`) boots demo mode: committed seed only, no network calls, read-only, no login (default: off) |
 | `DEMO_CACHE_PATH` | PGN the demo boots from (default: `tests/data/demo-games.pgn`) |
-| `HOST` / `PORT` / `DEBUG` | Server binding and debug mode |
+| `HOST` / `PORT` / `DEBUG` / `LOG_LEVEL` | Server binding, debug mode, and gunicorn log level |
 
 ### Offline resilience
 
@@ -176,7 +179,8 @@ All common tasks are wrapped in the `Makefile`:
 make help           # list all targets
 make install-dev    # install runtime + dev deps (pytest, ruff, mypy)
 make test           # run pytest with coverage report
-make lint           # run ruff (auto-fix)
+make lint           # run ruff (check only, like CI)
+make fix            # run ruff with auto-fix
 make typecheck      # run mypy on the core + client modules
 make run-debug      # start with hot-reload
 make docker-up      # build & run in Docker
@@ -208,23 +212,26 @@ fly deploy                 # every time after
 
 Points worth knowing:
 
-- Set your own values in `[env]` (`LICHESS_STUDY_IDS`, `USCF_MEMBER_ID`, …); put secrets (`LICHESS_API_TOKEN`, `ANTHROPIC_API_KEY`, `SECRET_KEY`, `USCF_DASHBOARD_USERS`) in `fly secrets set` instead of the file.
+- Set your own values in `[env]` (`LICHESS_STUDY_IDS`, `USCF_MEMBER_ID`, …); put secrets (`LICHESS_API_TOKEN`, `ANTHROPIC_API_KEY`, `OWNER_PASSWORD_HASH`, `SECRET_KEY`, `USCF_DASHBOARD_USERS`) in `fly secrets set` instead of the file.
 - The cache paths (`CACHE_PATH`, `USCF_CACHE_PATH`, `ANALYSIS_CACHE_PATH`, `DATA_DIR`) point at the mounted volume so caches survive deploys. They're disposable either way: losing them just means the next Sync re-fetches.
 - Fly health-checks `GET /health`, which the app serves.
 
 The container runs `gunicorn app:server --config gunicorn.conf.py`, so any platform that can run the Dockerfile works the same way.
 
-### Hosting a public demo
+### Owner and guest login
 
-A read-only public demo is just a second Fly app running demo mode, with no secrets and no volume needed:
+A public deployment should not let every visitor press Sync: it calls Lichess with your token, calls USCF, and can bill your Anthropic key. Set an owner password and every visitor lands on a login page with two choices:
+
+- **Owner:** enter the password for full access (Sync, Reconciliation dismissals, sign out from the header).
+- **Continue as guest:** every page and every game, read-only. The header shows a "Guest · read-only" badge instead of the Sync button, and the server refuses a guest's Sync or dismissal even if the request is sent by hand.
 
 ```bash
-fly launch --copy-config --name chess-dashboard-demo --no-deploy
-fly secrets set -a chess-dashboard-demo DEMO_MODE=1
-fly deploy -a chess-dashboard-demo
+python -m user_config hash          # prompts for the password, prints the hash
+fly secrets set OWNER_PASSWORD_HASH='<the printed hash>' \
+  SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
 ```
 
-Demo mode makes no network calls and never writes, so the smallest machine works.
+Keep the single quotes around the hash: it contains `$`. Sessions last seven days, and the cookie is HTTPS-only unless `DEBUG` is on.
 
 ---
 
@@ -257,7 +264,7 @@ chess-dashboard/
 ├── lichess_client.py        # Lichess API client (the only module that talks HTTP to Lichess)
 ├── uscf_client.py           # USCF ratings API client (the only module that talks HTTP to USCF)
 ├── uscf_core.py             # Pure USCF interpretation: profile, rating series, matching engine, reconciliation
-├── auth.py                  # Login gate (multi-user mode): session cookie, per-request user activation
+├── auth.py                  # Login gate: owner/guest roles or multi-user, signed session cookie
 ├── user_config.py           # USCF_DASHBOARD_USERS parsing + the `python -m user_config hash` helper
 ├── coach_match_core.py      # Pure coach-review matching: coach Chapters → Games, by the moves played
 ├── shell.py                 # Persistent app chrome: header, nav tabs, sync machinery
@@ -304,7 +311,7 @@ chess-dashboard/
 │   ├── test_sync.py         # Sync orchestrator tests (stubbed clients)
 │   ├── test_config.py       # Config parsing tests
 │   ├── test_data.py         # Data store tests (stubbed clients)
-│   ├── test_auth.py         # Login gate + per-user isolation tests
+│   ├── test_auth.py         # Login gate, guest read-only enforcement, per-user isolation
 │   ├── test_user_config.py  # USCF_DASHBOARD_USERS parsing + password-hash helper tests
 │   ├── test_coach_match_core.py  # Coach Chapter → Game matching tests
 │   ├── test_coach_sync.py   # Coach-study Sync integration tests
@@ -313,6 +320,7 @@ chess-dashboard/
 │   ├── test_theme.py        # styles.THEME ↔ CSS token consistency
 │   ├── test_shell.py        # Shell + filter callback tests
 │   └── test_ui_smoke.py     # UI smoke harness: every page boots, renders, wires up
+├── .env.example             # Every environment variable, commented
 ├── requirements.txt         # Runtime dependencies
 ├── requirements-dev.txt     # Dev dependencies (pytest, ruff, mypy)
 ├── pyproject.toml           # Project metadata + tool configuration
@@ -323,7 +331,7 @@ chess-dashboard/
 ├── fly.toml                 # Fly.io deployment configuration (machine, volume, health check)
 └── .github/
     └── workflows/
-        └── ci.yml           # GitHub Actions: lint → test → typecheck
+        └── ci.yml           # GitHub Actions: lint, then tests, typecheck, Docker smoke test
 ```
 
 ### Key design decisions
@@ -342,7 +350,7 @@ chess-dashboard/
 
 **One filter helper, many callbacks.** Every chart callback on every page shares the same `FILTER_INPUTS` list and `filters.get_filtered()` helper. Dash runs independent callbacks in parallel, so all charts update concurrently when you change a filter.
 
-**Lessons live on Lichess** (ADR 0002). A Game's Lesson is a chapter comment starting with `Lesson:`; hashtags become Tags. The dashboard extracts both during Sync and never stores them itself; writing happens on Lichess only. An analyzed Game *also* tags itself: `engine_analysis_core` maps its error profile into the canonical taxonomy (`#tactics`/`#strategy`/`#blunder`/`#opening`/`#endgame`) and those **engine-emitted Tags** flow into the same `Tags` column (source-tagged `engine` vs `mine` and rendered with a muted ⚙ chip so they stay distinguishable), lighting up the Lessons page, recurring-weakness detection, and review mode without a single comment (issue #62 [F4]). They're derived enrichment, never written back to Lichess.
+**Lessons live on Lichess** (ADR 0002). A Game's Lesson is a chapter comment starting with `Lesson:`; hashtags become Tags. The dashboard extracts both during Sync and never stores them itself; writing happens on Lichess only. An analyzed Game *also* tags itself: `engine_analysis_core` maps its error profile into the canonical taxonomy (`#tactics`/`#strategy`/`#blunder`/`#opening`/`#endgame`) and those **engine-emitted Tags** flow into the same `Tags` column (source-tagged `engine` vs `mine` and rendered with a muted ⚙ chip so they stay distinguishable), lighting up the Lessons page, recurring-weakness detection, and review mode without a single comment. They're derived enrichment, never written back to Lichess.
 
 **Engine analysis is enrichment, never a dependency** (ADR 0004). When you request Lichess's computer analysis on a Chapter, the Study export gains per-move `[%eval]` values, judgments, and recommended lines; the dashboard *reads* them, with no bundled engine and no analysis API. `engine_analysis_core.py` (pure, like `pgn_stats_core`) turns one Game's movetext into a `GameAnalysis` whose headline is the **critical moment**: the single biggest win-probability swing, attributed to whichever side made it. A Sync that reaches Lichess succeeds whether or not any Game is analyzed; an un-analyzed Game degrades to `analyzed=False` and is shown as "awaiting analysis", never as an error. One caveat: OTB time-trouble can't be auto-detected (the export carries no clock data), so the manual `#time-trouble` Tag stays the only signal for it.
 
