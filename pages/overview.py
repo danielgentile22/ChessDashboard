@@ -17,6 +17,7 @@ import plotly.express as px
 from dash import Input, Output, callback, dcc, html
 
 import data
+from auth import DESCRIPTION
 from components import (
     chart_card,
     content_card,
@@ -47,6 +48,7 @@ from uscf_core import achievement_milestones, membership_alert
 
 dash.register_page(
     __name__, path="/", name="Overview", title="Overview | Chess Dashboard", order=0,
+    description=DESCRIPTION,
 )
 
 
@@ -75,10 +77,10 @@ def layout(**kwargs) -> html.Div:
             kpi_card("Favourite Opening",  "kpi-fav-opn", text=True),
         ]),
 
-        # The USCF profile card (issue #25) — official identity, follows Syncs
+        # The USCF profile card — official identity, follows Syncs
         html.Div(id="uscf-profile-card"),
 
-        # The most severe recurring weakness, if any (issue #18)
+        # The most severe recurring weakness, if any
         html.Div(id="top-weakness"),
 
         # Form + outcome charts
@@ -144,7 +146,7 @@ def update_kpis(colors, outcomes, terminations, start, end, events, moves, _sync
 @callback(Output("uscf-profile-card", "children"), Input("sync-store", "data"))
 def update_uscf_card(_sync):
     """
-    The USCF profile card (issue #25).
+    The USCF profile card.
 
     Follows Syncs (not filters — official data is never filtered).  Degrades
     to an unavailable notice when USCF can't be reached (ADR 0003), and to
@@ -160,7 +162,7 @@ def update_uscf_card(_sync):
     if stale:
         stale += ". Showing the last successful Sync's data."
 
-    # The current Live Rating: where the per-Section chain stands today (issue #27)
+    # The current Live Rating: where the per-Section chain stands today
     live_series = data.get_live_series()
     live_rating = live_series[-1].post if live_series else None
 
@@ -174,7 +176,7 @@ def update_uscf_card(_sync):
 
 @callback(Output("top-weakness", "children"), FILTER_INPUTS)
 def update_top_weakness(colors, outcomes, terminations, start, end, events, moves, _sync=None, lens=None):
-    """The single most severe recurring weakness (issue #18). Silent below threshold."""
+    """The single most severe recurring weakness. Silent below threshold."""
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
     callouts = recurring_weaknesses(df_f)
     if not callouts:
@@ -192,7 +194,7 @@ def update_streak(colors, outcomes, terminations, start, end, events, moves, _sy
     s = streaks(df_f)
 
     # The outcome letter (W/D/L) inside each badge is the non-color channel —
-    # colour alone can't carry win vs loss (issue #88).
+    # colour alone can't carry win vs loss.
     badges = [
         html.Span(o[0], className=f"sbadge {o.lower()}", title=o)
         for o in s["last_20"]
@@ -268,7 +270,7 @@ def update_terminations(colors, outcomes, terminations, start, end, events, move
 
 def _milestone_row(m: dict) -> html.Div:
     """One timeline row.  Game milestones show their game number; official
-    USCF achievements (issue #36) show a gold USCF badge and link to the
+    USCF achievements show a gold USCF badge and link to the
     Events page, where their Rated Event lives."""
     is_uscf = m["kind"] == "uscf"
     num = html.Div("USCF" if is_uscf else f"#{m['game_num']}",
@@ -291,7 +293,7 @@ def _milestone_row(m: dict) -> html.Div:
 def update_milestones(colors, outcomes, terminations, start, end, events, moves, _sync=None, lens=None):
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
     ms = compute_milestones(df_f)
-    # Official achievements join the timeline (issue #36).  They aren't Games,
+    # Official achievements join the timeline.  They aren't Games,
     # so only the date range applies to them — never the game filters.
     ms += achievement_milestones(data.get_uscf_achievements(),
                                  date_start=start, date_end=end)

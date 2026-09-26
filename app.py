@@ -72,34 +72,50 @@ def _index_template(root_block: str) -> str:
 def build_app(study_ids: list[str], player_name=None, token=None, cache_path=None,
               uscf_member_id=None, uscf_cache_path=None,
               anthropic_api_key=None, analysis_cache_path=None,
-              users=None, secret_key=None, demo_mode=False):
+              users=None, secret_key=None, demo_mode=False,
+              owner_password_hash=None):
     """Sync the designated Studies, build the Dash app, and return (dash_app, server).
 
-    When *users* is a non-empty multi-user config (PRD #55), the whole server is
-    gated behind a login (issue #71 [G1]) and the data store becomes per-user
-    (issue #72 [G2]): each user is Synced against their own Studies / token /
-    USCF member ID, and the request's authenticated user is activated before any
-    page renders.  With no users it runs ungated, single-user, exactly as before.
+    Three ways to run:
+
+    * *users* (a multi-user config): the server is gated behind a username
+      login and the data store becomes per-user.  Each user is Synced against
+      their own Studies, token, and USCF member ID.
+    * *owner_password_hash* (single-user): the server is gated behind the
+      owner's password, with a read-only "Continue as guest" option.
+    * neither: single-user and ungated.
+
+    Demo mode is never gated: it is read-only already.
     """
     from dash import Dash
 
-    if users and not demo_mode:
-        # Multi-user auth signs session cookies with SECRET_KEY; refuse the
-        # public shipped default (forgeable cookies) *and* a blank key (Flask
-        # can't sign, so login would 500) — issue #89 [F1].  Only fires in
-        # multi-user mode; single-user stays ungated.
+    gated = bool(users or owner_password_hash) and not demo_mode
+    if gated:
+        # Sessions are signed with SECRET_KEY.  Refuse the public shipped
+        # default (forgeable cookies) and a blank key (Flask can't sign, so
+        # login would 500).
         effective_key = (secret_key or config.SECRET_KEY or "").strip()
         if not effective_key or effective_key == config.DEFAULT_SECRET_KEY:
             raise RuntimeError(
-                "Refusing to start multi-user auth without a real SECRET_KEY "
-                "(it is blank or the shipped default — cookies would be forgeable "
-                "or unsignable). Set SECRET_KEY to a stable secret, e.g. "
+                "Refusing to start the login gate without a real SECRET_KEY "
+                "(it is blank or the shipped default, so cookies would be "
+                "forgeable or unsignable). Set SECRET_KEY to a stable secret, e.g. "
                 "python -c 'import secrets; print(secrets.token_hex(32))'"
             )
-        # Multi-user (issue #72): a store per user.  Not Synced here — the
-        # per-request hook below activates the right store and Syncs it lazily
-        # on first use (issue #89 [F6]), so worker boot never blocks on the
-        # whole roster's external HTTP.
+    if owner_password_hash and not users and owner_password_hash.count("$") < 2:
+        raise RuntimeError(
+            "OWNER_PASSWORD_HASH is not a password hash. Mint one with "
+            "`python -m user_config hash` and set the printed value."
+        )
+    if not gated and not demo_mode:
+        logger.warning(
+            "No OWNER_PASSWORD_HASH or USCF_DASHBOARD_USERS set: the dashboard is "
+            "ungated, so anyone who can reach it can Sync.")
+
+    if users and not demo_mode:
+        # A store per user.  Not Synced here: the per-request hook below
+        # activates the right store and Syncs it lazily on first use, so worker
+        # boot never blocks on the whole roster's external HTTP.
         data.register_users(
             users, data_dir=config.DATA_DIR, anthropic_api_key=anthropic_api_key,
         )
@@ -121,7 +137,7 @@ def build_app(study_ids: list[str], player_name=None, token=None, cache_path=Non
         external_stylesheets=[dbc.themes.CYBORG, dbc.icons.BOOTSTRAP],
         suppress_callback_exceptions=True,
         title=f"Chess Dashboard | {detected}",
-        # Lichess's pgn-viewer (issue #60 [F6]) ships as an ES module; Dash would
+        # Lichess's pgn-viewer ships as an ES module; Dash would
         # otherwise inject it as a classic <script> and the browser would reject
         # its `export`.  Keep it out of the auto-bundle — assets/lpv-init.js
         # imports it dynamically.  It is still served at /assets/ on request.
@@ -143,11 +159,17 @@ def build_app(study_ids: list[str], player_name=None, token=None, cache_path=Non
     def health():
         return "ok", 200
 
-    # The login gate (issue #71 [G1]) + per-request user activation (issue #72
-    # [G2]).  Installed only when users are configured; coach material is
+    import auth
+    if gated and not users:
+        auth.install_auth(
+            dash_app.server, owner_password_hash=owner_password_hash,
+            secret_key=secret_key or config.SECRET_KEY,
+            secure_cookies=not config.DEBUG,  # HTTPS-only off only for local dev
+        )
+
+    # The multi-user gate + per-request user activation.  Coach material is
     # private, so a gated server is the only place it may render.
     if users and not demo_mode:
-        import auth
         auth.install_auth(
             dash_app.server, users, secret_key=secret_key or config.SECRET_KEY,
             secure_cookies=not config.DEBUG,  # HTTPS-only off only for local dev
@@ -184,7 +206,7 @@ def _exit_with_sync_error(exc: Exception, study_label: str) -> None:
 server = None
 
 # Boot when either a single global Study list (single-user) or a multi-user
-# config (PRD #55) is present.  Multi-user needs no global STUDY_IDS — each
+# config is present.  Multi-user needs no global STUDY_IDS — each
 # user's Studies live in their own config record.
 if config.STUDY_IDS or config.USERS or config.DEMO_MODE:
     try:
@@ -200,6 +222,7 @@ if config.STUDY_IDS or config.USERS or config.DEMO_MODE:
             users=config.USERS,
             secret_key=config.SECRET_KEY,
             demo_mode=config.DEMO_MODE,
+            owner_password_hash=config.OWNER_PASSWORD_HASH,
         )
     except SyncError as _exc:
         _exit_with_sync_error(_exc, f"LICHESS_STUDY_IDS={config.STUDY_IDS!r}")
@@ -241,7 +264,7 @@ def main():
     ap.add_argument("--port",   default=config.PORT, type=int)
     ap.add_argument("--debug",  action="store_true", default=config.DEBUG)
     ap.add_argument("--demo", action="store_true", default=config.DEMO_MODE,
-                    help="Boot entirely from the PGN cache; no network calls or auth")
+                    help="Boot entirely from the PGN cache; no network calls, no login, read-only")
     args = ap.parse_args()
 
     study_ids = args.studies or config.STUDY_IDS
@@ -262,6 +285,8 @@ def main():
             anthropic_api_key=None if args.demo else config.ANTHROPIC_API_KEY,
             analysis_cache_path=None if args.demo else args.analysis_cache_path,
             demo_mode=args.demo,
+            secret_key=config.SECRET_KEY,
+            owner_password_hash=config.OWNER_PASSWORD_HASH,
         )
     except SyncError as exc:
         _exit_with_sync_error(exc, f"--study {study_ids!r}")

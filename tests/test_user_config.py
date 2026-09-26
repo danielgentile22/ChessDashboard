@@ -1,7 +1,7 @@
 """
 tests/test_user_config.py
 =========================
-The multi-user configuration parser (issue #71 [G1]).
+The multi-user configuration parser.
 
 A well-formed config block yields one validated record per user; a malformed
 record raises clearly at load rather than silently serving the wrong data;
@@ -143,7 +143,7 @@ class TestMalformed:
     @pytest.mark.parametrize("bad", ["john smith", "a/b", ".", "..", "he@llo"])
     def test_username_that_wont_map_to_a_cache_dir_raises(self, bad):
         # Only chars that survive the cache-dir mapping unchanged are allowed,
-        # so distinct users can never collapse to one directory (#89).
+        # so distinct users can never collapse to one directory.
         with pytest.raises(UserConfigError, match="(?i)username"):
             parse_users(_config(_record(username=bad)))
 

@@ -28,7 +28,7 @@ def parse_bool(raw: str) -> bool:
 
 class Config:
     # The shipped fallback session-signing key.  Fine for a private single-user
-    # laptop, but multi-user auth refuses to start on it (issue #89): it is
+    # laptop, but multi-user auth refuses to start on it: it is
     # public, so any cookie signed with it is forgeable.
     DEFAULT_SECRET_KEY: str = "dev-insecure-change-me"
 
@@ -59,14 +59,14 @@ class Config:
     # down (ADR 0003). Disposable, gitignored, never a source of truth.
     USCF_CACHE_PATH: str = os.environ.get("USCF_CACHE_PATH", "uscf_cache.json").strip()
 
-    # Optional Anthropic API key for the AI game summaries (issue #59 [F5]).
+    # Optional Anthropic API key for the AI game summaries.
     # Without it the summary step is a no-op — the dashboard runs unchanged.
     ANTHROPIC_API_KEY: str | None = (
         os.environ.get("ANTHROPIC_API_KEY", "").strip() or None
     )
 
     # Where engine-analysis AI summaries are cached so unchanged Games aren't
-    # re-billed (issue #59).  Disposable, gitignored, never a source of truth
+    # re-billed.  Disposable, gitignored, never a source of truth
     # (ADR 0004), exactly like the USCF cache.
     ANALYSIS_CACHE_PATH: str = os.environ.get(
         "ANALYSIS_CACHE_PATH", "analysis_cache.json"
@@ -79,17 +79,24 @@ class Config:
     # no cache writes, no auth gate.
     DEMO_MODE: bool = parse_bool(os.environ.get("DEMO_MODE", ""))
 
-    # Multi-user access (issue #71 [G1]).  A JSON array of user records (see
+    # Multi-user access.  A JSON array of user records (see
     # user_config); empty means the dashboard runs single-user and ungated,
     # exactly as before.  A malformed block raises clearly here, at load.
     USERS: dict[str, UserRecord] = parse_users(os.environ.get("USCF_DASHBOARD_USERS", ""))
 
-    # Signs the login session cookie (issue #71).  MUST be set to a stable,
+    # The owner's password for the single-user owner/guest login, as a hash
+    # (mint one with `python -m user_config hash`).  Unset means the
+    # single-user dashboard is ungated: anyone who can reach it can Sync.
+    OWNER_PASSWORD_HASH: str | None = (
+        os.environ.get("OWNER_PASSWORD_HASH", "").strip() or None
+    )
+
+    # Signs the login session cookie.  MUST be set to a stable,
     # secret value in any multi-user deployment so sessions survive restarts
     # and cannot be forged; the dev default is fine only for a private laptop.
     SECRET_KEY: str = os.environ.get("SECRET_KEY", DEFAULT_SECRET_KEY).strip()
 
-    # Where each user's disposable caches live (issue #72 [G2]): one subdirectory
+    # Where each user's disposable caches live: one subdirectory
     # per user under here, so users' PGN/USCF/analysis caches never collide.
     # Disposable like every other cache (ADR 0001/0003); a host without a
     # writable disk just goes without them.

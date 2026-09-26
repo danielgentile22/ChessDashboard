@@ -29,7 +29,7 @@ class TestParseStudyIds:
 
 
 class TestParseMemberId:
-    """The USCF member ID setting, configurable alongside the Study IDs (issue #25)."""
+    """The USCF member ID setting, configurable alongside the Study IDs."""
 
     def test_member_id_passed_through(self):
         assert parse_member_id("12345678") == "12345678"
@@ -63,7 +63,7 @@ class TestDemoModeSettings:
 
 
 class TestAnalysisSettings:
-    """The AI-summary settings (issue #59 [F5]): both optional, safe defaults."""
+    """The AI-summary settings: both optional, safe defaults."""
 
     def test_api_key_unset_means_no_summaries(self, monkeypatch):
         """No key → ai_summary is a no-op; the dashboard runs without one."""

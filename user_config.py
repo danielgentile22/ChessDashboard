@@ -1,7 +1,7 @@
 """
 user_config.py
 ==============
-The multi-user configuration parser (issue #71 [G1]).
+The multi-user configuration parser.
 
 The dashboard is no longer hard-wired to one player.  A plain text-style config
 lists who is allowed: one record per user, each with a username, a **hashed**
@@ -48,7 +48,7 @@ from dataclasses import dataclass, field
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Usernames map 1:1 to a private cache directory, so they are restricted to
-# characters that survive that mapping unchanged (issue #89 [F2]) — see
+# characters that survive that mapping unchanged — see
 # data._safe_dirname, which then becomes a no-op.
 _USERNAME_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 
@@ -62,10 +62,10 @@ class UserRecord:
     """One allow-listed user: their credentials and their configured sources."""
 
     username: str
-    # repr=False: secrets must never surface in a log/traceback/pytest diff (#89).
+    # repr=False: secrets must never surface in a log/traceback/pytest diff.
     password_hash: str = field(repr=False)
     study_ids: tuple[str, ...]          # the Games' source of truth (ADR 0001)
-    coach_study_ids: tuple[str, ...]    # the coach's review Studies (issue #74)
+    coach_study_ids: tuple[str, ...]    # the coach's review Studies
     uscf_member_id: str | None          # enriches the Games (ADR 0003)
     lichess_token: str | None = field(repr=False)  # reads private coach Studies
 
@@ -149,7 +149,7 @@ def _record_from_item(item: object, index: int) -> UserRecord:
 
 
 def _validate_username(username: str, where: str) -> None:
-    """Reject usernames that wouldn't map 1:1 to a private cache dir (#89 [F2]).
+    """Reject usernames that wouldn't map 1:1 to a private cache dir.
 
     ``.`` and ``..`` are path components (they'd escape / collapse DATA_DIR), and
     anything outside ``_USERNAME_RE`` would be rewritten by ``_safe_dirname`` and

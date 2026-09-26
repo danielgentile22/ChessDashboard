@@ -14,12 +14,13 @@ Page content renders inside ``dash.page_container`` below the header.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, dcc, html, no_update
 
+import auth
 import data
 from components import celebration_banner, form_indicator
 from filters import FILTER_INPUTS, get_filtered, make_filter_button, make_filter_drawer
@@ -48,7 +49,7 @@ def _nav() -> html.Nav:
 
 def _lens_toggle() -> html.Div:
     """
-    The Official/Live rating lens (issue #31) — a lens, not a filter: it
+    The Official/Live rating lens — a lens, not a filter: it
     selects which rating series (CONTEXT.md: Official Rating vs Live Rating)
     powers rating-derived numbers, and never hides Games.
 
@@ -74,9 +75,32 @@ def _lens_toggle() -> html.Div:
     ], title="Rating lens: which rating series every rating-derived stat uses")
 
 
-def _header(player_name: str) -> html.Header:
+def _session_controls(guest: bool) -> list:
+    """The guest's read-only badge and sign-in link, or the owner's sign-out.
+
+    Nothing on an ungated server: there is no session to show.
     """
-    The calm header (issue #45): brand, form/streak, reconciliation badge,
+    if guest:
+        return [html.A(
+            [html.I(className="bi bi-eye"),
+             html.Span("Guest · read-only", className="header-btn-text")],
+            href="/login", className="header-btn header-guest",
+            title="You're browsing read-only. Sign in as the owner to Sync "
+                  "or dismiss items.",
+        )]
+    if auth.current_role() == auth.OWNER:
+        return [html.Form(method="post", action="/logout", className="header-logout",
+                          children=[html.Button(
+            [html.I(className="bi bi-box-arrow-right"),
+             html.Span("Sign out", className="header-btn-text")],
+            type="submit", className="header-btn", title="Sign out",
+        )])]
+    return []
+
+
+def _header(player_name: str, guest: bool = False) -> html.Header:
+    """
+    The calm header: brand, form/streak, reconciliation badge,
     the Official/Live lens, Filters, Sync.  Nothing else.
 
     The game count and date range now live in the filter drawer summary, and
@@ -93,23 +117,26 @@ def _header(player_name: str) -> html.Header:
                     html.Span("Chess Dashboard", className="app-header-title"),
                     html.Span(player_name, className="app-header-player"),
                 ], className="app-header-titles"),
-                # Streak fire + form dots (issue #10) — filled by callback
+                # Streak fire + form dots — filled by callback
                 html.Div(id="header-form", className="header-form"),
             ]),
             html.Div(className="app-header-right", children=[
-                # Open Reconciliation items (issue #30) — filled by callback
+                # Open Reconciliation items — filled by callback
                 html.Div(id="reconciliation-badge", className="reconciliation-badge-slot"),
-                # The Official/Live rating lens (issue #31)
+                # The Official/Live rating lens
                 _lens_toggle(),
                 make_filter_button(),
                 html.Button(
-                    # title holds the sync-freshness tooltip — filled by callback
+                    # title holds the sync-freshness tooltip, filled by callback.
+                    # Guests can't Sync, so it stays in the DOM (the freshness
+                    # callback writes to it) but hidden.
                     className="header-btn header-btn-sync", id="sync-button",
-                    title="Sync", children=[
+                    title="Sync", hidden=guest, children=[
                         html.I(className="bi bi-arrow-repeat"),
                         html.Span("Sync", className="header-btn-text"),
                     ],
                 ),
+                *_session_controls(guest),
             ]),
         ]),
         # Row 2: page navigation
@@ -128,22 +155,22 @@ def make_shell() -> html.Div:
     player = data.get_player()
 
     return html.Div(className="app-root", children=[
-        _header(player),
+        _header(player, guest=auth.is_guest()),
 
         # Cache / offline notice (filled by callback when relevant)
         html.Div(id="cache-notice"),
 
-        # Milestone celebrations (issue #15) — lives in the shell so a banner
+        # Milestone celebrations — lives in the shell so a banner
         # earned by a Sync survives page navigation until it's dismissed
         html.Div(id="celebration-zone"),
 
         # Programmatic navigation target: clicking a Game row anywhere
-        # outputs a /game/<id> path here (issue #11)
+        # outputs a /game/<id> path here
         dcc.Location(id="url", refresh="callback-nav"),
 
         # Sync machinery (invisible)
         dcc.Store(id="sync-store", data={"seq": 0, "new_games": 0}),
-        # Bumped on every Reconciliation dismissal so the badge follows (issue #30)
+        # Bumped on every Reconciliation dismissal so the badge follows
         dcc.Store(id="reconciliation-store", data=0),
         dcc.Interval(id="freshness-interval", interval=30_000, n_intervals=0),
         dbc.Toast(
@@ -169,7 +196,7 @@ def _freshness_label(synced_at: datetime | None) -> str:
     """'synced X ago' label for the header ('' if never synced)."""
     if synced_at is None:
         return ""
-    age = (datetime.now(timezone.utc) - synced_at).total_seconds()
+    age = (datetime.now(UTC) - synced_at).total_seconds()
     if age < 60:
         return "synced just now"
     if age < 3600:
@@ -181,7 +208,7 @@ def _freshness_label(synced_at: datetime | None) -> str:
 
 def _uscf_freshness_label() -> str:
     """
-    The USCF half of the per-source freshness indicator (issue #26).
+    The USCF half of the per-source freshness indicator.
 
     '' when USCF isn't configured — Lichess-only users see no USCF noise.
     """
@@ -227,6 +254,12 @@ def _describe_new_games(new_games: list[dict]) -> str:
 )
 def run_sync(n_clicks, store):
     """The Sync button: re-Sync all designated Studies, report the outcome."""
+    # Server-side check: hiding the button isn't enough, a guest can still
+    # fire this callback by hand.
+    if not auth.can_write():
+        return (no_update, True, "Read-only", "secondary",
+                "Guests can't Sync. Sign in as the owner to refresh the data.",
+                no_update)
     # Snapshot the pre-Sync Games: refresh() rebinds the store, so this
     # reference keeps pointing at the old data — the milestone baseline.
     pre_sync_df = data.get_df()
@@ -250,16 +283,16 @@ def run_sync(n_clicks, store):
     if outcome.failures:
         failed = ", ".join(study_id for study_id, _ in outcome.failures)
         body += f" (couldn't fetch: {failed})"
-    # Sync freshness rides along in the toast (issue #45): it left the header,
+    # Sync freshness rides along in the toast: it left the header,
     # so the post-Sync toast is where you confirm both sources are current.
     body = [html.Div(body),
             html.Div(_per_source_freshness(_freshness_label(data.synced_at())),
                      className="sync-toast-freshness")]
     new_store = {"seq": seq, "new_games": len(outcome.new_games)}
 
-    # Did the new Games set any personal bests? (issue #15)
+    # Did the new Games set any personal bests?
     deltas = milestone_deltas(pre_sync_df, data.get_df())
-    # Did USCF recognize anything new — a norm, an award? (issue #36)
+    # Did USCF recognize anything new — a norm, an award?
     deltas += [{
         "kind": "uscf_achievement",
         "description": f"Official USCF achievement: {a.title}"
@@ -284,7 +317,7 @@ def update_form(colors, outcomes, terminations, start, end, events, moves, _sync
 )
 def update_reconciliation_badge(_sync, _dismissals):
     """
-    The header's open-disagreements count (issue #30), on every page,
+    The header's open-disagreements count, on every page,
     linking to the Reconciliation page.  No badge when everything agrees —
     silence is the reward.
     """
@@ -310,7 +343,7 @@ def update_reconciliation_badge(_sync, _dismissals):
 def update_freshness(_n, _sync):
     """
     The per-source 'synced X ago' label moves onto the Sync button as its
-    tooltip (issue #45), and the cached-data notice shows when offline.
+    tooltip, and the cached-data notice shows when offline.
 
     Freshness no longer stares from the header on every page — it's one hover
     (or tap-and-hold) away on the Sync button, and it's restated in the
@@ -331,8 +364,8 @@ def update_freshness(_n, _sync):
         notice = dbc.Alert(
             [
                 html.Strong("Showing cached data "),
-                f"from {when}. Lichess was unreachable at startup. "
-                "Click Sync to retry.",
+                f"from {when}. Lichess was unreachable at startup."
+                + ("" if auth.is_guest() else " Click Sync to retry."),
             ],
             color="warning", className="cache-notice-alert mb-0",
         )

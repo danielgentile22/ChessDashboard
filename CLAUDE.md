@@ -96,7 +96,7 @@ tests pass:
 | `analysis_trends.py` | Pure Analysis-page aggregates over the error profile (ADR 0004), mirroring the Phase-4 analytics: accuracy trend, mistake-type trend (both rating-overlaid), phase × type matrix, mistake move-number histogram. DataFrame-in → data-out; awaiting-analysis Games excluded. |
 | `ai_summary.py` | The AI-summary boundary (ADR 0004), the *only* Anthropic HTTP. `build_prompt` (facts only) + `summarize` (no-op without a key, degrades silently, cache-aware). |
 | `analysis_cache.py` | Disposable `analysis_cache.json`: AI Summaries keyed by Game identity + facts fingerprint, so an unchanged Game isn't re-billed. USCF-cache lifecycle (never a source of truth). |
-| `auth.py` | Login gate for multi-user mode (ADR 0005): session cookie, per-request store activation. Ungated when `USCF_DASHBOARD_USERS` is empty. |
+| `auth.py` | Login gate. Owner/guest mode (`OWNER_PASSWORD_HASH`): guests read everything, `auth.can_write()` is False for them, and every callback that writes or calls a tokened API checks it. Multi-user mode (`USCF_DASHBOARD_USERS`, ADR 0005): per-request store activation. Ungated when neither is set. |
 | `user_config.py` | Parses `USCF_DASHBOARD_USERS` records; `python -m user_config hash '<pw>'` hashes passwords. |
 | `coach_match_core.py` | Pure coach-review matching: coach Chapters → the user's Games, by the moves played. Coach content is enrichment, never a dependency. |
 | `shell.py` | Persistent chrome: header, nav tabs, lens toggle, Sync machinery (`sync-store`, toast, freshness). Never unmounts → filter state survives navigation. |

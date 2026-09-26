@@ -61,7 +61,7 @@ def stub_uscf(profile, supplements=None, sections=None, games=None,
         return fetch
 
     def fake_profile(member_id, **kwargs):
-        # The member's own profile, or a stubbed opponent's (issue #35)
+        # The member's own profile, or a stubbed opponent's
         if isinstance(profile, Exception):
             raise profile
         if str(profile.get("id", "")) == str(member_id):
@@ -116,7 +116,7 @@ class TestSyncButton:
         assert "up to date" in str(body)
 
     def test_successful_sync_restates_freshness_in_the_toast(self, sample_pgn_text):
-        """Freshness left the header (issue #45) — the post-Sync toast is where
+        """Freshness left the header — the post-Sync toast is where
         a fresh Sync confirms its sources are current."""
         from shell import run_sync
         with stub_studies(teststudy=sample_pgn_text):
@@ -146,7 +146,7 @@ class TestSyncButton:
 
 
 # ---------------------------------------------------------------------------
-# Milestone celebrations (issue #15)
+# Milestone celebrations
 # ---------------------------------------------------------------------------
 
 class TestCelebrations:
@@ -189,7 +189,7 @@ class TestCelebrations:
 
 
 # ---------------------------------------------------------------------------
-# Official achievement celebrations (issue #36)
+# Official achievement celebrations
 # ---------------------------------------------------------------------------
 
 class TestAchievementCelebrations:
@@ -264,7 +264,7 @@ class TestFreshness:
     def test_live_data_shows_synced_label_and_no_notice(self):
         from shell import update_freshness
         label, notice = update_freshness(0, {"seq": 0})
-        assert "synced" in label  # the Sync button's tooltip text (issue #45)
+        assert "synced" in label  # the Sync button's tooltip text
         assert notice is None
 
     def test_cache_boot_shows_notice(self, sample_pgn_text, tmp_path):
@@ -284,11 +284,11 @@ class TestFreshness:
 
 
 # ---------------------------------------------------------------------------
-# Per-source freshness (issue #26)
+# Per-source freshness
 # ---------------------------------------------------------------------------
 
 class TestPerSourceFreshness:
-    """The freshness indicator distinguishes Lichess and USCF (issue #26)."""
+    """The freshness indicator distinguishes Lichess and USCF."""
 
     def _init_with_uscf(self, pgn, uscf, cache_path=None):
         data.reset()
@@ -347,7 +347,7 @@ class TestPerSourceFreshness:
 
 
 # ---------------------------------------------------------------------------
-# Streak fire + form dots (issue #10)
+# Streak fire + form dots
 # ---------------------------------------------------------------------------
 
 ALL_FILTERS = (["White", "Black"], ["Win", "Draw", "Loss"], [], None, None, [], None, None)
@@ -404,7 +404,7 @@ class TestFormIndicator:
         dots_wrap = next(c for c in children if "form-dots" in (c.className or ""))
         classes = [dot.className for dot in dots_wrap.children]
         assert classes == ["form-dot loss", "form-dot draw", "form-dot win"]
-        # Colourblind channel (issue #88): each dot carries its W/D/L letter.
+        # Colourblind channel: each dot carries its W/D/L letter.
         assert [dot.children for dot in dots_wrap.children] == ["L", "D", "W"]
 
     def test_empty_form_renders_nothing(self):
@@ -457,8 +457,7 @@ class TestFilterDrawer:
         assert count == ""  # nothing active → no badge
 
     def test_summary_carries_the_relocated_date_range(self):
-        """The date range moved from the header into the drawer summary (issue
-        #45): it rides alongside the game count, separated by '·'."""
+        """The date range moved from the header into the drawer summary: it rides alongside the game count, separated by '·'."""
         from filters import update_filter_summary
         summary, _count, *_ = update_filter_summary(
             ["White", "Black"], ["Win", "Draw", "Loss"], [], None, None, [], None, None
@@ -486,7 +485,7 @@ class TestFilterDrawer:
 
     def test_any_date_bound_counts_as_active(self):
         """Under the None-default, a set start/end always filters (it excludes
-        undated Games), so the badge must count it even at the dated extent (#93)."""
+        undated Games), so the badge must count it even at the dated extent."""
         from filters import update_filter_summary
         _s, count, *_ = update_filter_summary(
             ["White", "Black"], ["Win", "Draw", "Loss"], [], "2024-01-06", None,
@@ -503,7 +502,7 @@ class TestFilterDrawer:
                 apply_preset(None, None, None, None, None, 1)
         assert outcomes == ["Win"]
         assert colors == ["White", "Black"]
-        # A preset is a complete starting point (#93): every other filter resets,
+        # A preset is a complete starting point: every other filter resets,
         # and dates go unbounded so undated Games stay in view.
         assert terminations == [] and events == []
         assert start is None and end is None
@@ -531,7 +530,7 @@ class TestFilterOptions:
             self, sample_pgn_text, sample_pgn_study2_text):
         """After a Sync that found new Games, the selections reset to 'everything'
         so the new Games are visible — and dates go unbounded (None) so undated
-        Games stay in view rather than being clipped to the dated extent (#93)."""
+        Games stay in view rather than being clipped to the dated extent."""
         from filters import update_filter_options
         grown = sample_pgn_text + "\n\n" + sample_pgn_study2_text
         with stub_studies(teststudy=grown):
@@ -554,7 +553,7 @@ class TestFilterOptions:
 
     def test_no_new_games_clamps_out_of_range_selection(self):
         """A shrinking Sync (no new Games) must pull a now-out-of-range selection
-        back inside the new bounds instead of leaving it stranded (#93)."""
+        back inside the new bounds instead of leaving it stranded."""
         from filters import update_filter_options
         # Absurdly wide stale selection; the fixture data is far narrower.
         out = update_filter_options(

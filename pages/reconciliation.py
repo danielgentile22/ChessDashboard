@@ -1,7 +1,7 @@
 """
 pages/reconciliation.py
 =======================
-The Reconciliation page (issue #30) — where every disagreement between the
+The Reconciliation page — where every disagreement between the
 Studies and USCF becomes visible and actionable.
 
 Five kinds of entries (see CONTEXT.md / uscf_core.reconcile): conflicts,
@@ -19,6 +19,7 @@ from __future__ import annotations
 import dash
 from dash import ALL, Input, Output, State, callback, ctx, html, no_update
 
+import auth
 import data
 from components import content_card, empty_state, page_header
 from uscf_core import ReconciliationEntry
@@ -60,7 +61,7 @@ def layout(**kwargs) -> html.Div:
     ])
 
 
-def _entry_card(entry: ReconciliationEntry) -> html.Div:
+def _entry_card(entry: ReconciliationEntry, can_dismiss: bool = True) -> html.Div:
     """One disagreement: who and when, both versions side by side, actions."""
     sources = []
     if entry.lichess_says:
@@ -82,12 +83,13 @@ def _entry_card(entry: ReconciliationEntry) -> html.Div:
             href=entry.chapter_url, target="_blank",
             className="reconcile-action reconcile-fix",
         ))
-    actions.append(html.Button(
-        "Dismiss",
-        id={"type": "reconcile-dismiss", "index": entry.entry_id},
-        className="reconcile-action reconcile-dismiss",
-        title="USCF is wrong, or this difference is intentional. Stop showing it.",
-    ))
+    if can_dismiss:
+        actions.append(html.Button(
+            "Dismiss",
+            id={"type": "reconcile-dismiss", "index": entry.entry_id},
+            className="reconcile-action reconcile-dismiss",
+            title="USCF is wrong, or this difference is intentional. Stop showing it.",
+        ))
 
     head = [html.Span(f"vs {entry.opponent}", className="reconcile-opponent")]
     if entry.date:
@@ -110,7 +112,7 @@ def _persistence_note() -> html.Div:
 
 
 def _coach_ambiguity_card(chapters: list[dict]) -> html.Div:
-    """Coach reviews the matcher couldn't place (issue #92) — surfaced here so a
+    """Coach reviews the matcher couldn't place — surfaced here so a
     review the user paid for never silently vanishes.  Each links back to its
     coach Study Chapter to check by eye which Game it belongs to."""
     rows = []
@@ -147,6 +149,7 @@ def _render_entries(
     """The page body: USCF disagreements grouped by kind and any coach reviews
     the matcher couldn't place, or the all-clear empty state."""
     uscf_on = data.uscf_enabled()
+    can_dismiss = auth.can_write()
     if not uscf_on and not coach_ambiguities:
         return html.Div([empty_state(
             "♔", "USCF is not configured",
@@ -167,7 +170,7 @@ def _render_entries(
             sections.append(content_card(
                 f"{title} ({len(kind_entries)})",
                 html.Div(explanation, className="reconcile-explain"),
-                html.Div([_entry_card(e) for e in kind_entries],
+                html.Div([_entry_card(e, can_dismiss) for e in kind_entries],
                          className="reconcile-entries"),
             ))
     elif uscf_on and not coach_ambiguities:
@@ -180,9 +183,12 @@ def _render_entries(
     if coach_ambiguities:
         sections.append(_coach_ambiguity_card(coach_ambiguities))
 
-    sections.append(_persistence_note())
+    sections.append(_persistence_note() if can_dismiss else html.Div(
+        "Read-only guest view. Only the owner can dismiss items.",
+        className="reconcile-persistence-note",
+    ))
     # The per-kind cards stack vertically; the shared card-stack rhythm gives
-    # them the same gap a grid row would (spacing polish, issue #51).
+    # them the same gap a grid row would (spacing polish).
     return html.Div(sections, className="card-stack")
 
 
@@ -210,6 +216,10 @@ def dismiss_entry(n_clicks, store):
     header badge updates everywhere.
     """
     if not any(n for n in n_clicks if n):
+        return no_update, no_update
+    # Server-side check: guests get no Dismiss buttons, but could still fire
+    # this callback by hand.
+    if not auth.can_write():
         return no_update, no_update
     triggered = ctx.triggered_id
     if not triggered:
