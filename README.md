@@ -1,6 +1,6 @@
 # Chess Dashboard
 
-[![CI](https://github.com/danielgentile22/chess-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/danielgentile22/chess-dashboard/actions/workflows/ci.yml)
+[![CI](https://github.com/danielgentile22/ChessDashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/danielgentile22/ChessDashboard/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **As a tournament chess player, your results live in two systems that don't talk to each other — and disagree.** Your games and your own analysis are in Lichess Studies; your official record — ratings, crosstables, event results — is on USCF's site, and neither knows about the other. Chess Dashboard syncs your games from the Lichess API, enriches them with your official USCF data, engine analysis, AI summaries, and your coach's reviews, and surfaces every place the two sources disagree instead of silently picking one. It comes out as a dark-themed, fully filterable Plotly Dash app. No database, no manual exports.
@@ -10,7 +10,7 @@
 **Try it in one command** — no account, no config, seeded with a real (anonymized) tournament history:
 
 ```bash
-git clone https://github.com/danielgentile22/chess-dashboard.git && cd chess-dashboard
+git clone https://github.com/danielgentile22/ChessDashboard.git chess-dashboard && cd chess-dashboard
 make demo        # → http://localhost:8050
 ```
 
@@ -87,7 +87,7 @@ Boots entirely from a committed, anonymized game history (`tests/data/demo-games
 ### Install with Make (recommended)
 
 ```bash
-git clone https://github.com/danielgentile22/chess-dashboard.git
+git clone https://github.com/danielgentile22/ChessDashboard.git chess-dashboard
 cd chess-dashboard
 make install        # creates .venv and installs runtime deps
 make run STUDY=abcdWXYZ
@@ -98,7 +98,7 @@ Then open [http://localhost:8050](http://localhost:8050).
 ### Install manually
 
 ```bash
-git clone https://github.com/danielgentile22/chess-dashboard.git
+git clone https://github.com/danielgentile22/ChessDashboard.git chess-dashboard
 cd chess-dashboard
 python3 -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate

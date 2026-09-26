@@ -47,7 +47,7 @@ __all__ = [
 _API_BASE = "https://ratings-api.uschess.org/api/v1"
 
 # Cloudflare fronts the API: identify as a real app (mirrors the Lichess client).
-_USER_AGENT = "chess-dashboard/2.0 (https://github.com/danielgentile22/chess-dashboard)"
+_USER_AGENT = "chess-dashboard/2.0 (https://github.com/danielgentile22/ChessDashboard)"
 
 _DEFAULT_TIMEOUT = 30.0
 
