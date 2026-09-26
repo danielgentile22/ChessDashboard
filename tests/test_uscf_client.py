@@ -271,7 +271,7 @@ class TestRequestHygiene:
             uscf_client.fetch_member_profile("12345678")
 
         headers = get.call_args.kwargs["headers"]
-        assert "uscf-dashboard" in headers["User-Agent"]
+        assert "chess-dashboard" in headers["User-Agent"]
         assert "python-requests" not in headers["User-Agent"]
 
     def test_request_has_a_timeout(self, uscf_profile_json):

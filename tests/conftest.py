@@ -1,7 +1,7 @@
 """
 tests/conftest.py
 =================
-Shared fixtures for the chess stats test suite.
+Shared fixtures for the chess-dashboard test suite.
 """
 from __future__ import annotations
 

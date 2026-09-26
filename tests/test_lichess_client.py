@@ -137,7 +137,7 @@ class TestFetchStudyPgn:
             fetch_study_pgn("abcdWXYZ")
 
         headers = get.call_args.kwargs["headers"]
-        assert "uscf-dashboard" in headers["User-Agent"]
+        assert "chess-dashboard" in headers["User-Agent"]
 
     def test_request_has_a_timeout(self):
         """A hung Lichess must never hang the dashboard startup forever."""
