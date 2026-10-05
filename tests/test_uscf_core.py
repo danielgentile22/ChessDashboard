@@ -1122,7 +1122,7 @@ class TestEnrichGames:
 #
 # A Game with no USCF Game Record after both passes AND at most one move is a
 # Forfeit: the opponent never showed, so USCF correctly never rated it
-# (CONTEXT.md).
+# (GLOSSARY.md).
 # ---------------------------------------------------------------------------
 
 class TestForfeitDetection:

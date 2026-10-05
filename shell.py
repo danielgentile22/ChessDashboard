@@ -50,7 +50,7 @@ def _nav() -> html.Nav:
 def _lens_toggle() -> html.Div:
     """
     The Official/Live rating lens — a lens, not a filter: it
-    selects which rating series (CONTEXT.md: Official Rating vs Live Rating)
+    selects which rating series (GLOSSARY.md: Official Rating vs Live Rating)
     powers rating-derived numbers, and never hides Games.
 
     It lives in the header so it exists on every page; its value rides

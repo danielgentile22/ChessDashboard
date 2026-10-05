@@ -87,4 +87,4 @@ Every page module, top to bottom:
 - Filters, `FILTER_INPUTS`, lens application: `../filters.py`
 - Persistent chrome & Sync machinery: `../shell.py`
 - Pure stats: `../pgn_stats_core.py`, `../uscf_core.py`
-- Domain vocabulary: `../CONTEXT.md`
+- Domain vocabulary: `../GLOSSARY.md`

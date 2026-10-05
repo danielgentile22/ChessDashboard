@@ -3,7 +3,7 @@ pages/events.py
 ===============
 The Events page — Series → Rated Event.
 
-The two-level model from CONTEXT.md: a **Series** is a tournament as Daniel
+The two-level model from GLOSSARY.md: a **Series** is a tournament as Daniel
 names it (the PGN Event header, e.g. "ACC Friday Ladder"); each Series
 contains the **Rated Events** USCF actually rated (e.g. "ACC JUNE 2025" …
 "ACC MAY 2026"), each with its Section(s), score, game count, and live

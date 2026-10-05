@@ -4,7 +4,7 @@ sync.py
 Sync orchestrator: designated Lichess Studies → one merged Games DataFrame,
 plus the member's USCF record as enrichment.
 
-A Sync (see CONTEXT.md) fetches every designated Study, concatenates their
+A Sync (see GLOSSARY.md) fetches every designated Study, concatenates their
 Games, dedupes by ChapterURL (the permanent Game identity — ADR 0001), and
 sorts by date.  One Study failing never loses the Games of the Studies that
 succeeded; only when *every* Study fails is the Sync itself a failure.

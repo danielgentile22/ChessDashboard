@@ -35,7 +35,7 @@ UscfProfile             Who the member is according to USCF.
 UscfRating              One rating system's entry (rating, provisional, floor).
 OfficialRatingPoint     One supplement month's Official Rating.
 LiveRatingPoint         One Section's pre→post Live Rating change.
-UscfGameRecord          USCF's official record of one rated game (CONTEXT.md).
+UscfGameRecord          USCF's official record of one rated game (GLOSSARY.md).
 UscfEvent               One Rated Event the member entered.
 StandingEntry           One player's crosstable row.
 RoundOutcome            One round in a crosstable row.
@@ -350,7 +350,7 @@ def _coerce_date(value: str | date | None) -> date | None:
 
 @dataclass(frozen=True)
 class UscfGameRecord:
-    """USCF's official record of one rated game (see CONTEXT.md)."""
+    """USCF's official record of one rated game (see GLOSSARY.md)."""
 
     event_id: str
     event_name: str
@@ -395,7 +395,7 @@ def build_game_records(game_items: list[dict]) -> list[UscfGameRecord]:
 @dataclass(frozen=True)
 class UscfEvent:
     """
-    One Rated Event the member entered (CONTEXT.md): USCF's official unit of
+    One Rated Event the member entered (GLOSSARY.md): USCF's official unit of
     competition, with its official identity, dates, and field.
     """
 
@@ -1266,7 +1266,7 @@ _ENRICHMENT_DEFAULTS: dict[str, Any] = {
     "Forfeit": False,
 }
 
-# "At most one move" (CONTEXT.md): the threshold below which an
+# "At most one move" (GLOSSARY.md): the threshold below which an
 # unmatched Game is a Forfeit rather than a game USCF hasn't rated yet.
 _FORFEIT_MAX_MOVES = 1
 
@@ -1556,7 +1556,7 @@ def _rating_display(value: int | float | None) -> str:
 @dataclass(frozen=True)
 class ReconciliationEntry:
     """
-    One disagreement between the Studies and USCF (see CONTEXT.md):
+    One disagreement between the Studies and USCF (see GLOSSARY.md):
     what each source says, side by side, plus where to go to fix it.
     """
 

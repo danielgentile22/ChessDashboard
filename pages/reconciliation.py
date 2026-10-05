@@ -4,7 +4,7 @@ pages/reconciliation.py
 The Reconciliation page — where every disagreement between the
 Studies and USCF becomes visible and actionable.
 
-Five kinds of entries (see CONTEXT.md / uscf_core.reconcile): conflicts,
+Five kinds of entries (see GLOSSARY.md / uscf_core.reconcile): conflicts,
 USCF-only games, Lichess-only games, missing FideIds, and typed-rating
 mismatches.  Each shows both sources side by side and offers two actions:
 fix-on-Lichess (a deep link to the chapter) and Dismiss ("USCF is wrong" /

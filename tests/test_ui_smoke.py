@@ -1865,7 +1865,7 @@ class TestRatingLensToggle:
         assert toggle.value == "official"
 
     def test_the_lens_offers_exactly_official_and_live(self, ui_app, ui_data):
-        """The two world views of CONTEXT.md: Official Rating and Live Rating."""
+        """The two world views of GLOSSARY.md: Official Rating and Live Rating."""
         toggle = _shell_component(ui_app, "rating-lens")
         values = [opt["value"] for opt in toggle.options]
         assert values == ["official", "live"]

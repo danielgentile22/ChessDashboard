@@ -266,7 +266,7 @@ _LICHESS_DIRECTIVE_RE = re.compile(r"\[%[^\]]*\]")
 # The hand-drawn shapes: arrows ([%cal]) and board circles ([%csl]).
 _SHAPE_RE = re.compile(r"\[%(?:cal|csl)\b")
 
-# The canonical Tag taxonomy (CONTEXT.md) — the default vocabulary for what a
+# The canonical Tag taxonomy (GLOSSARY.md) — the default vocabulary for what a
 # Game taught. Freeform tags are allowed; they sort after these.
 CANONICAL_TAGS = [
     "opening", "tactics", "calculation", "endgame",
@@ -888,7 +888,7 @@ def head_to_head(df: pd.DataFrame, opponent: str) -> dict:
 
 def scouting_report(df: pd.DataFrame, opponent: str) -> dict:
     """
-    The pre-game dossier on one opponent (CONTEXT.md: Scouting Report).
+    The pre-game dossier on one opponent (GLOSSARY.md: Scouting Report).
 
     Composes everything Daniel wants to know right before facing someone
     again: the head-to-head score and rating gap, the per-game results
@@ -1426,7 +1426,7 @@ def _time_control_minutes(tc: str) -> float | None:
     total time per second (a game lasting ~60 moves).
 
     Assumes hand-written OTB headers (minutes), not the PGN-standard
-    seconds format: this dashboard's Games are over-the-board (CONTEXT.md),
+    seconds format: this dashboard's Games are over-the-board (GLOSSARY.md),
     where "30+5" means 30 minutes.  An online blitz export ("180+2" meaning
     seconds) would be misread as 182 minutes — out of scope by design.
     """

@@ -815,7 +815,7 @@ class TestOpponentSummary:
 
 
 class TestScoutingReport:
-    """The pre-game dossier on one opponent (CONTEXT.md glossary)."""
+    """The pre-game dossier on one opponent (GLOSSARY.md glossary)."""
 
     def test_head_to_head_score(self, df):
         # Fixture vs Opponent A: Win (G1), Win (G4), Draw (G7)
