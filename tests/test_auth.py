@@ -563,6 +563,11 @@ class TestBuiltAppOwnerGate:
         with pytest.raises(RuntimeError, match="OWNER_PASSWORD_HASH"):
             self._build(owner_password_hash="hunter2", secret_key="test-secret")
 
+    def test_owner_gate_refuses_a_hash_missing_its_method(self):
+        truncated = hash_password(_OWNER_PW).removeprefix("scrypt:")
+        with pytest.raises(RuntimeError, match="OWNER_PASSWORD_HASH"):
+            self._build(owner_password_hash=truncated, secret_key="test-secret")
+
     def test_demo_mode_stays_ungated(self, tmp_path):
         import data
         from config import config

@@ -23,6 +23,7 @@ import logging
 import sys
 
 import dash_bootstrap_components as dbc
+from werkzeug.security import check_password_hash
 
 import data
 from config import config
@@ -34,6 +35,19 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+
+
+def _is_password_hash(value: str) -> bool:
+    """Whether werkzeug can check a password against *value*.
+
+    A truncated hash (e.g. ``32768:8:1$salt$digest`` with the ``scrypt:``
+    prefix lost in a paste) has the right shape but makes every login 500.
+    """
+    try:
+        check_password_hash(value, "")
+    except ValueError:
+        return False
+    return value.count("$") >= 2
 
 
 def _index_template(root_block: str) -> str:
@@ -102,7 +116,7 @@ def build_app(study_ids: list[str], player_name=None, token=None, cache_path=Non
                 "forgeable or unsignable). Set SECRET_KEY to a stable secret, e.g. "
                 "python -c 'import secrets; print(secrets.token_hex(32))'"
             )
-    if owner_password_hash and not users and owner_password_hash.count("$") < 2:
+    if owner_password_hash and not users and not _is_password_hash(owner_password_hash):
         raise RuntimeError(
             "OWNER_PASSWORD_HASH is not a password hash. Mint one with "
             "`python -m user_config hash` and set the printed value."
