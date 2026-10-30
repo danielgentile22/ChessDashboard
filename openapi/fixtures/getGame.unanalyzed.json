@@ -1,0 +1,66 @@
+{
+  "board": {
+    "coach": null,
+    "engine": null,
+    "game": "[Event \"ACC Friday Ladder\"]\n[Date \"2025.07.18\"]\n[Round \"3\"]\n[White \"Daniel Gentile\"]\n[Black \"Fiona Foster\"]\n[Result \"0-1\"]\n\n1. e4 e5 2. Nc3 Nc6 3. Bc4 Nf6 4. d3 d6 5. f4 Bg4 6. Nf3 Nd4 7. h3 Bxf3 8. gxf3\nNh5 9. h4 exf4 10. Nd5 Ne6 11. b3 c6 12. Nc3 Be7 13. Bxe6 fxe6 14. Ne2 Bxh4+\n15. Kd2 Ng3 16. Nxf4 Nxh1 17. Qxh1 Bg5 18. Qh5+ g6 19. Qg4 Qf6 20. Ke2 Bxf4 21.\nBxf4 O-O 22. Rg1 Qxf4 23. Qxe6+ Rf7 24. Rg4 Qxf3+ 25. Kd2 Rf8 26. Rxg6+ hxg6\n27. Qxg6+ Rg7 28. Qe6+ Qf7 29. Qxd6 Qf4+ 0-1",
+    "my_analysis": "[Event \"ACC Friday Ladder\"]\n[Date \"2025.07.18\"]\n[Round \"3\"]\n[White \"Daniel Gentile\"]\n[Black \"Fiona Foster\"]\n[Result \"0-1\"]\n\n1. e4 e5 2. Nc3 Nc6 3. Bc4 Nf6 4. d3 d6 5. f4 Bg4 6. Nf3 Nd4 7. h3 Bxf3 8. gxf3\nNh5 9. h4 exf4 10. Nd5 Ne6 11. b3 c6 12. Nc3 Be7 13. Bxe6 fxe6 14. Ne2 Bxh4+\n15. Kd2 Ng3 16. Nxf4 Nxh1 17. Qxh1 Bg5 18. Qh5+ g6 19. Qg4 Qf6 20. Ke2 Bxf4 21.\nBxf4 O-O 22. Rg1 Qxf4 23. Qxe6+ Rf7 24. Rg4 Qxf3+ 25. Kd2 Rf8 26. Rxg6+ hxg6\n27. Qxg6+ Rg7 28. Qe6+ Qf7 29. Qxd6 Qf4+ { 0-1 Black wins. } 0-1"
+  },
+  "engine": {
+    "ai_summary": "",
+    "critical_moment": null,
+    "judged_moves": [],
+    "state": "awaiting_analysis",
+    "win_probability": []
+  },
+  "forfeit": false,
+  "game": {
+    "chapter_url": "https://lichess.org/study/abcdWXYZ/fion0001",
+    "color": "White",
+    "date": "2025-07-18",
+    "eco": "C24",
+    "game_id": "fion0001",
+    "has_lesson": false,
+    "moves": 29,
+    "opening": "Bishop's Opening: Vienna Hybrid",
+    "opponent": "Fiona Foster",
+    "opponent_rating": 1286,
+    "outcome": "Loss",
+    "player_rating": 1200,
+    "result": "0-1",
+    "round": 3,
+    "series": "ACC Friday Ladder",
+    "tags": [],
+    "termination": "loss by resignation",
+    "uscf_status": "matched_by_id"
+  },
+  "lessons": [],
+  "metadata": {
+    "color": "White",
+    "date": "2025-07-18",
+    "eco": "C24",
+    "moves": 29,
+    "opening": "Bishop's Opening: Vienna Hybrid",
+    "opponent_rating": 1286,
+    "player_rating": 1200,
+    "result": "0-1",
+    "round": "3",
+    "series": "ACC Friday Ladder",
+    "study_name": "USCF OTB Games",
+    "termination": "loss by resignation"
+  },
+  "player_color": "White",
+  "tags": [],
+  "uscf_record": {
+    "color_conflict": false,
+    "matched_by": "id",
+    "opponent_id": "20000027",
+    "opponent_name": "FIONA FOSTER",
+    "opponent_url": "https://ratings.uschess.org/members/20000027",
+    "rated_event_id": "202507250562",
+    "rated_event_name": "ACC JULY 2025",
+    "rating_system": "R",
+    "rating_system_label": "Regular",
+    "section": "LADDER",
+    "uscf_color": "White"
+  }
+}

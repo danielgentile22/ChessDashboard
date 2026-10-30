@@ -43,13 +43,13 @@ class TestClampHelpers:
 
 
 # ---------------------------------------------------------------------------
-# game_detail._game_pgn — a quote/backslash in a header value must be escaped
+# payloads.game.game_pgn (the board PGNs) — a quote/backslash in a header value must be escaped
 # or the generated PGN is malformed and breaks the board.
 # ---------------------------------------------------------------------------
 
 class TestPgnHeaderEscaping:
-    def test_quotes_and_backslashes_are_escaped(self, ui_app, ui_data):
-        from pages import game_detail
+    def test_quotes_and_backslashes_are_escaped(self):
+        from payloads.game import game_pgn
 
         game = pd.Series({
             "Color": "White",
@@ -60,7 +60,7 @@ class TestPgnHeaderEscaping:
             "Result": "1-0",
             "SetupFEN": "",
         })
-        pgn = game_detail._game_pgn(game, "1. e4 e5 1-0")
+        pgn = game_pgn(game, "1. e4 e5 1-0", "Test Player")
 
         assert r'[Event "2025 \"Summer\" Open"]' in pgn
         assert r'[Black "Bob \"Tal\" \\Smith"]' in pgn

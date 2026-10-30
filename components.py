@@ -17,7 +17,8 @@ from payloads.common import uscf_status
 from payloads.overview import form_indicator as indicator_state
 from pgn_stats_core import chapter_id
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
-from uscf_core import (  # noqa: F401 (pages import it from here)
+from uscf_core import (  # noqa: F401  (labels and member URL re-exported for pages)
+    USCF_RATING_SYSTEM_LABELS,
     UscfProfile,
     UscfRating,
     uscf_member_url,
@@ -323,17 +324,6 @@ def lichess_link(chapter_url: str) -> str:
     """Markdown 'Open on Lichess' link for a Game's ChapterURL ('' if none)."""
     return f"[Open ↗]({chapter_url})" if chapter_url else ""
 
-
-# Display names for USCF rating-system codes.
-USCF_RATING_SYSTEM_LABELS = {
-    "R": "Regular",
-    "D": "Dual (Regular + Quick)",
-    "Q": "Quick",
-    "B": "Blitz",
-    "OR": "Online Regular",
-    "OQ": "Online Quick",
-    "OB": "Online Blitz",
-}
 
 
 # One glyph per payloads.common.uscf_status value: the API and the web table

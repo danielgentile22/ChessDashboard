@@ -1290,7 +1290,7 @@
         "description": "The Game card's rows as the Chapter headers carry them. The web hides a row whose value is empty or '?'; here those are \"\" or null.",
         "properties": {
           "color": {
-            "$ref": "#/components/schemas/Color"
+            "$ref": "#/components/schemas/GameColor"
           },
           "date": {
             "$ref": "#/components/schemas/IsoDate"
@@ -1390,8 +1390,8 @@
             "$ref": "#/components/schemas/GameMetadata"
           },
           "player_color": {
-            "$ref": "#/components/schemas/Color",
-            "description": "The color the player had: orient the board with it at the bottom (the web's data-orientation)."
+            "$ref": "#/components/schemas/GameColor",
+            "description": "The color the player had: orient the board with it at the bottom (the web's data-orientation). Unknown when the player wasn't found in the Chapter headers; the web then orients from White."
           },
           "tags": {
             "description": "The Game's Tags with their source (mine or engine), in the order the web renders the chips. A Tag missing from the Game's source map is mine.",
@@ -3704,7 +3704,7 @@
             "type": "string"
           },
           "outcome": {
-            "$ref": "#/components/schemas/Outcome"
+            "$ref": "#/components/schemas/GameOutcome"
           },
           "result": {
             "description": "The PGN Result, e.g. 1-0.",
