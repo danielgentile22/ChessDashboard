@@ -59,13 +59,14 @@ public final class AppEnvironment {
 		self.cache = cache
 		self.filters = FilterStore(defaults: defaults)
 		self.session = SessionStore(credentials: credentials, api: guarded, defaults: defaults, now: now)
-		// Every sign-out forgets the shown meta, so the next person never sees
+		// Every sign-out forgets the shown meta and Sync toast, so the next person never sees
 		// it. Only an explicit sign-out wipes the cache and filters: after an
 		// expiry the same person usually signs back in, and their offline
 		// Scouting Report and review should still be there (the cache is keyed
 		// by user, so nobody else can read it).
-		session.onSignOut = { [cache, filters, meta] reason in
+		session.onSignOut = { [cache, filters, meta, sync] reason in
 			meta.reset()
+			sync.reset()
 			guard reason == .signedOut else { return }
 			cache.wipe()
 			filters.clear()

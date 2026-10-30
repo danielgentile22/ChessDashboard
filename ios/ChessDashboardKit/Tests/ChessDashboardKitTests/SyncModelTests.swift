@@ -29,6 +29,34 @@ struct SyncModelTests {
 		#expect(report.syncedAt == ISODates.timestamp("2026-01-01T00:00:00Z"))
 	}
 
+	@Test("sign-out clears the Sync toast, so the next person never sees it")
+	func signOutClearsReport() async {
+		let env = await signedIn()
+		await env.runSync()
+		#expect(env.sync.report != nil)
+		env.session.signOut()
+		#expect(env.sync.report == nil)
+	}
+
+	@Test("a Sync that lands after sign-out is dropped, success or failure")
+	func lateSyncAfterSignOut() async {
+		for failure in [nil, APIError.offline] {
+			let fixtures = FixtureAPIClient(directory: Repo.fixtures)
+			let box = EnvironmentBox()
+			let api = ClosureAPI { request throws(APIError) in
+				guard request.operationId == "runSync" else { return try await fixtures.data(for: request) }
+				await box.env.session.signOut()
+				if let failure { throw failure }
+				return try await fixtures.data(for: request)
+			}
+			box.env = makeEnvironment(api: api)
+			await box.env.refreshMeta()
+			await box.env.runSync()
+			#expect(box.env.sync.report == nil)
+			#expect(box.env.sync.revision == 0)
+		}
+	}
+
 	@Test("a successful Sync bumps the revision and re-fetches meta")
 	func refreshesAfterSync() async {
 		let api = FixtureAPIClient(directory: Repo.fixtures)

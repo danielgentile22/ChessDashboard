@@ -33,6 +33,8 @@ public final class SyncModel {
 		phase = .running
 		do {
 			let payload = try await context.api.send(Endpoints.runSync())
+			// Signed out meanwhile: reset() already cleared the toast.
+			guard context.isCurrent() else { return }
 			phase = .finished(SyncReport(payload))
 			if payload.status == .success {
 				revision += 1
@@ -42,12 +44,18 @@ public final class SyncModel {
 			// SessionGuard has already routed back to sign-in.
 			phase = .idle
 		} catch {
+			guard context.isCurrent() else { return }
 			phase = .finished(SyncReport(failure: error))
 		}
 	}
 
 	public func dismiss() {
 		if case .finished = phase { phase = .idle }
+	}
+
+	/// Every sign-out: the next person never sees this one's toast.
+	public func reset() {
+		phase = .idle
 	}
 }
 

@@ -66,7 +66,7 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
   never consulted for anything but "show this first". Only an explicit Sign
   out wipes it and the filters; an expired token or a 401 keeps both, so the
   offline Scouting Report and pre-game review survive re-signing in. Every
-  sign-out resets the shared `meta`, and an answer that lands after its
+  sign-out resets the shared `meta` and the Sync toast, and an answer that lands after its
   session ended is dropped (`ScreenContext.isCurrent`), never shown or cached.
 - **Ratings render through `RatingFormat`**; Tags through `TagChip`/`TagDisplay`
   so mine and engine always look different. Glossary words verbatim in UI copy
