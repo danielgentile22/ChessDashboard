@@ -97,6 +97,8 @@ jobs:
             ios:
               - 'ios/**'
               - 'openapi/**'
+              - 'payloads/**'
+              - 'api/**'
               - '.github/workflows/ci.yml'
 
   ios:
@@ -105,6 +107,7 @@ jobs:
     if: needs.ios-changes.outputs.ios == 'true'
     # Package.swift needs swift-tools 6.2, so Xcode 26 or newer.
     runs-on: macos-26
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 

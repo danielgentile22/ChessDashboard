@@ -14,13 +14,17 @@ with the UI smoke harness's fixture data::
 
 ``record`` names the fixture file: ``openapi/fixtures/<record>.json``.  Use the
 operationId, plus a ``.variant`` suffix for extra cases
-(``getOverview.live_lens``).  Recording is deterministic: keys are sorted,
-volatile values (tokens, ``*_at`` timestamps, the USCF-unavailable time) are
-pinned, and a file is rewritten only when its content changes.
+(``getOverview.live_lens``).  By default the body is compared with the
+committed fixture and a difference fails the test, so a payload change can't
+drift away from what the iOS tests decode.  ``RECORD_FIXTURES=1`` rewrites the
+fixtures instead.  Recording is deterministic: keys are sorted, volatile
+values (tokens, ``*_at`` timestamps, the USCF-unavailable time) are pinned,
+and a file is rewritten only when its content changes.
 """
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
@@ -103,13 +107,24 @@ def pin_volatile(value: Any, key: str = "") -> Any:
     return value
 
 
+def recording() -> bool:
+    """Whether this run may rewrite fixtures (``RECORD_FIXTURES=1``)."""
+    return os.environ.get("RECORD_FIXTURES") == "1"
+
+
 def record(name: str, body: Any) -> Path:
-    """Write *body* to ``openapi/fixtures/<name>.json`` (only if it changed)."""
+    """Check *body* against ``openapi/fixtures/<name>.json``, failing on any
+    drift; with ``RECORD_FIXTURES=1``, write it instead (only if it changed)."""
     path = FIXTURE_DIR / f"{name}.json"
     text = json.dumps(pin_volatile(body), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
-    if not path.exists() or path.read_text() != text:
-        FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
-        path.write_text(text)
+    if path.exists() and path.read_text() == text:
+        return path
+    if not recording():
+        raise AssertionError(
+            f"openapi/fixtures/{name}.json is {'stale' if path.exists() else 'missing'}: "
+            "rerun the tests with RECORD_FIXTURES=1 and commit the fixture")
+    FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
+    path.write_text(text)
     return path
 
 

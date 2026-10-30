@@ -131,7 +131,9 @@ python app.py --study <ID>   # run directly; needs a study ID or LICHESS_STUDY_I
 API contract: edit `openapi/src/<screen>.json`, then `python -m api.contract` to
 rebundle `openapi/v1.json` (a test fails if it's stale). Contract tests
 (`tests/test_api_*.py`, harness in `tests/api_contract.py`) validate every
-response and re-record `openapi/fixtures/*.json`; commit those changes.
+response and compare it with `openapi/fixtures/*.json`, failing on any drift.
+After a deliberate payload change, re-record with
+`RECORD_FIXTURES=1 .venv/bin/pytest tests/test_api_*.py` and commit the fixtures.
 
 iOS: `make kit-test` (package tests on the Mac), `make ios-test` (simulator),
 `make ios-build`, `make ios-codegen` after a spec or `styles.THEME` change.
@@ -147,3 +149,5 @@ lint → test → typecheck (`.github/workflows/ci.yml`).
   `games.pgn`, `.coverage`) and the venv live here. Stage files by name.
 - Adding a stat? Put the pure function in `pgn_stats_core.py` (or `uscf_core.py`),
   unit-test it there, then wire it into a page callback. Don't compute in the page.
+- `payloads/` is also a pure home (ADR 0008): it assembles a screen's response
+  from the cores' results, framework-agnostic, and API routes never compute inline.

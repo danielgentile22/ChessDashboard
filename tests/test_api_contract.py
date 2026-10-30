@@ -241,11 +241,28 @@ class TestRecording:
         import tests.api_contract as harness
 
         monkeypatch.setattr(harness, "FIXTURE_DIR", tmp_path)
+        monkeypatch.setenv("RECORD_FIXTURES", "1")
         path = record("x", {"b": 1, "a": [2]})
         mtime = path.stat().st_mtime_ns
         record("x", {"a": [2], "b": 1})
         assert path.stat().st_mtime_ns == mtime
         assert path.read_text() == '{\n  "a": [\n    2\n  ],\n  "b": 1\n}\n'
+
+    def test_without_record_mode_a_changed_body_fails_and_writes_nothing(
+            self, tmp_path, monkeypatch):
+        import tests.api_contract as harness
+
+        monkeypatch.setattr(harness, "FIXTURE_DIR", tmp_path)
+        monkeypatch.setenv("RECORD_FIXTURES", "1")
+        path = record("x", {"a": 1})
+        monkeypatch.delenv("RECORD_FIXTURES")
+        record("x", {"a": 1})  # unchanged: passes
+        with pytest.raises(AssertionError, match="x.json is stale"):
+            record("x", {"a": 2})
+        with pytest.raises(AssertionError, match="y.json is missing"):
+            record("y", {"a": 1})
+        assert path.read_text() == '{\n  "a": 1\n}\n'
+        assert not (tmp_path / "y.json").exists()
 
     def test_an_undeclared_status_fails_loudly(self):
         with pytest.raises(AssertionError, match="doesn't declare"):
