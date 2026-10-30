@@ -148,3 +148,10 @@ jobs:
           xcodebuild build-for-testing "${flags[@]}" > build.log 2>&1 \
             || { grep -E "error" build.log | sort -u | head -40 || true; tail -20 build.log; exit 1; }
           xcodebuild test-without-building "${flags[@]}" | tail -30
+
+      - name: Upload the build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-log
+          path: ios/build.log
