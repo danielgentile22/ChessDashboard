@@ -100,11 +100,21 @@ struct PGNTreeTests {
 		let d5 = tree.next(c3)!
 		#expect(tree[c3].san == "c3" && tree[d5].san == "d5")
 		#expect(!tree.isOnMainline(d5) && tree.isOnMainline(e5))
-		// Out of the nested line lands in the variation, then the main line.
-		#expect(tree.exitVariation(from: d5) == c5)
+		// Out of any depth lands on the main line, where it was left.
+		#expect(tree.exitVariation(from: d5) == e4)
 		#expect(tree.exitVariation(from: tree.next(nf3)!) == e4)
 		#expect(tree.exitVariation(from: e5) == nil)
 		#expect(tree[tree.mainline[3]].san == "Nf3")
+
+		// Forward toward a move deep in a variation follows that line.
+		#expect(tree.next(e4, toward: d5) == c5)
+		#expect(tree.next(c5, toward: d5) == c3)
+		#expect(tree.next(d5, toward: d5) == nil)
+		#expect(tree.next(e4, toward: e5) == e5)
+		#expect(tree.isAncestor(e4, of: d5) && tree.isAncestor(d5, of: d5) && !tree.isAncestor(e5, of: d5))
+		// Branch points: a move with an alternative beside it.
+		#expect(tree.hasAlternatives(e5) && tree.hasAlternatives(c5) && tree.hasAlternatives(c3))
+		#expect(!tree.hasAlternatives(e4) && !tree.hasAlternatives(d5) && !tree.hasAlternatives(PGNTree.root))
 	}
 
 	@Test("a comment right after ( comes before the variation's first move")

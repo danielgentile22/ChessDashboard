@@ -66,11 +66,38 @@ struct FilterStateTests {
 		let white = try #require(meta.presets.first { $0.id == .white })
 		let wins = try #require(meta.presets.first { $0.id == .wins })
 
-		#expect(FilterState(preset: all.filters, options: options, lens: .official) == .all)
-		let w = FilterState(preset: white.filters, options: options, lens: .live)
+		#expect(FilterState(preset: all, options: options, lens: .official) == .all)
+		let w = FilterState(preset: white, options: options, lens: .live)
 		#expect(w.colors == [.white] && w.minMoves == nil && w.maxMoves == nil && w.lens == .live)
 		#expect(w.matches(white, options: options))
 		#expect(!w.matches(wins, options: options))
+	}
+
+	@Test("This year stays this year: the start is resolved when the request is built")
+	func thisYearIsRelative() throws {
+		let meta = try JSONDecoder().decode(API.MetaPayload.self, from: Repo.fixture("getMeta"))
+		let preset = try #require(meta.presets.first { $0.id == .thisYear })
+		let utc: Calendar = {
+			var c = Calendar(identifier: .gregorian)
+			c.timeZone = .gmt
+			return c
+		}()
+		let nextYear = try #require(ISODates.day("2031-03-01"))
+
+		let s = FilterState(preset: preset, options: meta.filterOptions, lens: .official)
+		#expect(s.queryItems(on: nextYear, calendar: utc).contains(URLQueryItem(name: "start", value: "2031-01-01")))
+		#expect(s.summary == "This year")
+		#expect(s.matches(preset, options: meta.filterOptions))
+
+		// It persists as "this year", not as the day it was picked.
+		let saved = try JSONDecoder().decode(FilterState.self, from: JSONEncoder().encode(s))
+		#expect(saved == s && saved.relativeStart == .thisYear)
+
+		// Picking a day in the sheet makes it a fixed day again.
+		var edited = s
+		edited.start = "2030-06-01"
+		#expect(edited.relativeStart == nil)
+		#expect(edited.queryItems(on: nextYear, calendar: utc).contains(URLQueryItem(name: "start", value: "2030-06-01")))
 	}
 
 	@Test("the summary names what is kept")
@@ -114,5 +141,15 @@ struct FilterStoreTests {
 		let defaults = InMemoryKeyValueStore()
 		defaults.set(Data("nope".utf8), forKey: FilterStore.key)
 		#expect(FilterStore(defaults: defaults).state == .all)
+	}
+
+	@Test("filters saved by an earlier build still load")
+	func earlierFormat() {
+		let defaults = InMemoryKeyValueStore()
+		let saved = #"{"colors":["White"],"outcomes":[],"terminations":[],"start":"2026-01-01","series":["Summer Cup"],"minMoves":20,"lens":"live"}"#
+		defaults.set(Data(saved.utf8), forKey: FilterStore.key)
+		let state = FilterStore(defaults: defaults).state
+		#expect(state.colors == [.white] && state.series == ["Summer Cup"] && state.minMoves == 20)
+		#expect(state.start == "2026-01-01" && state.relativeStart == nil && state.lens == .live)
 	}
 }

@@ -8,7 +8,8 @@ extension ScreenContext {
 	public func prefetch<Value>(_ endpoint: Endpoint<Value>) async {
 		let request = endpoint.request
 		guard let data = try? await api.data(for: request),
-			(try? decode(Value.self, from: data)) != nil
+			(try? decode(Value.self, from: data)) != nil,
+			isCurrent()  // signed out meanwhile: the cache may be wiped
 		else { return }
 		cache.write(data, for: request, scope: cacheScope)
 	}

@@ -47,6 +47,9 @@ public final class GameDetailModel {
 	public private(set) var selectedKind: BoardViewKind = .game
 	/// Where each view's board is, so switching views keeps your place.
 	private var cursors: [BoardViewKind: PGNTree.ID] = [:]
+	/// Per view, the furthest move reached on the line the board follows, so
+	/// stepping back out of a variation and forward again stays in it.
+	private var lineTips: [BoardViewKind: PGNTree.ID] = [:]
 	@ObservationIgnored private var parsed: (board: API.GameBoardPgns, views: [BoardViewTree])?
 
 	public init(gameID: API.GameId, context: ScreenContext) {
@@ -101,13 +104,33 @@ public final class GameDetailModel {
 
 	public func select(_ kind: BoardViewKind) { selectedKind = kind }
 
+	/// The line the board follows, from the first move to its end: the move
+	/// list shows it, and forward (buttons, swipe) walks it.
+	public var line: [PGNTree.ID] {
+		tree?.line(through: lineTip) ?? []
+	}
+
+	private var lineTip: PGNTree.ID {
+		guard let tree, let kind = selectedView?.kind, let id = lineTips[kind], id < tree.nodes.count
+		else { return cursor }
+		return id
+	}
+
+	/// Show `id`. A move on the line being followed (or before it) keeps the
+	/// line; any other move starts following the line through it.
 	public func go(to id: PGNTree.ID) {
+		guard let tree, !tree.isAncestor(id, of: lineTip) else { return move(to: id) }
+		move(to: id, newLine: true)
+	}
+
+	private func move(to id: PGNTree.ID, newLine: Bool = false) {
 		guard let kind = selectedView?.kind, let tree, id < tree.nodes.count else { return }
 		cursors[kind] = id
+		if newLine || lineTips[kind] == nil { lineTips[kind] = id }
 	}
 
 	public func forward() {
-		if let next = tree?.next(cursor) { go(to: next) }
+		if let next = tree?.next(cursor, toward: lineTip) { go(to: next) }
 	}
 
 	public func back() {
@@ -120,7 +143,7 @@ public final class GameDetailModel {
 	public func toEnd() {
 		guard let tree else { return }
 		var id = cursor
-		while let next = tree.next(id) { id = next }
+		while let next = tree.next(id, toward: lineTip) { id = next }
 		go(to: id)
 	}
 
@@ -139,17 +162,18 @@ public final class GameDetailModel {
 		return !tree.isOnMainline(cursor)
 	}
 
-	/// Back to where the variation the board is in branched off.
+	/// "Main line": back to where the main line was left, however deep the
+	/// variation, and follow the main line from there.
 	public func exitVariation() {
 		guard let tree else { return }
-		if let branch = tree.exitVariation(from: cursor) { go(to: branch) }
+		if let branch = tree.exitVariation(from: cursor) { move(to: branch, newLine: true) }
 	}
 
 	/// Jump to a played move (the eval chart, a judged move, the critical
 	/// moment): the selected view's main line at that ply.
 	public func jump(toPly ply: Int) {
 		guard let tree else { return }
-		go(to: tree.mainline(ply: ply))
+		move(to: tree.mainline(ply: ply), newLine: true)
 	}
 
 	/// The ply of the main-line move the board shows, for the chart's marker; nil off the main line.

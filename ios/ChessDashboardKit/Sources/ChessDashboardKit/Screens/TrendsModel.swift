@@ -96,27 +96,30 @@ public final class TrendsModel {
 		public let lines: [Line]
 	}
 
-	/// The Official Rating in force at `date` (it is a step line: the last
-	/// supplement on or before), and the nearest Live Rating or typed rating.
+	/// The nearest Live Rating or typed rating, and the Official Rating the
+	/// drawn step line shows at the same x (the last supplement on or before
+	/// it). The rule is drawn at the nearest point, so the Official Rating is
+	/// read there too, never at the raw finger position; before the first
+	/// supplement there is no Official line, so no Official Rating.
 	public func ratingReadout(at date: Date) -> Readout? {
 		let chart = ratingChart
+		let live = ChartDates.nearest(chart.live, to: date, by: \.date)
+		let typed = ChartDates.nearest(chart.typed, to: date, by: \.date)
+		let anchor = typed?.date ?? live?.date ?? date
 		var lines: [Readout.Line] = []
-		var anchor: Date?
-		if let official = chart.official.last(where: { $0.date <= date }) ?? chart.official.first {
+		if let official = chart.official.last(where: { $0.date <= anchor }) {
 			lines.append(.init(series: "Official Rating", value: RatingFormat.whole(official.rating), detail: ""))
 		}
-		if let live = ChartDates.nearest(chart.live, to: date, by: \.date) {
+		if let live {
 			let from = live.preRating.map { "from \(RatingFormat.whole($0))" } ?? "first rated Section"
 			lines.append(.init(
 				series: "Live Rating", value: RatingFormat.whole(live.rating), detail: "\(live.detail), \(from)"))
-			anchor = live.date
 		}
-		if let typed = ChartDates.nearest(chart.typed, to: date, by: \.date) {
+		if let typed {
 			lines.append(.init(series: "Rating", value: RatingFormat.whole(typed.rating), detail: ""))
-			anchor = typed.date
 		}
 		guard !lines.isEmpty else { return nil }
-		return Readout(date: anchor ?? date, lines: lines)
+		return Readout(date: anchor, lines: lines)
 	}
 
 	// MARK: Win rate

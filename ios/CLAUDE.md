@@ -31,9 +31,9 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 |---|---|
 | `API/APITypes.generated.swift` | `API.*` (every schema, namespaced so `API.Color` never meets SwiftUI's `Color`), `Endpoints.*` (one factory per operation), `API.responseTypes`, `API.specDigest`. |
 | `API/DashboardAPI.swift` | **The seam.** `protocol DashboardAPI { data(for: APIRequest) }` plus `send(_:)`, the one decode path, and `APIError`. |
-| `API/LiveAPIClient.swift` | The only HTTP: URLSession, bearer token from the `CredentialStore`, error mapping. `SessionGuard` turns any `.unauthenticated` into "back to sign-in". |
+| `API/LiveAPIClient.swift` | The only HTTP: URLSession, bearer token from the `CredentialStore`, error mapping (a timeout is `.timedOut`, not `.offline`; Sync waits 150 s, past gunicorn's 120 s). `SessionGuard` turns any `.unauthenticated` into "back to sign-in". |
 | `API/FixtureAPIClient.swift` | Answers from `openapi/fixtures/*.json` for tests and previews; can fail any operation (offline, 401, 403). |
-| `Session/` | `Session`, `CredentialStore` (Keychain, in-memory), `SessionStore` (sign-in, guest, sign-out, expiry). |
+| `Session/` | `Session`, `CredentialStore` (Keychain, in-memory), `SessionStore` (sign-in, guest, sign-out, expiry, and `isMultiUserServer`, remembered from the server's answers since nothing tells the mode before sign-in). |
 | `Filters/FilterState.swift` | The filter state plus lens, its canonical form, presets, summary, and `queryItems`: **the only filter-to-query encoder.** |
 | `Filters/FilterStore.swift` | The app-wide observable filter state, persisted in UserDefaults. |
 | `Cache/ResponseCache.swift` | Last 2xx body per (route + query, server + user) in Caches. Every failure is "no cache". |
@@ -63,12 +63,17 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
   `swift test` and on the simulator). A fixture a server ticket records is
   covered with no Swift change.
 - **The cache is disposable.** Keyed by server and user (`Session.cacheScope`),
-  wiped on sign-out, never consulted for anything but "show this first".
+  never consulted for anything but "show this first". Only an explicit Sign
+  out wipes it and the filters; an expired token or a 401 keeps both, so the
+  offline Scouting Report and pre-game review survive re-signing in. Every
+  sign-out resets the shared `meta`, and an answer that lands after its
+  session ended is dropped (`ScreenContext.isCurrent`), never shown or cached.
 - **Ratings render through `RatingFormat`**; Tags through `TagChip`/`TagDisplay`
   so mine and engine always look different. Glossary words verbatim in UI copy
   (Game, Series, Rated Event, Lesson, Tag, Official/Live Rating, Sync).
 - **401 or expiry routes to sign-in** through `SessionGuard` and
-  `SessionStore.sessionEnded()`, never per screen.
+  `SessionStore.sessionEnded(token:)`, never per screen. A 401 ends only the
+  session whose token made the request.
 
 ## Why a hand-rolled generator, not swift-openapi-generator
 

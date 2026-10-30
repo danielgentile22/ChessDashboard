@@ -8,7 +8,8 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
 	struct Reply: Sendable {
 		var status: Int
 		var body: Data
-		var offline = false
+		/// Fail with this instead of answering (no connection, timed out).
+		var failure: URLError.Code?
 	}
 
 	static let reply = Mutex(Reply(status: 200, body: Data("{}".utf8)))
@@ -38,8 +39,8 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
 		}
 		Self.sent.withLock { $0.append(request) }
 		let reply = Self.reply.withLock { $0 }
-		if reply.offline {
-			client?.urlProtocol(self, didFailWithError: URLError(.notConnectedToInternet))
+		if let failure = reply.failure {
+			client?.urlProtocol(self, didFailWithError: URLError(failure))
 			return
 		}
 		let response = HTTPURLResponse(
@@ -135,9 +136,20 @@ struct LiveClientTests {
 
 	@Test("no connection is offline")
 	func offline() async {
-		StubProtocol.reply.withLock { $0.offline = true }
-		defer { StubProtocol.reply.withLock { $0.offline = false } }
+		StubProtocol.reply.withLock { $0.failure = .notConnectedToInternet }
+		defer { StubProtocol.reply.withLock { $0.failure = nil } }
 		await #expect(throws: APIError.offline) { try await client().send(Endpoints.getMeta()) }
+	}
+
+	@Test("a timeout is not offline; Sync waits past the server's 120 s worker timeout")
+	func timeouts() async throws {
+		StubProtocol.reply.withLock { $0.failure = .timedOut }
+		defer { StubProtocol.reply.withLock { $0.failure = nil } }
+		let live = client()
+		await #expect(throws: APIError.timedOut) { try await live.send(Endpoints.runSync()) }
+		await #expect(throws: APIError.timedOut) { try await live.send(Endpoints.getMeta()) }
+		let sent = StubProtocol.sent.withLock { $0.map(\.timeoutInterval) }
+		#expect(sent == [150, 60])
 	}
 
 	@Test("path ids are escaped as one segment")

@@ -76,6 +76,50 @@ struct GameDetailModelTests {
 		#expect(!m.isInVariation && m.mainlinePly == 6)
 	}
 
+	@Test("stepping back out of a variation and forward again (buttons or swipe) stays in it")
+	func forwardFollowsTheLine() async throws {
+		let m = await model("my_analysis")
+		m.select(.myAnalysis)
+		let tree = try #require(m.tree)
+		m.jump(toPly: 7)  // 4. Nf3, then 4... d6 or 4... dxc3 5. Nxc3 ...
+		let branch = m.cursor
+		let dxc3 = m.nextChoices[1]
+		#expect(tree.moveText(dxc3) == "dxc3")
+		m.go(to: dxc3)
+		m.forward()
+		let nxc3 = m.cursor
+		#expect(tree.moveText(nxc3) == "Nxc3" && m.line.contains(nxc3))
+
+		m.back()
+		m.back()
+		#expect(m.cursor == branch && m.line.contains(dxc3))  // the strip still shows the variation
+		m.forward()
+		#expect(m.cursor == dxc3)
+		m.toEnd()
+		#expect(tree.isAncestor(nxc3, of: m.cursor) && m.isInVariation)
+
+		// Main line: back on the main line, following it again.
+		m.exitVariation()
+		#expect(m.cursor == branch && m.line == Array(tree.mainline.dropFirst()))
+		m.forward()
+		#expect(m.mainlinePly == 8)
+	}
+
+	@Test("Main line leaves a nested variation in one tap")
+	func mainLineFromNested() async throws {
+		let m = await model("my_analysis")
+		m.select(.myAnalysis)
+		let tree = try #require(m.tree)
+		m.jump(toPly: 10)  // 5... Bg4, then 6. h3, 6. Bc4 or 6. Qb3
+		let bc4 = try #require(m.nextChoices.first { tree.moveText($0) == "Bc4!?" })
+		m.go(to: bc4)
+		let nf6 = try #require(m.nextChoices.first { tree.moveText($0) == "Nf6" })  // nested in 6. Bc4
+		m.go(to: nf6)
+		m.forward()
+		m.exitVariation()
+		#expect(m.mainlinePly == 10)
+	}
+
 	@Test("each view keeps its own place on the board")
 	func perViewCursor() async {
 		let m = await model("analyzed")

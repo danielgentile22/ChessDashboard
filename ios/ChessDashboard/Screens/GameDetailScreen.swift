@@ -156,7 +156,7 @@ private struct BoardCard: View {
 			Spacer()
 			if model.isInVariation {
 				Button("Main line", systemImage: "arrow.uturn.up", action: model.exitVariation)
-					.font(.subheadline).buttonStyle(.bordered).accessibilityHint("Steps out of this variation")
+					.font(.subheadline).buttonStyle(.bordered).accessibilityHint("Returns to the main line where this variation left it")
 			}
 		}
 		controls
@@ -184,7 +184,7 @@ private struct BoardCard: View {
 			.padding(10)
 			.background(Theme.card2.color, in: RoundedRectangle(cornerRadius: 8))
 		}
-		MoveLine(tree: tree, cursor: model.cursor, go: model.go)
+		MoveLine(tree: tree, line: model.line, cursor: model.cursor, go: model.go)
 	}
 
 	private var controls: some View {
@@ -206,14 +206,16 @@ private struct BoardCard: View {
 	}
 }
 
-/// The line the board is on, move by move; tap a move to go there.
+/// The line the board follows, move by move (it stays on a variation while
+/// you step back to where it branched); tap a move to go there. A dot marks
+/// a branch point: a move with a variation beside it.
 private struct MoveLine: View {
 	let tree: PGNTree
+	let line: [PGNTree.ID]
 	let cursor: PGNTree.ID
 	let go: (PGNTree.ID) -> Void
 
 	var body: some View {
-		let line = tree.line(through: cursor)
 		if !line.isEmpty {
 			ScrollViewReader { proxy in
 				ScrollView(.horizontal, showsIndicators: false) {
@@ -221,6 +223,7 @@ private struct MoveLine: View {
 						ForEach(Array(line.enumerated()), id: \.element) { index, id in
 							let node = tree[id]
 							let numbered = node.side == .white || index == 0
+							let branches = tree.hasAlternatives(id)
 							Button {
 								go(id)
 							} label: {
@@ -230,9 +233,14 @@ private struct MoveLine: View {
 									.padding(.vertical, 4)
 									.background(id == cursor ? Theme.primaryWash.color : .clear, in: RoundedRectangle(cornerRadius: 6))
 									.foregroundStyle(id == cursor ? Theme.primary.color : Theme.text.color)
+									.overlay(alignment: .topTrailing) {
+										if branches {
+											Circle().fill(Theme.accent.color).frame(width: 5, height: 5).offset(x: 1, y: 1)
+										}
+									}
 							}
 							.buttonStyle(.plain)
-							.accessibilityLabel(tree.label(id))
+							.accessibilityLabel(branches ? "\(tree.label(id)), a variation branches here" : tree.label(id))
 							.accessibilityAddTraits(id == cursor ? .isSelected : [])
 							.id(id)
 						}

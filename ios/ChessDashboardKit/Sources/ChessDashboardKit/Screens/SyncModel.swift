@@ -90,11 +90,15 @@ public struct SyncReport: Equatable, Sendable {
 	}
 
 	public init(failure: APIError) {
-		style = .failure
+		// A timeout isn't a failure yet: the server may still finish the Sync.
+		style = failure == .timedOut ? .warning : .failure
 		syncedAt = nil
 		celebrations = []
 		newGames = []
 		switch failure {
+		case .timedOut:
+			title = "Sync is taking a while"
+			self.message = "The server hasn't answered yet and may still finish. Pull to refresh in a minute to see new Games."
 		case .server(_, "sync_failed", let message) where !message.isEmpty:
 			title = "Sync failed"
 			self.message = "\(message) (still showing your current Games)."
