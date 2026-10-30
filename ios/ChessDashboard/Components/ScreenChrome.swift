@@ -5,11 +5,15 @@ extension View {
 	/// The chrome every screen has: its title, the Official/Live lens toggle
 	/// and the filter sheet in the toolbar, "Open on the web", the active
 	/// filter summary, the offline indicator for `resource`, and Sync (the
-	/// owner's toolbar action; `resource` re-fetches after each Sync).
-	func screenChrome<Value: Decodable & Sendable>(title: String, page: WebPage, resource: ScreenResource<Value>) -> some View {
+	/// owner's toolbar action; `resource` re-fetches after each Sync). A
+	/// screen whose route takes no filters (Analysis, like its web page)
+	/// passes `filtered: false` and gets no filter or lens controls.
+	func screenChrome<Value: Decodable & Sendable>(
+		title: String, page: WebPage, resource: ScreenResource<Value>, filtered: Bool = true
+	) -> some View {
 		modifier(ScreenChrome(
 			title: title, page: page, isOffline: resource.isOffline, cachedAt: resource.cachedAt,
-			reload: { await resource.reload(in: $0) }))
+			filtered: filtered, reload: { await resource.reload(in: $0) }))
 	}
 }
 
@@ -18,6 +22,7 @@ private struct ScreenChrome: ViewModifier {
 	let page: WebPage
 	let isOffline: Bool
 	let cachedAt: Date?
+	let filtered: Bool
 	let reload: @MainActor (ScreenContext) async -> Void
 
 	@Environment(AppEnvironment.self) private var env
@@ -31,22 +36,28 @@ private struct ScreenChrome: ViewModifier {
 			.safeAreaInset(edge: .top, spacing: 0) {
 				VStack(spacing: 0) {
 					if isOffline { OfflineBanner(cachedAt: cachedAt) }
-					ActiveFilterBar(state: env.filters.state) { showingFilters = true }
+					if filtered {
+						ActiveFilterBar(state: env.filters.state) { showingFilters = true }
+					}
 				}
 			}
 			.toolbar {
-				ToolbarItem(placement: .topBarLeading) {
-					LensToggle(lens: $filters.state.lens)
+				if filtered {
+					ToolbarItem(placement: .topBarLeading) {
+						LensToggle(lens: $filters.state.lens)
+					}
 				}
 				ToolbarItemGroup(placement: .topBarTrailing) {
 					if env.canSync { SyncButton() }
-					Button {
-						showingFilters = true
-					} label: {
-						Label(
-							"Filters",
-							systemImage: env.filters.state.isFiltered
-								? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+					if filtered {
+						Button {
+							showingFilters = true
+						} label: {
+							Label(
+								"Filters",
+								systemImage: env.filters.state.isFiltered
+									? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+						}
 					}
 					Menu {
 						Button {

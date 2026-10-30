@@ -39,6 +39,7 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 | `Cache/ResponseCache.swift` | Last 2xx body per (route + query, server + user) in Caches. Every failure is "no cache". |
 | `Screens/ScreenResource.swift` | `ScreenContext` (what every view model takes) and `ScreenResource` (cached first, then refresh, offline flag, `reload` after a Sync). |
 | `Screens/SyncModel.swift` | The owner's Sync: `POST sync`, the toast as `SyncReport` (worded like the web's), `revision` bumped on success so every `screenChrome` reloads its resource, then meta re-fetched. |
+| `Screens/Prefetch.swift` | `ScreenContext.prefetch`: cache a response a screen hasn't shown yet. Lessons and the Scouting Report warm pre-game review (`ReviewModel.endpoint`, lens only) so it opens offline. |
 | `Board/` | The Game detail board. `PGNTree`: our PGN parser into a flat move tree (variations, pre/post comments, NAGs, FEN starts), every move replayed through ChessKit's `SANParser`/`Board`; navigation (into and out of variations, main line by ply), comment display with `[%...]` commands stripped. `BoardDiagram`: what the board view draws, oriented. ChessKit types never leave the kit. Don't use ChessKit's `PGNParser`/`Game`/`MoveTree`: it rejects a comment before move 1 and returns wrong moves in nested variations. |
 | `Display/` | `RatingFormat` (whole numbers), `TagDisplay` (mine vs engine), `FreshnessSummary`, `WebPage` (open on the web), `ISODates`, `ChartDates` (contract days as chart x values at local noon, nearest point for touch-to-read). |
 | `Theme/` | `ThemeColor` and the generated `Theme`/`ThemeMetrics`. |
@@ -120,7 +121,9 @@ One screen = one view model in the kit + one view in the app.
    }
    ```
    `.task(id: filters.state)` reloads when filters or the lens change;
-   pull-to-refresh re-fetches and never Syncs.
+   pull-to-refresh re-fetches and never Syncs. A route that takes no
+   filters (Analysis) passes `screenChrome(..., filtered: false)`, which
+   hides the filter bar and lens toggle.
 4. **Wire it** in `App/MainTabView.swift` (or `MoreView`), replacing the
    `PlaceholderScreen` with `OverviewScreen(context: env.context!)` (the tabs
    only exist while signed in).
