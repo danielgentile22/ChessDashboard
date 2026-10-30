@@ -1,0 +1,38 @@
+{
+  "failures": [],
+  "milestones": [
+    {
+      "description": "New peak rating: 1815 (was 1810)",
+      "kind": "peak_rating",
+      "new": 1815,
+      "old": 1810
+    },
+    {
+      "description": "New longest win streak: 4 games in a row (was 3)",
+      "kind": "win_streak",
+      "new": 4,
+      "old": 3
+    }
+  ],
+  "new_achievements": [],
+  "new_games": [
+    {
+      "date": "2024-03-10",
+      "game_id": "chap0021",
+      "opponent": "Opponent E",
+      "outcome": "Win",
+      "result": "1-0"
+    },
+    {
+      "date": "2024-09-01",
+      "game_id": "chap0022",
+      "opponent": "Opponent A",
+      "outcome": "Draw",
+      "result": "1/2-1/2"
+    }
+  ],
+  "status": "success",
+  "synced_at": "2026-01-01T00:00:00Z",
+  "uscf_synced_at": "2026-01-01T00:00:00Z",
+  "uscf_unavailable_since": null
+}

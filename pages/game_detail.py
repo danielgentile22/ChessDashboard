@@ -30,7 +30,7 @@ from components import (
     uscf_member_url,
 )
 from engine_analysis_core import win_pct_from_cp
-from pgn_stats_core import has_my_analysis, mainline_movetext
+from payloads.game import board_pgns
 from styles import COLORS, apply_dark_theme, rgba
 
 dash.register_page(
@@ -236,42 +236,6 @@ def _lessons_card(game: pd.Series) -> html.Div:
     return content_card(title, *body)
 
 
-def _game_pgn(game: pd.Series, movetext: str) -> str:
-    """
-    Assemble a self-contained PGN (headers + movetext) for the pgn-viewer.
-
-    The board is rendered locally by Lichess's pgn-viewer, so
-    it needs the Game as a standalone PGN rather than an embed URL.  The headers
-    give the viewer the players, result, and date; *movetext* supplies the moves
-    (clean for the Game view, annotated for My Analysis).
-    """
-    player = data.get_player()
-    color = str(game.get("Color") or "")
-    opponent = str(game.get("Opponent") or "?")
-    white = player if color == "White" else opponent
-    black = opponent if color == "White" else player
-    headers = [
-        ("Event", game.get("Event")),
-        ("Date", game.get("Date")),
-        ("Round", game.get("Round")),
-        ("White", white),
-        ("Black", black),
-        ("Result", game.get("Result")),
-    ]
-    # A custom start position (Studies allow one) must ride in the headers or the
-    # viewer replays the moves from the standard start.
-    setup_fen = str(game.get("SetupFEN") or "").strip()
-    if setup_fen:
-        headers += [("FEN", setup_fen), ("SetUp", "1")]
-    # PGN tag values must escape backslash and double-quote, else an opponent or
-    # event name with a quote (e.g. '2025 "Summer" Open') produces a malformed
-    # tag pair that breaks the viewer for all three board views.
-    def esc(v: object) -> str:
-        return str(v).replace("\\", "\\\\").replace('"', '\\"')
-    head = "".join(f'[{k} "{esc(v)}"]\n' for k, v in headers if str(v or "").strip())
-    return f"{head}\n{movetext}".strip()
-
-
 def _correction_row(move_eval) -> html.Div | None:
     """The engine's recommended correction for a judged move: the best move and
     the refutation line it leads to.  None when the engine named no better move
@@ -409,9 +373,16 @@ def _board_section(game: pd.Series) -> html.Div:
             ),
         ])
 
-    setup_fen = str(game.get("SetupFEN") or "")
+    # The PGNs come from the API's builder, so the native board plays exactly
+    # what this one does.
+    chapter_url = str(game.get("ChapterURL") or "")
+    coach_chapter = data.get_coach_chapter(chapter_url)
+    pgns = board_pgns(
+        game, player=data.get_player(),
+        coach_movetext=coach_chapter.movetext if coach_chapter is not None else None,
+    )
     data_attrs = {
-        "data-pgn-game": _game_pgn(game, mainline_movetext(movetext, setup_fen)),
+        "data-pgn-game": pgns["game"],
         # Orient the board the way Daniel played it — his colour at the bottom.
         "data-orientation": str(game.get("Color") or "white").lower(),
     }
@@ -424,8 +395,8 @@ def _board_section(game: pd.Series) -> html.Div:
         html.Button("Game", className="lpv-switch active",
                     **{"data-view": "game"}),
     ]
-    if has_my_analysis(movetext, setup_fen):
-        data_attrs["data-pgn-analysis"] = _game_pgn(game, movetext)
+    if pgns["my_analysis"] is not None:
+        data_attrs["data-pgn-analysis"] = pgns["my_analysis"]
         switches.append(
             html.Button("My Analysis", className="lpv-switch",
                         **{"data-view": "analysis"})
@@ -443,10 +414,8 @@ def _board_section(game: pd.Series) -> html.Div:
     # in the same board.  A Game with no coach match simply has no Coach tab
     # (gracefully, never an error); coach material is private, so it renders
     # only behind the auth gate.
-    chapter_url = str(game.get("ChapterURL") or "")
-    coach_chapter = data.get_coach_chapter(chapter_url)
-    if coach_chapter is not None:
-        data_attrs["data-pgn-coach"] = _game_pgn(game, coach_chapter.movetext)
+    if pgns["coach"] is not None:
+        data_attrs["data-pgn-coach"] = pgns["coach"]
         switches.append(
             html.Button("Coach", className="lpv-switch", **{"data-view": "coach"})
         )

@@ -1,0 +1,59 @@
+{
+  "coach_notes": [
+    {
+      "game": {
+        "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+        "color": "White",
+        "date": "2024-01-06",
+        "eco": "E04",
+        "game_id": "chap0001",
+        "has_lesson": true,
+        "moves": 6,
+        "opening": "Catalan Opening: Open Defense",
+        "opponent": "Opponent A",
+        "opponent_rating": 1920,
+        "outcome": "Win",
+        "player_rating": 1800,
+        "result": "1-0",
+        "round": 1,
+        "series": "Test Open",
+        "tags": [
+          {
+            "name": "strategy",
+            "source": "mine"
+          }
+        ],
+        "termination": "win by resignation",
+        "uscf_status": "matched_by_id"
+      },
+      "move_number": 3,
+      "text": "Develop the knight before the bishop."
+    }
+  ],
+  "games_count": 1,
+  "lessons": [],
+  "lessons_opponents": [
+    {
+      "opponent": "Opponent A",
+      "opponent_id": "uscf-10000001"
+    }
+  ],
+  "recurring_weaknesses": [],
+  "review": null,
+  "tag_counts": [
+    {
+      "canonical": true,
+      "count": 1,
+      "engine_count": 0,
+      "mine_count": 1,
+      "name": "tactics"
+    },
+    {
+      "canonical": true,
+      "count": 1,
+      "engine_count": 0,
+      "mine_count": 1,
+      "name": "blunder"
+    }
+  ]
+}

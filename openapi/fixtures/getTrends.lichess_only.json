@@ -1,0 +1,340 @@
+{
+  "average_length": {
+    "draw": 3.5,
+    "loss": 3.0,
+    "win": 4.2
+  },
+  "calendar": [
+    {
+      "days": [
+        {
+          "date": "2024-01-06",
+          "draw": 1,
+          "game_list": [
+            {
+              "game_id": "chap0001",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0002",
+              "opponent": "Opponent B",
+              "outcome": "Draw"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 1,
+          "win": 1
+        },
+        {
+          "date": "2024-01-07",
+          "draw": 0,
+          "game_list": [
+            {
+              "game_id": "chap0003",
+              "opponent": "Opponent C",
+              "outcome": "Loss"
+            }
+          ],
+          "games": 1,
+          "loss": 1,
+          "net": -1,
+          "win": 0
+        },
+        {
+          "date": "2024-06-15",
+          "draw": 0,
+          "game_list": [
+            {
+              "game_id": "chap0004",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0005",
+              "opponent": "Opponent D",
+              "outcome": "Win"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 2,
+          "win": 2
+        },
+        {
+          "date": "2024-06-16",
+          "draw": 1,
+          "game_list": [
+            {
+              "game_id": "chap0006",
+              "opponent": "Opponent B",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0007",
+              "opponent": "Opponent A",
+              "outcome": "Draw"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 1,
+          "win": 1
+        }
+      ],
+      "games": 7,
+      "losses": 1,
+      "wins": 4,
+      "year": 2024
+    }
+  ],
+  "game_lengths": [
+    {
+      "moves": 6,
+      "outcome": "Win"
+    },
+    {
+      "moves": 4,
+      "outcome": "Draw"
+    },
+    {
+      "moves": 3,
+      "outcome": "Loss"
+    },
+    {
+      "moves": 4,
+      "outcome": "Win"
+    },
+    {
+      "moves": 4,
+      "outcome": "Win"
+    },
+    {
+      "moves": 3,
+      "outcome": "Win"
+    },
+    {
+      "moves": 3,
+      "outcome": "Draw"
+    }
+  ],
+  "games_count": 7,
+  "games_per_month": [
+    {
+      "games": 3,
+      "win_rate_pct": 33.3,
+      "wins": 1,
+      "year_month": "2024-01"
+    },
+    {
+      "games": 4,
+      "win_rate_pct": 75.0,
+      "wins": 3,
+      "year_month": "2024-06"
+    }
+  ],
+  "rating_chart": {
+    "emphasized": "official",
+    "live": [],
+    "mode": "typed",
+    "official": [],
+    "typed": [
+      {
+        "date": "2024-01-06",
+        "rating": 1800,
+        "trend": 1799.0
+      },
+      {
+        "date": "2024-01-07",
+        "rating": 1800,
+        "trend": 1803.0
+      },
+      {
+        "date": "2024-06-15",
+        "rating": 1810,
+        "trend": 1807.0
+      },
+      {
+        "date": "2024-06-16",
+        "rating": 1810,
+        "trend": 1811.0
+      }
+    ]
+  },
+  "rounds": [
+    {
+      "draw": 0,
+      "games": 2,
+      "loss": 0,
+      "reliable": false,
+      "round": 1,
+      "score_pct": 100.0,
+      "win": 2,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 1,
+      "games": 2,
+      "loss": 0,
+      "reliable": false,
+      "round": 2,
+      "score_pct": 75.0,
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 0,
+      "games": 2,
+      "loss": 1,
+      "reliable": false,
+      "round": 3,
+      "score_pct": 50.0,
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 1,
+      "games": 1,
+      "loss": 0,
+      "reliable": false,
+      "round": 4,
+      "score_pct": 50.0,
+      "win": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "time_controls": [
+    {
+      "draw": 1,
+      "games": 3,
+      "loss": 1,
+      "minutes": 140.0,
+      "speed": "Classical",
+      "time_control": "40/80, SD30; +30",
+      "win": 1,
+      "win_rate_pct": 33.3
+    },
+    {
+      "draw": 0,
+      "games": 3,
+      "loss": 0,
+      "minutes": 35.0,
+      "speed": "Rapid",
+      "time_control": "30+5",
+      "win": 3,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 1,
+      "games": 1,
+      "loss": 0,
+      "minutes": null,
+      "speed": "Unknown",
+      "time_control": "",
+      "win": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "upsets": {
+    "giant_kills": [
+      {
+        "game": {
+          "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+          "color": "White",
+          "date": "2024-01-06",
+          "eco": "E04",
+          "game_id": "chap0001",
+          "has_lesson": true,
+          "moves": 6,
+          "opening": "Catalan Opening: Open Defense",
+          "opponent": "Opponent A",
+          "opponent_rating": 1920,
+          "outcome": "Win",
+          "player_rating": 1800,
+          "result": "1-0",
+          "round": 1,
+          "series": "Test Open",
+          "tags": [
+            {
+              "name": "strategy",
+              "source": "mine"
+            }
+          ],
+          "termination": "win by resignation",
+          "uscf_status": "unmatched"
+        },
+        "margin": 120
+      },
+      {
+        "game": {
+          "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+          "color": "Black",
+          "date": "2024-06-15",
+          "eco": "E60",
+          "game_id": "chap0004",
+          "has_lesson": true,
+          "moves": 4,
+          "opening": "King's Indian Defense",
+          "opponent": "Opponent A",
+          "opponent_rating": 1930,
+          "outcome": "Win",
+          "player_rating": 1810,
+          "result": "0-1",
+          "round": 1,
+          "series": "Summer Cup",
+          "tags": [
+            {
+              "name": "opening",
+              "source": "mine"
+            }
+          ],
+          "termination": "loss by checkmate",
+          "uscf_status": "unmatched"
+        },
+        "margin": 120
+      }
+    ],
+    "upset_losses": []
+  },
+  "win_rate": [
+    {
+      "cum_games": 2,
+      "cum_wins": 1,
+      "date": "2024-01-06",
+      "win_rate_pct": 50.0
+    },
+    {
+      "cum_games": 3,
+      "cum_wins": 1,
+      "date": "2024-01-07",
+      "win_rate_pct": 33.33333333333333
+    },
+    {
+      "cum_games": 5,
+      "cum_wins": 3,
+      "date": "2024-06-15",
+      "win_rate_pct": 60.0
+    },
+    {
+      "cum_games": 7,
+      "cum_wins": 4,
+      "date": "2024-06-16",
+      "win_rate_pct": 57.14285714285714
+    }
+  ],
+  "win_rate_by_weekday": [
+    {
+      "day_of_week": "Sat",
+      "games": 4,
+      "win_rate_pct": 75.0,
+      "wins": 3
+    },
+    {
+      "day_of_week": "Sun",
+      "games": 3,
+      "win_rate_pct": 33.3,
+      "wins": 1
+    }
+  ]
+}

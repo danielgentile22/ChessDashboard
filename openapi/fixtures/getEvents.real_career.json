@@ -1,0 +1,2367 @@
+{
+  "games_count": 63,
+  "series": [
+    {
+      "draw": 2,
+      "first_date": "2025-06-20",
+      "forfeit_count": 0,
+      "game_count": 27,
+      "longest_win_streak": 7,
+      "loss": 7,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2025-06-28",
+          "event_id": "202506284842",
+          "forfeit_count": 0,
+          "game_count": 2,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/dian0001",
+                "color": "Black",
+                "date": "2025-06-20",
+                "eco": "A40",
+                "game_id": "dian0001",
+                "has_lesson": false,
+                "moves": 39,
+                "opening": "Queen's Pawn Game: Modern Defense",
+                "opponent": "Diana Davis",
+                "opponent_rating": 1097,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 1,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/ethn0001",
+                "color": "White",
+                "date": "2025-06-27",
+                "eco": "B20",
+                "game_id": "ethn0001",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "Sicilian Defense: Mengarini Variation",
+                "opponent": "Ethan Edwards",
+                "opponent_rating": 1386,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "0-1",
+                "round": 2,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            }
+          ],
+          "loss": 2,
+          "name": "ACC JUNE 2025",
+          "performance_rating": 442,
+          "player_count": 84,
+          "post_rating": 695,
+          "pre_rating": null,
+          "rating_change": null,
+          "score": 0.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-06-28",
+          "win": 0
+        },
+        {
+          "draw": 0,
+          "end": "2025-07-25",
+          "event_id": "202507250562",
+          "forfeit_count": 0,
+          "game_count": 2,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/fion0001",
+                "color": "White",
+                "date": "2025-07-18",
+                "eco": "C24",
+                "game_id": "fion0001",
+                "has_lesson": false,
+                "moves": 29,
+                "opening": "Bishop's Opening: Vienna Hybrid",
+                "opponent": "Fiona Foster",
+                "opponent_rating": 1286,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "0-1",
+                "round": 3,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00047",
+                "color": "Black",
+                "date": "2025-07-25",
+                "eco": "B12",
+                "game_id": "chp00047",
+                "has_lesson": false,
+                "moves": 33,
+                "opening": "Caro-Kann Defense: Advance Variation, Botvinnik-Carls Defense",
+                "opponent": "Wyatt Davis",
+                "opponent_rating": 1047,
+                "outcome": "Win",
+                "player_rating": null,
+                "result": "0-1",
+                "round": 4,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            }
+          ],
+          "loss": 1,
+          "name": "ACC JULY 2025",
+          "performance_rating": 1166,
+          "player_count": 68,
+          "post_rating": 927,
+          "pre_rating": 695,
+          "rating_change": 232,
+          "score": 1.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-07-04",
+          "win": 1
+        },
+        {
+          "draw": 0,
+          "end": "2025-08-29",
+          "event_id": "202508290762",
+          "forfeit_count": 0,
+          "game_count": 1,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00006",
+                "color": "Black",
+                "date": "2025-08-29",
+                "eco": "B10",
+                "game_id": "chp00006",
+                "has_lesson": false,
+                "moves": 42,
+                "opening": "Caro-Kann Defense: Accelerated Panov Attack",
+                "opponent": "Olivia Baker",
+                "opponent_rating": 1162,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 5,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 1,
+          "name": "ACC AUGUST 2025",
+          "performance_rating": 362,
+          "player_count": 84,
+          "post_rating": 1015,
+          "pre_rating": 1038,
+          "rating_change": -23,
+          "score": 0.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-08-01",
+          "win": 0
+        },
+        {
+          "draw": 0,
+          "end": "2025-09-26",
+          "event_id": "202509267492",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00024",
+                "color": "White",
+                "date": "2025-09-05",
+                "eco": "C56",
+                "game_id": "chp00024",
+                "has_lesson": false,
+                "moves": 53,
+                "opening": "Italian Game: Scotch Gambit, Walbrodt-Baird Gambit",
+                "opponent": "Keira Edwards",
+                "opponent_rating": 1060,
+                "outcome": "Win",
+                "player_rating": 1038,
+                "result": "1-0",
+                "round": 6,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 6
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00026",
+                "color": "Black",
+                "date": "2025-09-19",
+                "eco": "B10",
+                "game_id": "chp00026",
+                "has_lesson": false,
+                "moves": 25,
+                "opening": "Caro-Kann Defense: Hillbilly Attack",
+                "opponent": "Uma Foster",
+                "opponent_rating": 1034,
+                "outcome": "Loss",
+                "player_rating": 1038,
+                "result": "1-0",
+                "round": 7,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 7
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00021",
+                "color": "Black",
+                "date": "2025-09-26",
+                "eco": "B07",
+                "game_id": "chp00021",
+                "has_lesson": false,
+                "moves": 53,
+                "opening": "Pirc Defense: Kholmov System",
+                "opponent": "Gina Edwards",
+                "opponent_rating": 983,
+                "outcome": "Win",
+                "player_rating": 1038,
+                "result": "0-1",
+                "round": 8,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 8
+            }
+          ],
+          "loss": 1,
+          "name": "ACC SEPTEMBER 2025",
+          "performance_rating": 1146,
+          "player_count": 91,
+          "post_rating": 1033,
+          "pre_rating": 1005,
+          "rating_change": 28,
+          "score": 2.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-09-05",
+          "win": 2
+        },
+        {
+          "draw": 0,
+          "end": "2025-10-31",
+          "event_id": "202510310133",
+          "forfeit_count": 0,
+          "game_count": 1,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00020",
+                "color": "White",
+                "date": "2025-10-10",
+                "eco": "C42",
+                "game_id": "chp00020",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "Petrov's Defense",
+                "opponent": "Uma Foster",
+                "opponent_rating": 1034,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "1-0",
+                "round": 9,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 9
+            }
+          ],
+          "loss": 0,
+          "name": "ACC OCTOBER 2025",
+          "performance_rating": 1834,
+          "player_count": 83,
+          "post_rating": 1155,
+          "pre_rating": 1133,
+          "rating_change": 22,
+          "score": 1.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-10-03",
+          "win": 1
+        },
+        {
+          "draw": 1,
+          "end": "2025-11-21",
+          "event_id": "202511210313",
+          "forfeit_count": 0,
+          "game_count": 2,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00043",
+                "color": "White",
+                "date": "2025-11-07",
+                "eco": "C58",
+                "game_id": "chp00043",
+                "has_lesson": false,
+                "moves": 67,
+                "opening": "Italian Game: Two Knights Defense, Polerio Defense, Bogoljubow Variation",
+                "opponent": "Olivia Davis",
+                "opponent_rating": 1136,
+                "outcome": "Draw",
+                "player_rating": 1133,
+                "result": "1/2-1/2",
+                "round": 10,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "draw by agreement",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 10
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00027",
+                "color": "Black",
+                "date": "2025-11-14",
+                "eco": "D01",
+                "game_id": "chp00027",
+                "has_lesson": false,
+                "moves": 33,
+                "opening": "Rapport-Jobava System",
+                "opponent": "Ethan Anderson",
+                "opponent_rating": 1050,
+                "outcome": "Win",
+                "player_rating": 1133,
+                "result": "0-1",
+                "round": 11,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 11
+            }
+          ],
+          "loss": 0,
+          "name": "ACC NOVEMBER 2025",
+          "performance_rating": 1284,
+          "player_count": 78,
+          "post_rating": 1237,
+          "pre_rating": 1230,
+          "rating_change": 7,
+          "score": 1.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-11-07",
+          "win": 1
+        },
+        {
+          "draw": 0,
+          "end": "2025-12-26",
+          "event_id": "202512260263",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00025",
+                "color": "Black",
+                "date": "2025-12-05",
+                "eco": "B12",
+                "game_id": "chp00025",
+                "has_lesson": false,
+                "moves": 22,
+                "opening": "Caro-Kann Defense: Maróczy Variation",
+                "opponent": "Alice Baker",
+                "opponent_rating": 1195,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "0-1",
+                "round": 12,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 12
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00018",
+                "color": "Black",
+                "date": "2025-12-19",
+                "eco": "E04",
+                "game_id": "chp00018",
+                "has_lesson": false,
+                "moves": 42,
+                "opening": "Catalan Opening: Open Defense",
+                "opponent": "Maya Baker",
+                "opponent_rating": 1203,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "0-1",
+                "round": 13,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 13
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00034",
+                "color": "White",
+                "date": "2025-12-26",
+                "eco": "C41",
+                "game_id": "chp00034",
+                "has_lesson": false,
+                "moves": 50,
+                "opening": "Philidor Defense: Exchange Variation",
+                "opponent": "Alice Baker",
+                "opponent_rating": 1195,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "1-0",
+                "round": 14,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 14
+            }
+          ],
+          "loss": 0,
+          "name": "ACC DECEMBER 2025",
+          "performance_rating": 1998,
+          "player_count": 78,
+          "post_rating": 1419,
+          "pre_rating": 1385,
+          "rating_change": 34,
+          "score": 3.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-12-05",
+          "win": 3
+        },
+        {
+          "draw": 0,
+          "end": "2026-01-30",
+          "event_id": "202601300273",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00038",
+                "color": "White",
+                "date": "2026-01-02",
+                "eco": "B10",
+                "game_id": "chp00038",
+                "has_lesson": false,
+                "moves": 47,
+                "opening": "Caro-Kann Defense: Two Knights Attack",
+                "opponent": "Zane Baker",
+                "opponent_rating": 1463,
+                "outcome": "Win",
+                "player_rating": 1386,
+                "result": "1-0",
+                "round": 15,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 15
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00059",
+                "color": "Black",
+                "date": "2026-01-09",
+                "eco": "B13",
+                "game_id": "chp00059",
+                "has_lesson": false,
+                "moves": 25,
+                "opening": "Caro-Kann Defense: Exchange Variation",
+                "opponent": "Parker Anderson",
+                "opponent_rating": 1364,
+                "outcome": "Win",
+                "player_rating": 1386,
+                "result": "0-1",
+                "round": 16,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 16
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00019",
+                "color": "Black",
+                "date": "2026-01-30",
+                "eco": "D50",
+                "game_id": "chp00019",
+                "has_lesson": false,
+                "moves": 43,
+                "opening": "Queen's Gambit Declined: Modern Variation",
+                "opponent": "Theo Edwards",
+                "opponent_rating": 1300,
+                "outcome": "Win",
+                "player_rating": 1386,
+                "result": "0-1",
+                "round": 17,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 17
+            }
+          ],
+          "loss": 0,
+          "name": "ACC January 2026",
+          "performance_rating": 2176,
+          "player_count": 95,
+          "post_rating": 1506,
+          "pre_rating": 1445,
+          "rating_change": 61,
+          "score": 3.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-01-02",
+          "win": 3
+        },
+        {
+          "draw": 1,
+          "end": "2026-02-27",
+          "event_id": "202602270323",
+          "forfeit_count": 0,
+          "game_count": 2,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00033",
+                "color": "Black",
+                "date": "2026-02-20",
+                "eco": "B10",
+                "game_id": "chp00033",
+                "has_lesson": false,
+                "moves": 52,
+                "opening": "Caro-Kann Defense",
+                "opponent": "Liam Davis",
+                "opponent_rating": 1400,
+                "outcome": "Draw",
+                "player_rating": 1419,
+                "result": "1/2-1/2",
+                "round": 18,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "draw by agreement",
+                "uscf_status": "conflict"
+              },
+              "round": 18
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00036",
+                "color": "Black",
+                "date": "2026-02-27",
+                "eco": "A00",
+                "game_id": "chp00036",
+                "has_lesson": false,
+                "moves": 31,
+                "opening": "Hungarian Opening: Catalan Formation",
+                "opponent": "Jonah Baker",
+                "opponent_rating": 1335,
+                "outcome": "Loss",
+                "player_rating": 1419,
+                "result": "1-0",
+                "round": 19,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 19
+            }
+          ],
+          "loss": 1,
+          "name": "ACC FEBRUARY 2026",
+          "performance_rating": 1177,
+          "player_count": 64,
+          "post_rating": 1461,
+          "pre_rating": 1506,
+          "rating_change": -45,
+          "score": 0.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-02-20",
+          "win": 0
+        },
+        {
+          "draw": 0,
+          "end": "2026-03-27",
+          "event_id": "202603270403",
+          "forfeit_count": 0,
+          "game_count": 1,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00054",
+                "color": "Black",
+                "date": "2026-03-20",
+                "eco": "C00",
+                "game_id": "chp00054",
+                "has_lesson": false,
+                "moves": 12,
+                "opening": "French Defense: Steiner Variation",
+                "opponent": "Zane Baker",
+                "opponent_rating": 1449,
+                "outcome": "Win",
+                "player_rating": 1506,
+                "result": "0-1",
+                "round": 20,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 20
+            }
+          ],
+          "loss": 0,
+          "name": "ACC March 2026",
+          "performance_rating": 2249,
+          "player_count": 90,
+          "post_rating": 1465,
+          "pre_rating": 1441,
+          "rating_change": 24,
+          "score": 1.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-03-06",
+          "win": 1
+        },
+        {
+          "draw": 0,
+          "end": "2026-04-24",
+          "event_id": "202604240323",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00053",
+                "color": "White",
+                "date": "2026-04-03",
+                "eco": "B21",
+                "game_id": "chp00053",
+                "has_lesson": false,
+                "moves": 23,
+                "opening": "Sicilian Defense: Smith-Morra Gambit Accepted",
+                "opponent": "Vera Clark",
+                "opponent_rating": 1512,
+                "outcome": "Win",
+                "player_rating": 1440,
+                "result": "1-0",
+                "round": 21,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 21
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00029",
+                "color": "White",
+                "date": "2026-04-17",
+                "eco": "B06",
+                "game_id": "chp00029",
+                "has_lesson": false,
+                "moves": 61,
+                "opening": "Modern Defense",
+                "opponent": "Jonah Baker",
+                "opponent_rating": 1343,
+                "outcome": "Win",
+                "player_rating": 1440,
+                "result": "1-0",
+                "round": 22,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "conflict"
+              },
+              "round": 22
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00049",
+                "color": "Black",
+                "date": "2026-04-24",
+                "eco": "D35",
+                "game_id": "chp00049",
+                "has_lesson": false,
+                "moves": 50,
+                "opening": "Queen's Gambit Declined: Normal Defense",
+                "opponent": "Theo Baker",
+                "opponent_rating": 1300,
+                "outcome": "Win",
+                "player_rating": 1440,
+                "result": "0-1",
+                "round": 23,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 23
+            }
+          ],
+          "loss": 0,
+          "name": "ACC Aprril 2026",
+          "performance_rating": 2185,
+          "player_count": 92,
+          "post_rating": 1544,
+          "pre_rating": 1470,
+          "rating_change": 74,
+          "score": 3.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "LADDER",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-04-03",
+          "win": 3
+        },
+        {
+          "draw": 0,
+          "end": "2026-05-29",
+          "event_id": "202605290393",
+          "forfeit_count": 0,
+          "game_count": 4,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00015",
+                "color": "White",
+                "date": "2026-05-01",
+                "eco": "C42",
+                "game_id": "chp00015",
+                "has_lesson": false,
+                "moves": 47,
+                "opening": "Petrov's Defense: Nimzowitsch Attack",
+                "opponent": "Bob Baker",
+                "opponent_rating": 1465,
+                "outcome": "Win",
+                "player_rating": 1470,
+                "result": "1-0",
+                "round": 24,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00041",
+                "color": "Black",
+                "date": "2026-05-15",
+                "eco": "D02",
+                "game_id": "chp00041",
+                "has_lesson": false,
+                "moves": 51,
+                "opening": "Queen's Pawn Game: London System",
+                "opponent": "Bob Harris",
+                "opponent_rating": 1446,
+                "outcome": "Win",
+                "player_rating": 1470,
+                "result": "0-1",
+                "round": 25,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "conflict"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00028",
+                "color": "Black",
+                "date": "2026-05-22",
+                "eco": "A13",
+                "game_id": "chp00028",
+                "has_lesson": false,
+                "moves": 55,
+                "opening": "English Opening: Agincourt Defense",
+                "opponent": "Ethan Edwards",
+                "opponent_rating": 1436,
+                "outcome": "Win",
+                "player_rating": 1470,
+                "result": "0-1",
+                "round": 26,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 4
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00004",
+                "color": "Black",
+                "date": "2026-05-22",
+                "eco": "B12",
+                "game_id": "chp00004",
+                "has_lesson": false,
+                "moves": 62,
+                "opening": "Caro-Kann Defense: Advance Variation, Botvinnik-Carls Defense",
+                "opponent": "Carter Clark",
+                "opponent_rating": 1446,
+                "outcome": "Loss",
+                "player_rating": 1470,
+                "result": "1-0",
+                "round": 27,
+                "series": "ACC Friday Ladder",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 1,
+          "name": "ACC MAY 2026",
+          "performance_rating": 1639,
+          "player_count": 116,
+          "post_rating": 1571,
+          "pre_rating": 1544,
+          "rating_change": 27,
+          "score": 3.0,
+          "sections": [
+            {
+              "has_crosstable": true,
+              "name": "LADDER",
+              "placement": 5,
+              "player_count": 116
+            }
+          ],
+          "start": "2026-05-01",
+          "win": 3
+        }
+      ],
+      "score": 19.0,
+      "series": "ACC Friday Ladder",
+      "unmatched_games": [],
+      "win": 18
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-08-01",
+      "forfeit_count": 0,
+      "game_count": 5,
+      "longest_win_streak": 2,
+      "loss": 3,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2025-08-03",
+          "event_id": "202508036402",
+          "forfeit_count": 0,
+          "game_count": 5,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00008",
+                "color": "White",
+                "date": "2025-08-01",
+                "eco": "B28",
+                "game_id": "chp00008",
+                "has_lesson": false,
+                "moves": 30,
+                "opening": "Sicilian Defense: O'Kelly Variation, Normal System, Smith-Morra Line",
+                "opponent": "Carver Baker",
+                "opponent_rating": 643,
+                "outcome": "Win",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 1,
+                "series": "4th Annual Beltway Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00030",
+                "color": "Black",
+                "date": "2025-08-02",
+                "eco": "D50",
+                "game_id": "chp00030",
+                "has_lesson": false,
+                "moves": 18,
+                "opening": "Queen's Gambit Declined: Modern Variation",
+                "opponent": "Henry Foster",
+                "opponent_rating": 1252,
+                "outcome": "Win",
+                "player_rating": null,
+                "result": "0-1",
+                "round": 2,
+                "series": "4th Annual Beltway Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00051",
+                "color": "White",
+                "date": "2025-08-02",
+                "eco": "C58",
+                "game_id": "chp00051",
+                "has_lesson": false,
+                "moves": 38,
+                "opening": "Italian Game: Two Knights Defense, Polerio Defense, Bogoljubow Variation",
+                "opponent": "Henry Garcia",
+                "opponent_rating": 1070,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "0-1",
+                "round": 3,
+                "series": "4th Annual Beltway Open (U1400)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00014",
+                "color": "Black",
+                "date": "2025-08-03",
+                "eco": "D40",
+                "game_id": "chp00014",
+                "has_lesson": false,
+                "moves": 48,
+                "opening": "Queen's Gambit Declined: Semi-Tarrasch Defense",
+                "opponent": "Sofia Foster",
+                "opponent_rating": 1061,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 4,
+                "series": "4th Annual Beltway Open (U1400)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00016",
+                "color": "Black",
+                "date": "2025-08-03",
+                "eco": "B15",
+                "game_id": "chp00016",
+                "has_lesson": false,
+                "moves": 16,
+                "opening": "Caro-Kann Defense: Main Line",
+                "opponent": "Alice Clark",
+                "opponent_rating": 1273,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 5,
+                "series": "4th Annual Beltway Open (U1400)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 3,
+          "name": "FOURTH ANNUAL BELTWAY OPEN",
+          "performance_rating": 989,
+          "player_count": 130,
+          "post_rating": 991,
+          "pre_rating": 927,
+          "rating_change": 64,
+          "score": 2.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "UNDER 1400",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-08-01",
+          "win": 2
+        }
+      ],
+      "score": 2.0,
+      "series": "4th Annual Beltway Open (U1400)",
+      "unmatched_games": [],
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-08-17",
+      "forfeit_count": 0,
+      "game_count": 4,
+      "longest_win_streak": 2,
+      "loss": 2,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2025-08-17",
+          "event_id": "202508174422",
+          "forfeit_count": 0,
+          "game_count": 4,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00013",
+                "color": "Black",
+                "date": "2025-08-17",
+                "eco": "B13",
+                "game_id": "chp00013",
+                "has_lesson": false,
+                "moves": 19,
+                "opening": "Caro-Kann Defense: Panov Attack",
+                "opponent": "Bob Foster",
+                "opponent_rating": 1278,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 1,
+                "series": "DMV Late Summer Action (U1500)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00023",
+                "color": "White",
+                "date": "2025-08-17",
+                "eco": "C58",
+                "game_id": "chp00023",
+                "has_lesson": false,
+                "moves": 38,
+                "opening": "Italian Game: Two Knights Defense, Polerio Defense, Bishop Check Line",
+                "opponent": "Liam Anderson",
+                "opponent_rating": 937,
+                "outcome": "Win",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 2,
+                "series": "DMV Late Summer Action (U1500)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00045",
+                "color": "White",
+                "date": "2025-08-17",
+                "eco": "B21",
+                "game_id": "chp00045",
+                "has_lesson": false,
+                "moves": 46,
+                "opening": "Sicilian Defense: Smith-Morra Gambit Accepted",
+                "opponent": "Zane Garcia",
+                "opponent_rating": 1286,
+                "outcome": "Win",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 3,
+                "series": "DMV Late Summer Action (U1500)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00001",
+                "color": "Black",
+                "date": "2025-08-17",
+                "eco": "B12",
+                "game_id": "chp00001",
+                "has_lesson": false,
+                "moves": 39,
+                "opening": "Caro-Kann Defense: Advance Variation, Botvinnik-Carls Defense",
+                "opponent": "Alice Garcia",
+                "opponent_rating": 1185,
+                "outcome": "Loss",
+                "player_rating": null,
+                "result": "1-0",
+                "round": 4,
+                "series": "DMV Late Summer Action (U1500)",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            }
+          ],
+          "loss": 2,
+          "name": "DMV LATE-SUMMER ACTION",
+          "performance_rating": 1172,
+          "player_count": 56,
+          "post_rating": 1038,
+          "pre_rating": 991,
+          "rating_change": 47,
+          "score": 2.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "UNDER 1500",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-08-17",
+          "win": 2
+        }
+      ],
+      "score": 2.0,
+      "series": "DMV Late Summer Action (U1500)",
+      "unmatched_games": [],
+      "win": 2
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-09-06",
+      "forfeit_count": 0,
+      "game_count": 4,
+      "longest_win_streak": 1,
+      "loss": 1,
+      "rated_events": [
+        {
+          "draw": 1,
+          "end": "2025-09-07",
+          "event_id": "202509076442",
+          "forfeit_count": 0,
+          "game_count": 4,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00056",
+                "color": "Black",
+                "date": "2025-09-06",
+                "eco": "D02",
+                "game_id": "chp00056",
+                "has_lesson": false,
+                "moves": 66,
+                "opening": "Queen's Pawn Game: Krause Variation",
+                "opponent": "Vera Davis",
+                "opponent_rating": 1101,
+                "outcome": "Loss",
+                "player_rating": 1038,
+                "result": "1-0",
+                "round": 1,
+                "series": "DMV FIDE Classical (U1400)",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00007",
+                "color": "White",
+                "date": "2025-09-06",
+                "eco": "B32",
+                "game_id": "chp00007",
+                "has_lesson": false,
+                "moves": 27,
+                "opening": "Sicilian Defense: Franco-Sicilian Variation",
+                "opponent": "Quinn Anderson",
+                "opponent_rating": null,
+                "outcome": "Win",
+                "player_rating": 1038,
+                "result": "1-0",
+                "round": 2,
+                "series": "DMV FIDE Classical (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00010",
+                "color": "Black",
+                "date": "2025-09-07",
+                "eco": "B13",
+                "game_id": "chp00010",
+                "has_lesson": false,
+                "moves": 53,
+                "opening": "Caro-Kann Defense: Exchange Variation",
+                "opponent": "Carter Garcia",
+                "opponent_rating": 1141,
+                "outcome": "Draw",
+                "player_rating": 1038,
+                "result": "1/2-1/2",
+                "round": 3,
+                "series": "DMV FIDE Classical (U1400)",
+                "tags": [],
+                "termination": "draw by repetition",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00035",
+                "color": "White",
+                "date": "2025-09-07",
+                "eco": "C56",
+                "game_id": "chp00035",
+                "has_lesson": false,
+                "moves": 57,
+                "opening": "Italian Game: Scotch Gambit, Walbrodt-Baird Gambit",
+                "opponent": "Sofia Edwards",
+                "opponent_rating": 691,
+                "outcome": "Win",
+                "player_rating": 1038,
+                "result": "1-0",
+                "round": 4,
+                "series": "DMV FIDE Classical (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            }
+          ],
+          "loss": 1,
+          "name": "DMV FIDE CLASSICAL AND BACK-TO-SCHOOL TOURNAMENT",
+          "performance_rating": 978,
+          "player_count": 76,
+          "post_rating": 1005,
+          "pre_rating": 1015,
+          "rating_change": -10,
+          "score": 2.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "UNDER 1400",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-09-06",
+          "win": 2
+        }
+      ],
+      "score": 2.5,
+      "series": "DMV FIDE Classical (U1400)",
+      "unmatched_games": [],
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-10-04",
+      "forfeit_count": 0,
+      "game_count": 5,
+      "longest_win_streak": 2,
+      "loss": 2,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2025-10-05",
+          "event_id": "202510054832",
+          "forfeit_count": 0,
+          "game_count": 5,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00048",
+                "color": "Black",
+                "date": "2025-10-04",
+                "eco": "B07",
+                "game_id": "chp00048",
+                "has_lesson": false,
+                "moves": 40,
+                "opening": "Pirc Defense: Byrne Variation",
+                "opponent": "Noah Edwards",
+                "opponent_rating": 1254,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "0-1",
+                "round": 1,
+                "series": "2nd Annual Federal Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00031",
+                "color": "White",
+                "date": "2025-10-04",
+                "eco": "C56",
+                "game_id": "chp00031",
+                "has_lesson": false,
+                "moves": 18,
+                "opening": "Italian Game: Scotch Gambit, Walbrodt-Baird Gambit",
+                "opponent": "Fiona Foster",
+                "opponent_rating": 1236,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "1-0",
+                "round": 2,
+                "series": "2nd Annual Federal Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00057",
+                "color": "Black",
+                "date": "2025-10-04",
+                "eco": "A10",
+                "game_id": "chp00057",
+                "has_lesson": false,
+                "moves": 70,
+                "opening": "English Opening",
+                "opponent": "Xena Clark",
+                "opponent_rating": 1326,
+                "outcome": "Loss",
+                "player_rating": 1005,
+                "result": "1-0",
+                "round": 3,
+                "series": "2nd Annual Federal Open (U1400)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00037",
+                "color": "White",
+                "date": "2025-10-05",
+                "eco": "B01",
+                "game_id": "chp00037",
+                "has_lesson": false,
+                "moves": 50,
+                "opening": "Scandinavian Defense: Main Line",
+                "opponent": "Yara Anderson",
+                "opponent_rating": 1308,
+                "outcome": "Loss",
+                "player_rating": 1005,
+                "result": "0-1",
+                "round": 4,
+                "series": "2nd Annual Federal Open (U1400)",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00002",
+                "color": "Black",
+                "date": "2025-10-05",
+                "eco": "B08",
+                "game_id": "chp00002",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "Pirc Defense: Classical Variation",
+                "opponent": "Liam Anderson",
+                "opponent_rating": 755,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "0-1",
+                "round": 5,
+                "series": "2nd Annual Federal Open (U1400)",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 2,
+          "name": "SECOND ANNUAL FEDERAL OPEN",
+          "performance_rating": 1246,
+          "player_count": 79,
+          "post_rating": 1133,
+          "pre_rating": 1033,
+          "rating_change": 100,
+          "score": 3.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "UNDER 1400",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-10-03",
+          "win": 3
+        }
+      ],
+      "score": 3.0,
+      "series": "2nd Annual Federal Open (U1400)",
+      "unmatched_games": [],
+      "win": 3
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-11-01",
+      "forfeit_count": 1,
+      "game_count": 4,
+      "longest_win_streak": 2,
+      "loss": 1,
+      "rated_events": [
+        {
+          "draw": 1,
+          "end": "2025-11-02",
+          "event_id": "202511020583",
+          "forfeit_count": 0,
+          "game_count": 4,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00055",
+                "color": "Black",
+                "date": "2025-11-01",
+                "eco": "B13",
+                "game_id": "chp00055",
+                "has_lesson": false,
+                "moves": 41,
+                "opening": "Caro-Kann Defense: Exchange Variation",
+                "opponent": "Zane Anderson",
+                "opponent_rating": 1308,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "0-1",
+                "round": 1,
+                "series": "2nd Annual Thanksgiving Open (U1600)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00032",
+                "color": "White",
+                "date": "2025-11-01",
+                "eco": "C57",
+                "game_id": "chp00032",
+                "has_lesson": false,
+                "moves": 76,
+                "opening": "Italian Game: Two Knights Defense, Fried Liver Attack",
+                "opponent": "Xena Garcia",
+                "opponent_rating": null,
+                "outcome": "Win",
+                "player_rating": 1005,
+                "result": "1-0",
+                "round": 2,
+                "series": "2nd Annual Thanksgiving Open (U1600)",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00042",
+                "color": "Black",
+                "date": "2025-11-01",
+                "eco": "A07",
+                "game_id": "chp00042",
+                "has_lesson": false,
+                "moves": 57,
+                "opening": "King's Indian Attack, with e6",
+                "opponent": "Wyatt Garcia",
+                "opponent_rating": 1578,
+                "outcome": "Loss",
+                "player_rating": 1005,
+                "result": "1-0",
+                "round": 3,
+                "series": "2nd Annual Thanksgiving Open (U1600)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00052",
+                "color": "White",
+                "date": "2025-11-02",
+                "eco": "C42",
+                "game_id": "chp00052",
+                "has_lesson": false,
+                "moves": 32,
+                "opening": "Petrov's Defense: Nimzowitsch Attack",
+                "opponent": "Liam Garcia",
+                "opponent_rating": 1534,
+                "outcome": "Draw",
+                "player_rating": 1005,
+                "result": "1/2-1/2",
+                "round": 5,
+                "series": "2nd Annual Thanksgiving Open (U1600)",
+                "tags": [],
+                "termination": "draw by agreement",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 1,
+          "name": "2nd Annual Thankgiving Day Open",
+          "performance_rating": 1473,
+          "player_count": 73,
+          "post_rating": 1230,
+          "pre_rating": 1155,
+          "rating_change": 75,
+          "score": 2.5,
+          "sections": [
+            {
+              "has_crosstable": true,
+              "name": "U1600",
+              "placement": 4,
+              "player_count": 19
+            }
+          ],
+          "start": "2025-10-31",
+          "win": 2
+        }
+      ],
+      "score": 3.5,
+      "series": "2nd Annual Thanksgiving Open (U1600)",
+      "unmatched_games": [
+        {
+          "forfeit": true,
+          "game": {
+            "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00009",
+            "color": "White",
+            "date": "2025-11-02",
+            "eco": "B00",
+            "game_id": "chp00009",
+            "has_lesson": false,
+            "moves": 1,
+            "opening": "King's Pawn Game",
+            "opponent": "Uma Baker",
+            "opponent_rating": 1303,
+            "outcome": "Win",
+            "player_rating": 1133,
+            "result": "1-0",
+            "round": 4,
+            "series": "2nd Annual Thanksgiving Open (U1600)",
+            "tags": [],
+            "termination": "win by forfeit",
+            "uscf_status": "forfeit"
+          },
+          "round": 4
+        }
+      ],
+      "win": 2
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-12-12",
+      "forfeit_count": 0,
+      "game_count": 5,
+      "longest_win_streak": 4,
+      "loss": 0,
+      "rated_events": [
+        {
+          "draw": 1,
+          "end": "2025-12-14",
+          "event_id": "202512140213",
+          "forfeit_count": 0,
+          "game_count": 5,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00022",
+                "color": "Black",
+                "date": "2025-12-12",
+                "eco": "D37",
+                "game_id": "chp00022",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "Queen's Gambit Declined: Three Knights Variation",
+                "opponent": "Diana Garcia",
+                "opponent_rating": 1175,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "0-1",
+                "round": 1,
+                "series": "1st Annual Oak Grove Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00017",
+                "color": "White",
+                "date": "2025-12-13",
+                "eco": "C56",
+                "game_id": "chp00017",
+                "has_lesson": false,
+                "moves": 69,
+                "opening": "Italian Game: Scotch Gambit, Walbrodt-Baird Gambit",
+                "opponent": "Gina Harris",
+                "opponent_rating": 1132,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "1-0",
+                "round": 2,
+                "series": "1st Annual Oak Grove Open (U1400)",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00058",
+                "color": "Black",
+                "date": "2025-12-13",
+                "eco": "B10",
+                "game_id": "chp00058",
+                "has_lesson": false,
+                "moves": 36,
+                "opening": "Caro-Kann Defense",
+                "opponent": "Ivy Anderson",
+                "opponent_rating": 1297,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "0-1",
+                "round": 3,
+                "series": "1st Annual Oak Grove Open (U1400)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00044",
+                "color": "White",
+                "date": "2025-12-14",
+                "eco": "C00",
+                "game_id": "chp00044",
+                "has_lesson": false,
+                "moves": 21,
+                "opening": "French Defense: Schlechter Variation",
+                "opponent": "Olivia Edwards",
+                "opponent_rating": 1129,
+                "outcome": "Win",
+                "player_rating": 1230,
+                "result": "1-0",
+                "round": 4,
+                "series": "1st Annual Oak Grove Open (U1400)",
+                "tags": [],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00050",
+                "color": "Black",
+                "date": "2025-12-14",
+                "eco": "B13",
+                "game_id": "chp00050",
+                "has_lesson": false,
+                "moves": 35,
+                "opening": "Caro-Kann Defense: Exchange Variation",
+                "opponent": "Zane Anderson",
+                "opponent_rating": 1308,
+                "outcome": "Draw",
+                "player_rating": 1230,
+                "result": "1/2-1/2",
+                "round": 5,
+                "series": "1st Annual Oak Grove Open (U1400)",
+                "tags": [],
+                "termination": "draw by agreement",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 5
+            }
+          ],
+          "loss": 0,
+          "name": "First Annual Oak Grove Open",
+          "performance_rating": 1590,
+          "player_count": 91,
+          "post_rating": 1385,
+          "pre_rating": 1237,
+          "rating_change": 148,
+          "score": 4.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "Under 1400",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2025-12-12",
+          "win": 4
+        }
+      ],
+      "score": 4.5,
+      "series": "1st Annual Oak Grove Open (U1400)",
+      "unmatched_games": [],
+      "win": 4
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-01-23",
+      "forfeit_count": 0,
+      "game_count": 3,
+      "longest_win_streak": 2,
+      "loss": 1,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2026-01-25",
+          "event_id": "202601250303",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00039",
+                "color": "Black",
+                "date": "2026-01-23",
+                "eco": "A13",
+                "game_id": "chp00039",
+                "has_lesson": false,
+                "moves": 33,
+                "opening": "English Opening: Agincourt Defense, Catalan Defense Accepted",
+                "opponent": "Ivy Davis",
+                "opponent_rating": 1600,
+                "outcome": "Loss",
+                "player_rating": 1386,
+                "result": "1-0",
+                "round": 1,
+                "series": "4th Annual Newcomb Memorial (U1900)",
+                "tags": [],
+                "termination": "loss by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00003",
+                "color": "White",
+                "date": "2026-01-24",
+                "eco": "C56",
+                "game_id": "chp00003",
+                "has_lesson": false,
+                "moves": 54,
+                "opening": "Italian Game: Scotch Gambit, Walbrodt-Baird Gambit",
+                "opponent": "Vera Foster",
+                "opponent_rating": 1280,
+                "outcome": "Win",
+                "player_rating": 1386,
+                "result": "1-0",
+                "round": 2,
+                "series": "4th Annual Newcomb Memorial (U1900)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00005",
+                "color": "White",
+                "date": "2026-01-24",
+                "eco": "B11",
+                "game_id": "chp00005",
+                "has_lesson": false,
+                "moves": 44,
+                "opening": "Caro-Kann Defense: Two Knights Attack, Mindeno Variation, Retreat Line",
+                "opponent": "Zane Foster",
+                "opponent_rating": 1504,
+                "outcome": "Win",
+                "player_rating": 1386,
+                "result": "1-0",
+                "round": 3,
+                "series": "4th Annual Newcomb Memorial (U1900)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            }
+          ],
+          "loss": 1,
+          "name": "Fourth Annual Newcomb Memorial Tournament",
+          "performance_rating": 1582,
+          "player_count": 52,
+          "post_rating": 1445,
+          "pre_rating": 1419,
+          "rating_change": 26,
+          "score": 2.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "Under 1900",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-01-23",
+          "win": 2
+        }
+      ],
+      "score": 2.0,
+      "series": "4th Annual Newcomb Memorial (U1900)",
+      "unmatched_games": [],
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-07",
+      "forfeit_count": 0,
+      "game_count": 1,
+      "longest_win_streak": 0,
+      "loss": 1,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2026-03-07",
+          "event_id": "202603070993",
+          "forfeit_count": 0,
+          "game_count": 1,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00012",
+                "color": "White",
+                "date": "2026-03-07",
+                "eco": "C00",
+                "game_id": "chp00012",
+                "has_lesson": false,
+                "moves": 62,
+                "opening": "French Defense: Schlechter Variation",
+                "opponent": "Quinn Davis",
+                "opponent_rating": 1492,
+                "outcome": "Loss",
+                "player_rating": 1506,
+                "result": "0-1",
+                "round": 1,
+                "series": "ACC vs ANC",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            }
+          ],
+          "loss": 1,
+          "name": "ACC v Army-Navy CC",
+          "performance_rating": 692,
+          "player_count": 16,
+          "post_rating": 1441,
+          "pre_rating": 1461,
+          "rating_change": -20,
+          "score": 0.0,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "Section1",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2026-03-07",
+          "win": 0
+        }
+      ],
+      "score": 0.0,
+      "series": "ACC vs ANC",
+      "unmatched_games": [],
+      "win": 0
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-28",
+      "forfeit_count": 0,
+      "game_count": 3,
+      "longest_win_streak": 1,
+      "loss": 2,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2026-03-29",
+          "event_id": "202603290543",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00011",
+                "color": "Black",
+                "date": "2026-03-28",
+                "eco": "D37",
+                "game_id": "chp00011",
+                "has_lesson": false,
+                "moves": 63,
+                "opening": "Queen's Gambit Declined: Three Knights Variation",
+                "opponent": "Olivia Clark",
+                "opponent_rating": 1756,
+                "outcome": "Loss",
+                "player_rating": 1506,
+                "result": "1-0",
+                "round": 1,
+                "series": "2nd Annual Adults Only (U1800)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00040",
+                "color": "White",
+                "date": "2026-03-28",
+                "eco": "C00",
+                "game_id": "chp00040",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "French Defense: Schlechter Variation",
+                "opponent": "Vera Edwards",
+                "opponent_rating": 1549,
+                "outcome": "Loss",
+                "player_rating": 1506,
+                "result": "0-1",
+                "round": 2,
+                "series": "2nd Annual Adults Only (U1800)",
+                "tags": [],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/alic0001",
+                "color": "Black",
+                "date": "2026-03-29",
+                "eco": "B10",
+                "game_id": "alic0001",
+                "has_lesson": false,
+                "moves": 24,
+                "opening": "Caro-Kann Defense",
+                "opponent": "Alice Anderson",
+                "opponent_rating": 909,
+                "outcome": "Win",
+                "player_rating": 1506,
+                "result": "0-1",
+                "round": 3,
+                "series": "2nd Annual Adults Only (U1800)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            }
+          ],
+          "loss": 2,
+          "name": "DMV Chess Second Annual Tournament for All Ages",
+          "performance_rating": 1428,
+          "player_count": 89,
+          "post_rating": 1470,
+          "pre_rating": 1465,
+          "rating_change": 5,
+          "score": 1.0,
+          "sections": [
+            {
+              "has_crosstable": true,
+              "name": "Extra games - Classical",
+              "placement": 3,
+              "player_count": 8
+            },
+            {
+              "has_crosstable": true,
+              "name": "Under 1800",
+              "placement": 6,
+              "player_count": 10
+            }
+          ],
+          "start": "2026-03-28",
+          "win": 1
+        }
+      ],
+      "score": 1.0,
+      "series": "2nd Annual Adults Only (U1800)",
+      "unmatched_games": [],
+      "win": 1
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-29",
+      "forfeit_count": 0,
+      "game_count": 1,
+      "longest_win_streak": 1,
+      "loss": 0,
+      "rated_events": [
+        {
+          "draw": 0,
+          "end": "2026-03-29",
+          "event_id": "202603290543",
+          "forfeit_count": 0,
+          "game_count": 1,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00046",
+                "color": "Black",
+                "date": "2026-03-29",
+                "eco": "B15",
+                "game_id": "chp00046",
+                "has_lesson": false,
+                "moves": 21,
+                "opening": "Caro-Kann Defense: von Hennig Gambit",
+                "opponent": "Bob Baker",
+                "opponent_rating": 1498,
+                "outcome": "Win",
+                "player_rating": 1506,
+                "result": "0-1",
+                "round": 4,
+                "series": "2nd Annual DMV Adults-Only (U1800)",
+                "tags": [],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 4
+            }
+          ],
+          "loss": 0,
+          "name": "DMV Chess Second Annual Tournament for All Ages",
+          "performance_rating": 1428,
+          "player_count": 89,
+          "post_rating": 1469,
+          "pre_rating": 1465,
+          "rating_change": 4,
+          "score": 1.0,
+          "sections": [
+            {
+              "has_crosstable": true,
+              "name": "Under 1800",
+              "placement": 6,
+              "player_count": 10
+            }
+          ],
+          "start": "2026-03-28",
+          "win": 1
+        }
+      ],
+      "score": 1.0,
+      "series": "2nd Annual DMV Adults-Only (U1800)",
+      "unmatched_games": [],
+      "win": 1
+    }
+  ],
+  "series_performance": [
+    {
+      "draw": 2,
+      "first_date": "2025-06-20",
+      "loss": 7,
+      "series": "ACC Friday Ladder",
+      "win": 18
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-08-01",
+      "loss": 3,
+      "series": "4th Annual Beltway Open (U1400)",
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-08-17",
+      "loss": 2,
+      "series": "DMV Late Summer Action (U1500)",
+      "win": 2
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-09-06",
+      "loss": 1,
+      "series": "DMV FIDE Classical (U1400)",
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2025-10-04",
+      "loss": 2,
+      "series": "2nd Annual Federal Open (U1400)",
+      "win": 3
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-11-01",
+      "loss": 1,
+      "series": "2nd Annual Thanksgiving Open (U1600)",
+      "win": 3
+    },
+    {
+      "draw": 1,
+      "first_date": "2025-12-12",
+      "loss": 0,
+      "series": "1st Annual Oak Grove Open (U1400)",
+      "win": 4
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-01-23",
+      "loss": 1,
+      "series": "4th Annual Newcomb Memorial (U1900)",
+      "win": 2
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-07",
+      "loss": 1,
+      "series": "ACC vs ANC",
+      "win": 0
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-28",
+      "loss": 2,
+      "series": "2nd Annual Adults Only (U1800)",
+      "win": 1
+    },
+    {
+      "draw": 0,
+      "first_date": "2026-03-29",
+      "loss": 0,
+      "series": "2nd Annual DMV Adults-Only (U1800)",
+      "win": 1
+    }
+  ],
+  "unplayed_events": [
+    {
+      "end": "2025-08-31",
+      "event_id": "202508311982",
+      "name": "ROCKVILLE ACTION TOURNAMENT",
+      "player_count": 69,
+      "start": "2025-08-31"
+    },
+    {
+      "end": "2026-01-30",
+      "event_id": "202601300323",
+      "name": "DMVCHESS.COM JANUARY CLIMB THE RATING LADDER",
+      "player_count": 66,
+      "start": "2026-01-01"
+    }
+  ]
+}

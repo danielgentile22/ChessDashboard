@@ -29,7 +29,14 @@ from components import (
     page_header,
 )
 from filters import FILTER_INPUTS, get_filtered
-from pgn_stats_core import event_summary, performance_rating_stats
+from payloads.events import (
+    SERIES_CHART_LIMIT,
+    performance_by_event,
+    player_entry,
+    rating_change,
+    round_chapter_urls,
+)
+from pgn_stats_core import event_summary
 from styles import WDL_COLOR_MAP, apply_dark_theme, apply_wdl_hover, empty_fig
 from uscf_core import (
     RoundOutcome,
@@ -76,9 +83,9 @@ def _rating_change(pre: float | None, post: float | None) -> str:
     """'1544 → 1571 (+26)' — or 'unrated → 695' for the first event ever."""
     if post is None:
         return ""
-    if pre is None:
+    diff = rating_change(pre, post)
+    if diff is None:
         return f"unrated → {_whole(post)}"
-    diff = round(post) - round(pre)
     return f"{_whole(pre)} → {_whole(post)} ({'+' if diff >= 0 else ''}{diff})"
 
 
@@ -173,7 +180,7 @@ def _crosstable_row(entry: StandingEntry, member_id: str,
 def _crosstable(section_name: str, standings: list[StandingEntry],
                 member_id: str, games_by_round: dict[int, str]) -> html.Details:
     """The full standings of one Section, expandable."""
-    me = next((s for s in standings if s.member_id == member_id), None)
+    me = player_entry(standings, member_id)
     placement = (f"Finished {ordinal(me.ordinal)} of {len(standings)}"
                  if me else f"{len(standings)} players")
     return html.Details(className="crosstable", children=[
@@ -209,16 +216,7 @@ def _rated_event_card(event: dict, performance_rating: int | None = None,
         f"Performance {performance_rating}" if performance_rating else "",
     ]
 
-    # Real round → ChapterURL, for crosstable round links.  Forfeit rows from
-    # the Series ride along (their crosstable round was attached via this very
-    # event's crosstable) — but never other events' unmatched games, which
-    # could collide on round numbers.
-    forfeit_rows = [row for row in (extra_rows or []) if row.get("Forfeit")]
-    games_by_round = {
-        int(row["UscfRound"]): row["ChapterURL"]
-        for row in [*event["rows"], *forfeit_rows]
-        if pd.notna(row.get("UscfRound")) and row.get("ChapterURL")
-    }
+    games_by_round = round_chapter_urls(event["rows"], extra_rows or [])
     crosstables = [
         _crosstable(section, (standings or {})[(event["event_id"], section)],
                     member_id, games_by_round)
@@ -313,7 +311,7 @@ def update_event_bar(colors, outcomes, terminations, start, end, events, moves, 
     ev = event_summary(df_f)
     if ev.empty:
         return empty_fig("No event data")
-    long = ev.tail(20).melt(
+    long = ev.tail(SERIES_CHART_LIMIT).melt(
         id_vars=["Event"],
         value_vars=["Win", "Draw", "Loss"],
         var_name="Outcome", value_name="Count",
@@ -341,12 +339,7 @@ def update_series_groups(colors, outcomes, terminations, start, end, events, mov
             "Widen the global filters to see your tournaments.",
         )
 
-    # Per-Rated-Event performance ratings (kept from the old detail panel)
-    performance_by_event = {}
-    for event_id, games in df_f[df_f["UscfEventId"] != ""].groupby("UscfEventId"):
-        performance_by_event[event_id] = (
-            performance_rating_stats(games)["performance_rating"]
-        )
+    performance = performance_by_event(df_f)
 
     # Crosstables + whose row to highlight in them
     standings = data.get_uscf_standings()
@@ -361,7 +354,7 @@ def update_series_groups(colors, outcomes, terminations, start, end, events, mov
                 "Rated Events USCF actually rated, with your official results.",
                 className="series-list-hint",
             ),
-            *[_series_group(s, performance_by_event, standings, member_id)
+            *[_series_group(s, performance, standings, member_id)
               for s in summary],
         ),
     ])

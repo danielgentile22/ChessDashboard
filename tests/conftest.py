@@ -768,3 +768,13 @@ def api_lichess_only(ui_app, monkeypatch, sample_pgn_text):
     with preserve_dash_callbacks():
         yield ApiHarness(ui_app.server.test_client())
     data.reset()
+
+
+@pytest.fixture()
+def api_real(ui_app, real_career_ui):
+    """The contract harness over Daniel's real Study and USCF record: cached
+    crosstables, so Rated Event placements and round links have data."""
+    from tests.api_contract import ApiHarness
+
+    with preserve_dash_callbacks():
+        yield ApiHarness(ui_app.server.test_client())

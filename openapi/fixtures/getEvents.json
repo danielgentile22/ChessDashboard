@@ -1,0 +1,463 @@
+{
+  "games_count": 7,
+  "series": [
+    {
+      "draw": 1,
+      "first_date": "2024-01-06",
+      "forfeit_count": 0,
+      "game_count": 3,
+      "longest_win_streak": 1,
+      "loss": 1,
+      "rated_events": [
+        {
+          "draw": 1,
+          "end": "2024-01-07",
+          "event_id": "202401070001",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+                "color": "White",
+                "date": "2024-01-06",
+                "eco": "E04",
+                "game_id": "chap0001",
+                "has_lesson": true,
+                "moves": 6,
+                "opening": "Catalan Opening: Open Defense",
+                "opponent": "Opponent A",
+                "opponent_rating": 1920,
+                "outcome": "Win",
+                "player_rating": 1800,
+                "result": "1-0",
+                "round": 1,
+                "series": "Test Open",
+                "tags": [
+                  {
+                    "name": "strategy",
+                    "source": "mine"
+                  }
+                ],
+                "termination": "win by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0002",
+                "color": "Black",
+                "date": "2024-01-06",
+                "eco": "B12",
+                "game_id": "chap0002",
+                "has_lesson": false,
+                "moves": 4,
+                "opening": "Caro-Kann Defense",
+                "opponent": "Opponent B",
+                "opponent_rating": 1750,
+                "outcome": "Draw",
+                "player_rating": 1800,
+                "result": "1/2-1/2",
+                "round": 2,
+                "series": "Test Open",
+                "tags": [],
+                "termination": "Normal",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0003",
+                "color": "White",
+                "date": "2024-01-07",
+                "eco": "A45",
+                "game_id": "chap0003",
+                "has_lesson": false,
+                "moves": 3,
+                "opening": "Indian Game",
+                "opponent": "Opponent C",
+                "opponent_rating": 2050,
+                "outcome": "Loss",
+                "player_rating": 1800,
+                "result": "0-1",
+                "round": 3,
+                "series": "Test Open",
+                "tags": [
+                  {
+                    "name": "blunder",
+                    "source": "mine"
+                  },
+                  {
+                    "name": "tactics",
+                    "source": "mine"
+                  }
+                ],
+                "termination": "loss by resignation",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 3
+            }
+          ],
+          "loss": 1,
+          "name": "TEST OPEN JANUARY",
+          "performance_rating": 1907,
+          "player_count": 12,
+          "post_rating": 1800,
+          "pre_rating": 1782,
+          "rating_change": 18,
+          "score": 1.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "OPEN",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2024-01-06",
+          "win": 1
+        }
+      ],
+      "score": 1.5,
+      "series": "Test Open",
+      "unmatched_games": [],
+      "win": 1
+    },
+    {
+      "draw": 1,
+      "first_date": "2024-06-15",
+      "forfeit_count": 0,
+      "game_count": 4,
+      "longest_win_streak": 3,
+      "loss": 0,
+      "rated_events": [
+        {
+          "draw": 1,
+          "end": "2024-06-16",
+          "event_id": "202406160002",
+          "forfeit_count": 0,
+          "game_count": 3,
+          "games": [
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+                "color": "Black",
+                "date": "2024-06-15",
+                "eco": "E60",
+                "game_id": "chap0004",
+                "has_lesson": true,
+                "moves": 4,
+                "opening": "King's Indian Defense",
+                "opponent": "Opponent A",
+                "opponent_rating": 1930,
+                "outcome": "Win",
+                "player_rating": 1810,
+                "result": "0-1",
+                "round": 1,
+                "series": "Summer Cup",
+                "tags": [
+                  {
+                    "name": "opening",
+                    "source": "mine"
+                  }
+                ],
+                "termination": "loss by checkmate",
+                "uscf_status": "conflict"
+              },
+              "round": 1
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0005",
+                "color": "White",
+                "date": "2024-06-15",
+                "eco": "C50",
+                "game_id": "chap0005",
+                "has_lesson": false,
+                "moves": 4,
+                "opening": "Italian Game",
+                "opponent": "Opponent D",
+                "opponent_rating": 1600,
+                "outcome": "Win",
+                "player_rating": 1810,
+                "result": "1-0",
+                "round": 2,
+                "series": "Summer Cup",
+                "tags": [
+                  {
+                    "name": "tactics",
+                    "source": "mine"
+                  },
+                  {
+                    "name": "endgame",
+                    "source": "mine"
+                  }
+                ],
+                "termination": "win by checkmate",
+                "uscf_status": "matched_by_id"
+              },
+              "round": 2
+            },
+            {
+              "forfeit": false,
+              "game": {
+                "chapter_url": "https://lichess.org/study/teststudy/chap0007",
+                "color": "White",
+                "date": "2024-06-16",
+                "eco": "E04",
+                "game_id": "chap0007",
+                "has_lesson": false,
+                "moves": 3,
+                "opening": "Catalan Opening",
+                "opponent": "Opponent A",
+                "opponent_rating": 1925,
+                "outcome": "Draw",
+                "player_rating": 1810,
+                "result": "1/2-1/2",
+                "round": 4,
+                "series": "Summer Cup",
+                "tags": [],
+                "termination": "Normal",
+                "uscf_status": "matched_by_name"
+              },
+              "round": 4
+            }
+          ],
+          "loss": 0,
+          "name": "SUMMER CUP 2024",
+          "performance_rating": 2098,
+          "player_count": 16,
+          "post_rating": 1812,
+          "pre_rating": 1800,
+          "rating_change": 12,
+          "score": 2.5,
+          "sections": [
+            {
+              "has_crosstable": false,
+              "name": "OPEN",
+              "placement": null,
+              "player_count": null
+            }
+          ],
+          "start": "2024-06-15",
+          "win": 2
+        }
+      ],
+      "score": 3.5,
+      "series": "Summer Cup",
+      "unmatched_games": [
+        {
+          "forfeit": false,
+          "game": {
+            "chapter_url": "https://lichess.org/study/teststudy/chap0006",
+            "color": "Black",
+            "date": "2024-06-16",
+            "eco": "B12",
+            "game_id": "chap0006",
+            "has_lesson": false,
+            "moves": 3,
+            "opening": "Caro-Kann Defense",
+            "opponent": "Opponent B",
+            "opponent_rating": 1760,
+            "outcome": "Win",
+            "player_rating": 1810,
+            "result": "0-1",
+            "round": 3,
+            "series": "Summer Cup",
+            "tags": [],
+            "termination": "win by resignation",
+            "uscf_status": "unmatched"
+          },
+          "round": 3
+        }
+      ],
+      "win": 3
+    }
+  ],
+  "series_performance": [
+    {
+      "draw": 1,
+      "first_date": "2024-01-06",
+      "loss": 1,
+      "series": "Test Open",
+      "win": 1
+    },
+    {
+      "draw": 1,
+      "first_date": "2024-06-15",
+      "loss": 0,
+      "series": "Summer Cup",
+      "win": 3
+    }
+  ],
+  "unplayed_events": [
+    {
+      "end": "2025-06-28",
+      "event_id": "202506284842",
+      "name": "ACC JUNE 2025",
+      "player_count": 84,
+      "start": "2025-06-28"
+    },
+    {
+      "end": "2025-07-25",
+      "event_id": "202507250562",
+      "name": "ACC JULY 2025",
+      "player_count": 68,
+      "start": "2025-07-04"
+    },
+    {
+      "end": "2025-08-29",
+      "event_id": "202508290762",
+      "name": "ACC AUGUST 2025",
+      "player_count": 84,
+      "start": "2025-08-01"
+    },
+    {
+      "end": "2025-08-03",
+      "event_id": "202508036402",
+      "name": "FOURTH ANNUAL BELTWAY OPEN",
+      "player_count": 130,
+      "start": "2025-08-01"
+    },
+    {
+      "end": "2025-08-17",
+      "event_id": "202508174422",
+      "name": "DMV LATE-SUMMER ACTION",
+      "player_count": 56,
+      "start": "2025-08-17"
+    },
+    {
+      "end": "2025-08-31",
+      "event_id": "202508311982",
+      "name": "ROCKVILLE ACTION TOURNAMENT",
+      "player_count": 69,
+      "start": "2025-08-31"
+    },
+    {
+      "end": "2025-09-26",
+      "event_id": "202509267492",
+      "name": "ACC SEPTEMBER 2025",
+      "player_count": 91,
+      "start": "2025-09-05"
+    },
+    {
+      "end": "2025-09-07",
+      "event_id": "202509076442",
+      "name": "DMV FIDE CLASSICAL AND BACK-TO-SCHOOL TOURNAMENT",
+      "player_count": 76,
+      "start": "2025-09-06"
+    },
+    {
+      "end": "2025-10-31",
+      "event_id": "202510310133",
+      "name": "ACC OCTOBER 2025",
+      "player_count": 83,
+      "start": "2025-10-03"
+    },
+    {
+      "end": "2025-10-05",
+      "event_id": "202510054832",
+      "name": "SECOND ANNUAL FEDERAL OPEN",
+      "player_count": 79,
+      "start": "2025-10-03"
+    },
+    {
+      "end": "2025-11-02",
+      "event_id": "202511020583",
+      "name": "2nd Annual Thankgiving Day Open",
+      "player_count": 73,
+      "start": "2025-10-31"
+    },
+    {
+      "end": "2025-11-21",
+      "event_id": "202511210313",
+      "name": "ACC NOVEMBER 2025",
+      "player_count": 78,
+      "start": "2025-11-07"
+    },
+    {
+      "end": "2025-12-26",
+      "event_id": "202512260263",
+      "name": "ACC DECEMBER 2025",
+      "player_count": 78,
+      "start": "2025-12-05"
+    },
+    {
+      "end": "2025-12-14",
+      "event_id": "202512140213",
+      "name": "First Annual Oak Grove Open",
+      "player_count": 91,
+      "start": "2025-12-12"
+    },
+    {
+      "end": "2026-01-30",
+      "event_id": "202601300323",
+      "name": "DMVCHESS.COM JANUARY CLIMB THE RATING LADDER",
+      "player_count": 66,
+      "start": "2026-01-01"
+    },
+    {
+      "end": "2026-01-30",
+      "event_id": "202601300273",
+      "name": "ACC January 2026",
+      "player_count": 95,
+      "start": "2026-01-02"
+    },
+    {
+      "end": "2026-01-25",
+      "event_id": "202601250303",
+      "name": "Fourth Annual Newcomb Memorial Tournament",
+      "player_count": 52,
+      "start": "2026-01-23"
+    },
+    {
+      "end": "2026-02-27",
+      "event_id": "202602270323",
+      "name": "ACC FEBRUARY 2026",
+      "player_count": 64,
+      "start": "2026-02-20"
+    },
+    {
+      "end": "2026-03-27",
+      "event_id": "202603270403",
+      "name": "ACC March 2026",
+      "player_count": 90,
+      "start": "2026-03-06"
+    },
+    {
+      "end": "2026-03-07",
+      "event_id": "202603070993",
+      "name": "ACC v Army-Navy CC",
+      "player_count": 16,
+      "start": "2026-03-07"
+    },
+    {
+      "end": "2026-03-29",
+      "event_id": "202603290543",
+      "name": "DMV Chess Second Annual Tournament for All Ages",
+      "player_count": 89,
+      "start": "2026-03-28"
+    },
+    {
+      "end": "2026-04-24",
+      "event_id": "202604240323",
+      "name": "ACC Aprril 2026",
+      "player_count": 92,
+      "start": "2026-04-03"
+    },
+    {
+      "end": "2026-05-29",
+      "event_id": "202605290393",
+      "name": "ACC MAY 2026",
+      "player_count": 116,
+      "start": "2026-05-01"
+    }
+  ]
+}
