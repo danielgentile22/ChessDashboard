@@ -21,10 +21,10 @@ struct MainTabView: View {
 				NavigationStack { GamesScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
-				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons).gameDestination() }
+				NavigationStack { LessonsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Opponents", systemImage: "person.2", value: .opponents) {
-				NavigationStack { PlaceholderScreen(title: "Opponents", page: .opponents).gameDestination() }
+				NavigationStack { OpponentsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("More", systemImage: "ellipsis.circle", value: .more) {
 				NavigationStack { MoreView().gameDestination() }
@@ -48,7 +48,7 @@ struct MoreView: View {
 				NavigationLink { EventsScreen(context: env.context!) } label: {
 					Label("Events", systemImage: "trophy")
 				}
-				NavigationLink { PlaceholderScreen(title: "Analysis", page: .analysis) } label: {
+				NavigationLink { AnalysisScreen(context: env.context!) } label: {
 					Label("Analysis", systemImage: "cpu")
 				}
 			}
