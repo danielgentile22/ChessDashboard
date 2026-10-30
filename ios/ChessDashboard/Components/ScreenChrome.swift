@@ -131,7 +131,8 @@ struct ActiveFilterBar: View {
 			.foregroundStyle(state.isFiltered ? Theme.primary.color : Theme.muted.color)
 			.padding(.horizontal)
 			.padding(.vertical, 6)
-			.background(.bar)
+			// Not into the safe area: there it would paint over the large title.
+			.background(.bar, ignoresSafeAreaEdges: [])
 		}
 		.buttonStyle(.plain)
 		.accessibilityLabel("Filters: \(state.summary)")
@@ -159,7 +160,7 @@ struct OfflineBanner: View {
 		.padding(.horizontal)
 		.padding(.vertical, 6)
 		.frame(maxWidth: .infinity)
-		.background(Theme.warningWash.color)
+		.background(Theme.warningWash.color, ignoresSafeAreaEdges: [])
 		.accessibilityElement(children: .combine)
 	}
 }
