@@ -18,7 +18,7 @@ are generated and gitignored.
 |---|---|
 | `project.yml` | XcodeGen spec: app target `ChessDashboard` (bundle `dev.danielgentile.chessdashboard`, team 58N856BAX8), the scheme whose test action runs the package tests. |
 | `Config/Base.xcconfig` | `CD_BASE_URL` per configuration (Release `https://chess-dashboard.fly.dev/api/v1/`, Debug `http://localhost:8050/api/v1/`), read from Info.plist as `CDBaseURL`. Optional gitignored `Local.xcconfig` overrides it (copy `Local.xcconfig.example`). |
-| `ChessDashboard/` | The app target: views only. `App/` (entry point, root, tab bar, More), `Components/` (screen chrome, filter sheet, Tag chip, freshness, offline banner, `ScreenState`, `ChessBoardView`), `Navigation/` (`GameRoute`: push it to open Game detail; every tab's stack registers `.gameDestination()`), `Screens/`. |
+| `ChessDashboard/` | The app target: views only. `App/` (entry point, root, tab bar, More), `Components/` (screen chrome, filter sheet, Tag chip, freshness, offline banner, `ScreenState`, `ChessBoardView`), `Screens/`. |
 | `ChessDashboardKit/` | Swift package with everything testable. No UIKit; `swift test` runs it on the Mac in seconds. One dependency: ChessKit (`exact: "0.17.0"`), for chess rules only. |
 | `scripts/gen_api_types.py` | Swift types from `openapi/v1.json` (checked in as `API/APITypes.generated.swift`). |
 | `scripts/gen_theme.py` | Swift color tokens from `styles.THEME` (checked in as `Theme/ThemeTokens.generated.swift`). |

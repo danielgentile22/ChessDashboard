@@ -2,22 +2,6 @@ import Charts
 import ChessDashboardKit
 import SwiftUI
 
-extension View {
-	/// Registers Game detail for `GameRoute` values pushed on this NavigationStack.
-	func gameDestination() -> some View {
-		navigationDestination(for: GameRoute.self) { route in GameDetailDestination(gameID: route.gameID) }
-	}
-}
-
-private struct GameDetailDestination: View {
-	@Environment(AppEnvironment.self) private var env
-	let gameID: String
-
-	var body: some View {
-		if let context = env.context { GameDetailScreen(gameID: gameID, context: context) }
-	}
-}
-
 /// One Game in full: the board with its views (Game, My Analysis, Engine,
 /// Coach), the critical moment, the Engine panel, Lessons and Tags, the Game
 /// card, the USCF Game Record, and the link to the Chapter on Lichess.
@@ -95,7 +79,7 @@ struct GameDetailScreen: View {
 		HStack(alignment: .center) {
 			Text(model.subtitle).font(.subheadline).foregroundStyle(Theme.muted.color)
 			Spacer()
-			OutcomeBadge(outcome: payload.game.outcome)
+			OutcomePill(outcome: payload.game.outcome)
 		}
 		.accessibilityElement(children: .combine)
 	}
@@ -492,7 +476,7 @@ private struct ForfeitBanner: View {
 	}
 }
 
-private struct OutcomeBadge: View {
+private struct OutcomePill: View {
 	let outcome: API.GameOutcome
 
 	var body: some View {

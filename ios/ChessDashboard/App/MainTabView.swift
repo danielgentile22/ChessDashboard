@@ -6,6 +6,7 @@ import SwiftUI
 struct MainTabView: View {
 	enum TabID: String { case overview, trends, games, lessons, opponents, more }
 
+	@Environment(AppEnvironment.self) private var env
 	@SceneStorage("tab") private var tab: TabID = .overview
 
 	var body: some View {
@@ -17,7 +18,7 @@ struct MainTabView: View {
 				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends).gameDestination() }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
-				NavigationStack { PlaceholderScreen(title: "Games", page: .games).gameDestination() }
+				NavigationStack { GamesScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
 				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons).gameDestination() }
@@ -41,10 +42,10 @@ struct MoreView: View {
 	var body: some View {
 		List {
 			Section {
-				NavigationLink { PlaceholderScreen(title: "Openings", page: .openings) } label: {
+				NavigationLink { OpeningsScreen(context: env.context!) } label: {
 					Label("Openings", systemImage: "point.3.connected.trianglepath.dotted")
 				}
-				NavigationLink { PlaceholderScreen(title: "Events", page: .events) } label: {
+				NavigationLink { EventsScreen(context: env.context!) } label: {
 					Label("Events", systemImage: "trophy")
 				}
 				NavigationLink { PlaceholderScreen(title: "Analysis", page: .analysis) } label: {
