@@ -1,0 +1,169 @@
+{
+  "paths": {
+    "/api/v1/events": {
+      "get": {
+        "operationId": "getEvents",
+        "tags": ["screens"],
+        "summary": "The Events screen: each Series and the Rated Events inside it.",
+        "description": "Series -> Rated Event, plus the Performance per Series chart and the Rated Events entered but never played. Each Rated Event here is a summary row with its Section placements; its full crosstables come from GET /api/v1/events/{event_id} (the web embeds them in the card; the app pushes a detail screen). Forfeit rule throughout: a Forfeit win counts toward score but never as a game, a win, or a Streak.",
+        "parameters": [
+          {"$ref": "#/components/parameters/colors"},
+          {"$ref": "#/components/parameters/outcomes"},
+          {"$ref": "#/components/parameters/terminations"},
+          {"$ref": "#/components/parameters/start"},
+          {"$ref": "#/components/parameters/end"},
+          {"$ref": "#/components/parameters/series"},
+          {"$ref": "#/components/parameters/min_moves"},
+          {"$ref": "#/components/parameters/max_moves"},
+          {"$ref": "#/components/parameters/lens"}
+        ],
+        "responses": {
+          "200": {
+            "description": "The Events screen for this filter state.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/EventsPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EventsPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Everything the Events page shows. Empty series is the 'No events in this filter' empty state; empty series_performance is the chart's empty state; empty unplayed_events hides that card. Source: pages/events.py update_event_bar -> pgn_stats_core.event_summary; update_series_groups -> uscf_core.series_summary(df_f, data.get_live_series(), data.get_uscf_events()) + pgn_stats_core.performance_rating_stats per UscfEventId + data.get_uscf_standings() / data.get_uscf_profile().member_id for placements; update_unplayed -> uscf_core.unplayed_events(data.get_df(), data.get_uscf_events(), start, end).",
+        "required": ["games_count", "series_performance", "series", "unplayed_events"],
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0, "description": "Games after filters."},
+          "series_performance": {
+            "type": "array",
+            "maxItems": 20,
+            "description": "The Performance per Series stacked W/D/L bar chart: the 20 most recent Series by first Game date, oldest first (the web draws the list reversed, newest on top). Forfeits count here, as in event_summary. Games with an empty Series are left out.",
+            "items": {"$ref": "#/components/schemas/EventsSeriesBar"}
+          },
+          "series": {
+            "type": "array",
+            "description": "Series -> Rated Events groups, oldest first by first Game date (undated Series last).",
+            "items": {"$ref": "#/components/schemas/EventsSeries"}
+          },
+          "unplayed_events": {
+            "type": "array",
+            "description": "The 'Entered, never played' card: Rated Events the player entered with no Games anywhere in the UNFILTERED store (no-shows, online-only events). Only the start/end filters apply, to the event's start date; undated events always show.",
+            "items": {"$ref": "#/components/schemas/EventsUnplayedEvent"}
+          }
+        }
+      },
+      "EventsSeriesBar": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One bar of the Performance per Series chart; the hover shows each count.",
+        "required": ["series", "first_date", "win", "draw", "loss"],
+        "properties": {
+          "series": {"type": "string"},
+          "first_date": {"$ref": "#/components/schemas/IsoDate"},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0}
+        }
+      },
+      "EventsSeries": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Series (the PGN Event header) as an expandable group. Header: '<game_count> games, <forfeit_count> forfeits, <win>W <draw>D <loss>L, <score> pts, best streak <longest_win_streak>W' (forfeits shown only when nonzero, the streak only when >= 2).",
+        "required": ["series", "first_date", "game_count", "forfeit_count", "win", "draw", "loss", "score", "longest_win_streak", "rated_events", "unmatched_games"],
+        "properties": {
+          "series": {"type": "string"},
+          "first_date": {"$ref": "#/components/schemas/IsoDate"},
+          "game_count": {"type": "integer", "minimum": 0, "description": "Games played over the board (Forfeits excluded)."},
+          "forfeit_count": {"type": "integer", "minimum": 0},
+          "win": {"type": "integer", "minimum": 0, "description": "Wins over the board (Forfeits excluded); likewise draw and loss."},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "score": {"type": "number", "minimum": 0, "description": "Tournament points: wins + 0.5 x draws + Forfeit wins. Halves are possible."},
+          "longest_win_streak": {"type": "integer", "minimum": 0, "description": "The longest Streak of wins in this Series, date order, Forfeits excluded."},
+          "rated_events": {
+            "type": "array",
+            "description": "The Rated Events this Series' matched Games belong to, chronological by start date (undated last).",
+            "items": {"$ref": "#/components/schemas/EventsRatedEvent"}
+          },
+          "unmatched_games": {
+            "type": "array",
+            "description": "The 'Not part of any Rated Event' block: Games in this Series with no Rated Event (Forfeits and Games USCF hasn't rated yet). Empty hides the block.",
+            "items": {"$ref": "#/components/schemas/EventsGameRow"}
+          }
+        }
+      },
+      "EventsRatedEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Rated Event card inside a Series. Tap pushes GET /api/v1/events/{event_id} for its crosstables.",
+        "required": ["event_id", "name", "start", "end", "player_count", "sections", "game_count", "forfeit_count", "win", "draw", "loss", "score", "pre_rating", "post_rating", "rating_change", "performance_rating", "games"],
+        "properties": {
+          "event_id": {"type": "string", "minLength": 1, "description": "The USCF event ID; the path key of the event route."},
+          "name": {"type": "string", "description": "USCF's official name, e.g. 'ACC JUNE 2025'."},
+          "start": {"$ref": "#/components/schemas/IsoDate"},
+          "end": {"$ref": "#/components/schemas/IsoDate"},
+          "player_count": {"type": ["integer", "null"], "minimum": 0, "description": "The Rated Event's whole field, from USCF; null when unknown."},
+          "sections": {
+            "type": "array",
+            "description": "The Sections this Series' Games were played in, sorted by name, each with the final placement when its crosstable is cached.",
+            "items": {"$ref": "#/components/schemas/EventsSectionPlacement"}
+          },
+          "game_count": {"type": "integer", "minimum": 0, "description": "Games over the board (Forfeits excluded)."},
+          "forfeit_count": {"type": "integer", "minimum": 0},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "score": {"type": "number", "minimum": 0, "description": "Tournament points, Forfeit wins included."},
+          "pre_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or no Live series point."},
+          "post_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking out (after the last played Section), whole number; null when unknown. With pre_rating null and post_rating set, the web shows 'unrated -> <post>'."},
+          "rating_change": {"type": ["integer", "null"], "description": "round(post) - round(pre) of the Live Rating; null when either is null. Independent of the lens (always the Live series, as on the web)."},
+          "performance_rating": {"$ref": "#/components/schemas/Rating", "description": "Performance rating over this Rated Event's filtered Games (pgn_stats_core.performance_rating_stats, Forfeits and unrated opponents excluded); null when none qualify."},
+          "games": {
+            "type": "array",
+            "description": "This Rated Event's Games, in date then round order.",
+            "items": {"$ref": "#/components/schemas/EventsGameRow"}
+          }
+        }
+      },
+      "EventsSectionPlacement": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Section the player played, with the crosstable summary line 'Finished <placement> of <player_count>'.",
+        "required": ["name", "has_crosstable", "placement", "player_count"],
+        "properties": {
+          "name": {"type": "string", "description": "The Section name, e.g. 'U1600'."},
+          "has_crosstable": {"type": "boolean", "description": "Whether the crosstable for (event_id, name) is cached. False: placement and player_count are null and the detail screen shows no crosstable for it."},
+          "placement": {"type": ["integer", "null"], "minimum": 1, "description": "The player's final ordinal in the Section (1 = Section winner); null when no crosstable or the player's member ID isn't in it."},
+          "player_count": {"type": ["integer", "null"], "minimum": 0, "description": "Rows in the Section's crosstable; null when no crosstable."}
+        }
+      },
+      "EventsGameRow": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Game line inside a Rated Event or the unmatched block: 'R<round> <color> <outcome> vs <opponent> <opponent_rating>' plus a Forfeit marker. Tap opens GET /api/v1/games/{game.game_id}.",
+        "required": ["round", "forfeit", "game"],
+        "properties": {
+          "round": {"type": ["integer", "null"], "minimum": 1, "description": "The REAL round from the cached crosstable (UscfRound) when known, falling back to the hand-typed Round header (RoundNum); null shows as a dash. May differ from game.round, which is the typed one."},
+          "forfeit": {"type": "boolean", "description": "The Game is a Forfeit."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      },
+      "EventsUnplayedEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One entered-but-never-played Rated Event. Not tappable (it has no Games, so the event route 404s for it).",
+        "required": ["event_id", "name", "start", "end", "player_count"],
+        "properties": {
+          "event_id": {"type": "string", "minLength": 1, "description": "The USCF event ID."},
+          "name": {"type": "string"},
+          "start": {"$ref": "#/components/schemas/IsoDate"},
+          "end": {"$ref": "#/components/schemas/IsoDate"},
+          "player_count": {"type": ["integer", "null"], "minimum": 0}
+        }
+      }
+    }
+  }
+}

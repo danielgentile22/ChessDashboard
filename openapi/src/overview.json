@@ -1,0 +1,598 @@
+{
+  "paths": {
+    "/api/v1/overview": {
+      "get": {
+        "operationId": "getOverview",
+        "tags": [
+          "screens"
+        ],
+        "summary": "The Overview screen",
+        "description": "KPIs, the USCF profile card (Official and Live Ratings side by side), the current Streak with its fire indicator, last-20 form, Win / Draw / Loss, termination breakdown, the top recurring weakness, and the milestone timeline. Takes the global filters and lens; the USCF card ignores them.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Overview screen",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewPayload"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OverviewFormOutcome": {
+        "type": "string",
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss",
+          "Unknown"
+        ],
+        "description": "A Game's outcome in the form strip. Unknown is an unfinished Game (PGN Result `*`), which the web still shows as a badge."
+      },
+      "OverviewKpis": {
+        "description": "The KPI bar. Total Games is the payload's games_count.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "win_pct",
+          "draw_pct",
+          "loss_pct",
+          "current_rating",
+          "peak_rating",
+          "performance_rating",
+          "longest_win_streak",
+          "unique_opponents",
+          "favorite_opening"
+        ],
+        "properties": {
+          "win_pct": {
+            "type": "number",
+            "description": "Wins as a percentage 0..100 (one decimal) of finished, non-Forfeit Games (Win + Draw + Loss). 0 when there are none."
+          },
+          "draw_pct": {
+            "type": "number",
+            "description": "Draws, same basis and unit as win_pct."
+          },
+          "loss_pct": {
+            "type": "number",
+            "description": "Losses, same basis and unit as win_pct."
+          },
+          "current_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The player rating on the latest dated, rated Game, under the active lens."
+          },
+          "peak_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Highest player rating on any Game in the filter, under the active lens."
+          },
+          "performance_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Performance rating over Games with a rated opponent (Forfeits excluded); null when there are none."
+          },
+          "longest_win_streak": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Longest run of consecutive Wins (Forfeits never extend a Streak)."
+          },
+          "unique_opponents": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "favorite_opening": {
+            "type": "string",
+            "description": "Most-played opening name over non-Forfeit Games; \"\" when none (the core returns an em dash placeholder, the payload builder maps it to \"\")."
+          }
+        }
+      },
+      "OverviewUscfRating": {
+        "description": "One rating system's entry on the member profile. null at the use site when the profile has no entry for that system (shown as Unrated).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rating",
+          "is_provisional",
+          "games_played",
+          "floor"
+        ],
+        "properties": {
+          "rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "is_provisional": {
+            "type": "boolean"
+          },
+          "games_played": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Provisional game count; null once established."
+          },
+          "floor": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The rating floor; null when none."
+          }
+        }
+      },
+      "OverviewUscfProfile": {
+        "description": "The member's official identity at a glance.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "member_id",
+          "name",
+          "state",
+          "membership_status",
+          "membership_expires",
+          "membership_alert",
+          "official_rating",
+          "live_rating",
+          "regular",
+          "quick",
+          "online_regular",
+          "national_rank",
+          "state_rank"
+        ],
+        "properties": {
+          "member_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "description": "Two-letter state the member represents; \"\" when unknown (the web then labels the rank \"State rank\")."
+          },
+          "membership_status": {
+            "type": "string"
+          },
+          "membership_expires": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "membership_alert": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Lapsed or expiring-within-90-days warning, evaluated against the server's today; null when all is well."
+          },
+          "official_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Official Rating (Regular system, R), shown side by side with live_rating."
+          },
+          "live_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The current Live Rating (post of the last Live series point), rounded to a whole number; null when there is no Live series (the web then shows the Regular tile alone)."
+          },
+          "regular": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Regular (R) entry, for the provisional/floor note under the Official and Live pair."
+          },
+          "quick": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Quick (Q) entry."
+          },
+          "online_regular": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Online Regular (OR) entry."
+          },
+          "national_rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "state_rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      },
+      "OverviewUscfCard": {
+        "description": "The USCF profile card. Follows Syncs, not filters: official data is never filtered, so this block is identical for every filter state and lens.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "state",
+          "profile",
+          "unavailable_reason",
+          "unavailable_since"
+        ],
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "disabled",
+              "unavailable",
+              "ok"
+            ],
+            "description": "disabled: no USCF member ID configured, the web renders no card. unavailable: USCF never reached and nothing cached, render the unavailable notice. ok: profile is present (possibly from cache, see unavailable_since)."
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfProfile"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present iff state is ok."
+          },
+          "unavailable_reason": {
+            "type": "string",
+            "description": "Why USCF is unavailable (data.uscf_failure); \"\" otherwise."
+          },
+          "unavailable_since": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The staleness notice when the profile comes from the last successful Sync's cache, e.g. \"USCF unavailable since 2026-05-01 14:02 UTC\"; null when fresh."
+          }
+        }
+      },
+      "OverviewFormIndicator": {
+        "description": "The fire/cold indicator the web shows in the header.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "count",
+          "blazing"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "none",
+              "fire",
+              "cold"
+            ],
+            "description": "fire: current win Streak of 2 or more. cold: current loss Streak of 3 or more (shown only when there is no fire). none otherwise."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "The Streak length the indicator shows; 0 when kind is none."
+          },
+          "blazing": {
+            "type": "boolean",
+            "description": "Fire at a win Streak of 5 or more (the web adds an extra glow; the flame grows with count, capped)."
+          }
+        }
+      },
+      "OverviewStreak": {
+        "description": "The current Streak and last-20 form. Forfeits are excluded throughout.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "last_20",
+          "longest_unbeaten",
+          "longest_win_streak",
+          "current_outcome",
+          "current_count",
+          "indicator"
+        ],
+        "properties": {
+          "last_20": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OverviewFormOutcome"
+            },
+            "description": "Outcomes of the last 20 non-Forfeit Games, oldest to newest (undated Games sort last). The header's last-5 dots are the final 5. Empty when no Games."
+          },
+          "longest_unbeaten": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Longest run without a Loss (\"Unbeaten streak\")."
+          },
+          "longest_win_streak": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Longest run of Wins (\"Win streak\")."
+          },
+          "current_outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewFormOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Outcome of the current Streak (the latest Game's); null when no Games (the core's \"N/A\")."
+          },
+          "current_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Length of the current Streak of that outcome."
+          },
+          "indicator": {
+            "$ref": "#/components/schemas/OverviewFormIndicator"
+          }
+        }
+      },
+      "OverviewOutcomeCounts": {
+        "description": "The Win / Draw / Loss donut. Forfeits excluded; the web hides zero wedges.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "win",
+          "draw",
+          "loss",
+          "unknown"
+        ],
+        "properties": {
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unknown": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Unfinished Games; the web shows a dim wedge when non-zero."
+          }
+        }
+      },
+      "OverviewTermination": {
+        "description": "One bar of \"How games ended\". Forfeits included.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "termination",
+          "games"
+        ],
+        "properties": {
+          "termination": {
+            "type": "string",
+            "description": "The full termination reason (the web truncates the axis label at 30 characters, the hover shows it whole)."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "OverviewWeakness": {
+        "description": "The most severe recurring weakness. null at the use site below threshold (silence over noise).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tag",
+          "loss_count",
+          "window_losses",
+          "stat",
+          "window",
+          "severity",
+          "game_ids"
+        ],
+        "properties": {
+          "tag": {
+            "$ref": "#/components/schemas/Tag",
+            "description": "The recurring Tag. Its source is engine only when every Game behind the callout carries it as engine-emitted, else mine."
+          },
+          "loss_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many of the windowed Losses carry the Tag."
+          },
+          "window_losses": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "How many Losses the window holds (up to 10)."
+          },
+          "stat": {
+            "type": "string",
+            "description": "The headline, e.g. \"#time-trouble appears in 6 of your last 8 losses\"."
+          },
+          "window": {
+            "type": "string",
+            "description": "The period the window spans, e.g. \"Mar 2024 – Jun 2024\" or \"Mar 2024\"; \"\" when undated."
+          },
+          "severity": {
+            "type": "number",
+            "description": "Ranking score 0..1 (three decimals)."
+          },
+          "game_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameId"
+            },
+            "description": "The Losses behind the callout (the web's compact form links to the Lessons page instead)."
+          }
+        }
+      },
+      "OverviewMilestone": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "date",
+          "game_num",
+          "game_id",
+          "event_id",
+          "description"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "first",
+              "win",
+              "draw",
+              "loss",
+              "milestone",
+              "peak",
+              "streak",
+              "uscf"
+            ],
+            "description": "uscf is an official USCF achievement (norm or award), rendered gold with a USCF badge and linking to Events; every other kind is a Game milestone."
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "null when undated (the web then shows the raw PGN date, sorted last)."
+          },
+          "game_num": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "description": "The Game's 1-based chronological number within the filter; null for uscf."
+          },
+          "game_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GameId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Game the milestone points at; null for uscf."
+          },
+          "event_id": {
+            "type": "string",
+            "description": "For uscf: the Rated Event's USCF event ID (\"\" if unknown). \"\" for Game milestones."
+          },
+          "description": {
+            "type": "string",
+            "description": "e.g. \"First win (vs Opponent A)\", \"Achieved peak rating: 1545\", \"Fourth Category norm, ACC JUNE 2025 (Scored 4.5 in 5 games)\"."
+          }
+        }
+      },
+      "OverviewPayload": {
+        "description": "The Overview screen: \"how am I doing?\". Everything follows the filters and lens except uscf_card, which follows Syncs. Source: pages/overview.py update_kpis -> pgn_stats_core.kpi_stats; update_uscf_card -> data.get_uscf_profile, data.get_live_series, data.uscf_failure, data.uscf_unavailable_since, uscf_core.membership_alert; update_top_weakness -> pgn_stats_core.recurring_weaknesses[0]; update_streak -> pgn_stats_core.streaks, plus shell.py update_form -> pgn_stats_core.current_form, components.form_indicator; update_wdl -> pgn_stats_core.win_draw_loss_counts; update_terminations -> pgn_stats_core.termination_counts; update_milestones -> pgn_stats_core.compute_milestones + uscf_core.achievement_milestones(data.get_uscf_achievements).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "games_count",
+          "kpis",
+          "uscf_card",
+          "top_weakness",
+          "streak",
+          "outcome_counts",
+          "terminations",
+          "milestones"
+        ],
+        "properties": {
+          "games_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Games after the filters (Forfeits included). 0 means the client shows the empty state."
+          },
+          "kpis": {
+            "$ref": "#/components/schemas/OverviewKpis"
+          },
+          "uscf_card": {
+            "$ref": "#/components/schemas/OverviewUscfCard"
+          },
+          "top_weakness": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewWeakness"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "streak": {
+            "$ref": "#/components/schemas/OverviewStreak"
+          },
+          "outcome_counts": {
+            "$ref": "#/components/schemas/OverviewOutcomeCounts"
+          },
+          "terminations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OverviewTermination"
+            },
+            "description": "Descending by games."
+          },
+          "milestones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OverviewMilestone"
+            },
+            "description": "Chronological across both kinds; undated last; same-date ties by game_num, achievements after Games. USCF achievements obey only the start/end filters, never the Game filters."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Chess Dashboard API",
+    "version": "1.0.0",
+    "description": "Versioned JSON API for the native iOS client (ADR 0008). A read surface over the same per-user store the Dash pages read. Every screen route takes the global filters and the Official/Live lens as query parameters, mirroring FILTER_INPUTS one to one. Ratings are whole numbers. Enrichment fields are always present (unmatched, un-analyzed, or empty), never absent."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {},
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "The token from POST /api/v1/session. Signed with the server's SECRET_KEY, carries role and username, expires after 7 days."
+      }
+    },
+    "parameters": {
+      "colors": {
+        "name": "colors",
+        "in": "query",
+        "required": false,
+        "explode": true,
+        "description": "Player colors to keep (repeatable). Omitted means both.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Color"
+          }
+        }
+      },
+      "outcomes": {
+        "name": "outcomes",
+        "in": "query",
+        "required": false,
+        "explode": true,
+        "description": "Outcomes to keep (repeatable). Omitted means all three.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Outcome"
+          }
+        }
+      },
+      "terminations": {
+        "name": "terminations",
+        "in": "query",
+        "required": false,
+        "explode": true,
+        "description": "Terminations to keep (repeatable). Omitted means all.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "start": {
+        "name": "start",
+        "in": "query",
+        "required": false,
+        "description": "First date to keep (inclusive). Setting any date bound drops undated Games, as on the web.",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "end": {
+        "name": "end",
+        "in": "query",
+        "required": false,
+        "description": "Last date to keep (inclusive).",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "series": {
+        "name": "series",
+        "in": "query",
+        "required": false,
+        "explode": true,
+        "description": "Series to keep (repeatable, the PGN Event header). Omitted means all.",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "min_moves": {
+        "name": "min_moves",
+        "in": "query",
+        "required": false,
+        "description": "Shortest Game to keep, in full moves.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "max_moves": {
+        "name": "max_moves",
+        "in": "query",
+        "required": false,
+        "description": "Longest Game to keep, in full moves.",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "lens": {
+        "name": "lens",
+        "in": "query",
+        "required": false,
+        "description": "Which rating series powers every rating-derived number. A lens, not a filter: it never hides Games.",
+        "schema": {
+          "$ref": "#/components/schemas/Lens"
+        }
+      },
+      "game_id": {
+        "name": "game_id",
+        "in": "path",
+        "required": true,
+        "description": "The opaque Game ID (stable across Syncs, derived from the ChapterURL).",
+        "schema": {
+          "$ref": "#/components/schemas/GameId"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "A malformed request (e.g. an unparseable filter value).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthenticated": {
+        "description": "No valid session cookie or bearer token (missing, expired, or tampered), or wrong credentials.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Signed in, but the role may not do this (e.g. a guest calling Sync).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "No such resource (an unknown Game ID, opponent, or Rated Event).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "bad_request",
+                  "unauthenticated",
+                  "throttled",
+                  "forbidden",
+                  "not_found",
+                  "sync_failed",
+                  "not_implemented"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Color": {
+        "type": "string",
+        "enum": [
+          "White",
+          "Black"
+        ]
+      },
+      "Outcome": {
+        "type": "string",
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss"
+        ]
+      },
+      "Lens": {
+        "type": "string",
+        "enum": [
+          "official",
+          "live"
+        ],
+        "default": "official"
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "owner",
+          "guest"
+        ],
+        "description": "owner may write (Sync); guest is read-only. Multi-user accounts are owners of their own store."
+      },
+      "GameId": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Opaque Game ID. Today the last path segment of the ChapterURL, matching the web's /game/<id>; clients must not parse it."
+      },
+      "Rating": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "description": "A rating as a whole number (the Live Rating keeps decimals only internally), or null when unknown."
+      },
+      "IsoDate": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "date",
+        "description": "YYYY-MM-DD, or null when undated."
+      },
+      "Timestamp": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "date-time",
+        "description": "UTC ISO 8601, or null when never."
+      },
+      "TagSource": {
+        "type": "string",
+        "enum": [
+          "mine",
+          "engine"
+        ]
+      },
+      "Tag": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "source"
+        ],
+        "description": "A Tag without its leading #, with who wrote it: mine (hand-written in a chapter comment) or engine (emitted from the Error Profile).",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/TagSource"
+          }
+        }
+      },
+      "UscfMatchStatus": {
+        "type": "string",
+        "enum": [
+          "matched_by_id",
+          "matched_by_name",
+          "conflict",
+          "forfeit",
+          "unmatched"
+        ],
+        "description": "The Game's USCF status, as the web Games table shows it: matched by member ID, matched by name, matched but the sources disagree (see Reconciliation), a Forfeit, or no USCF Game Record."
+      },
+      "GameSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Game as a list row, everywhere a Game is listed (Games, Lessons, Scouting Report, crosstables, milestones). Tap opens GET /api/v1/games/{game_id}.",
+        "required": [
+          "game_id",
+          "chapter_url",
+          "date",
+          "series",
+          "round",
+          "opponent",
+          "opponent_rating",
+          "color",
+          "player_rating",
+          "outcome",
+          "result",
+          "termination",
+          "moves",
+          "eco",
+          "opening",
+          "has_lesson",
+          "tags",
+          "uscf_status"
+        ],
+        "properties": {
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "chapter_url": {
+            "type": "string",
+            "description": "The Chapter on Lichess."
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "series": {
+            "type": "string",
+            "description": "The Series (PGN Event header); empty when unset."
+          },
+          "round": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "opponent_rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "color": {
+            "$ref": "#/components/schemas/GameColor"
+          },
+          "player_rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/GameOutcome"
+          },
+          "result": {
+            "type": "string",
+            "description": "The PGN Result, e.g. 1-0."
+          },
+          "termination": {
+            "type": "string"
+          },
+          "moves": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Full moves played."
+          },
+          "eco": {
+            "type": "string"
+          },
+          "opening": {
+            "type": "string"
+          },
+          "has_lesson": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "uscf_status": {
+            "$ref": "#/components/schemas/UscfMatchStatus"
+          }
+        }
+      },
+      "GameColor": {
+        "type": "string",
+        "enum": [
+          "White",
+          "Black",
+          "Unknown"
+        ],
+        "description": "The player's color in a Game; Unknown when the player's name matches neither side."
+      },
+      "GameOutcome": {
+        "type": "string",
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss",
+          "Unknown"
+        ],
+        "description": "The player's outcome; Unknown for an unfinished or unparseable result."
+      }
+    }
+  }
+}

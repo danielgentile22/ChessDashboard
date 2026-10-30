@@ -1,0 +1,174 @@
+{
+  "paths": {
+    "/api/v1/opponents/{opponent_id}": {
+      "get": {
+        "operationId": "getOpponent",
+        "tags": ["screens"],
+        "summary": "One opponent's Scouting Report",
+        "description": "The pre-game dossier on one opponent, as the Opponents page renders it once an opponent is picked: their USCF identity with then-vs-now ratings, the player's record against them, every Game against them, the openings they have played against the player (split by the player's color), how those Games ended, and the Lessons written after facing them. Honors the global filters and the lens, like the web dossier. Forfeits are excluded from the record, the Games list, and the openings (a no-show is not an over-the-board result) but still count in terminations and games_count. When record.games is 0 the client shows the web's empty state ('No games vs <opponent> in the current filter'). An opponent_id that resolves to no opponent anywhere in the archive is a 404; one that only falls outside the filters is a 200 with an empty record.",
+        "parameters": [
+          {"$ref": "#/components/parameters/opponent_id"},
+          {"$ref": "#/components/parameters/colors"},
+          {"$ref": "#/components/parameters/outcomes"},
+          {"$ref": "#/components/parameters/terminations"},
+          {"$ref": "#/components/parameters/start"},
+          {"$ref": "#/components/parameters/end"},
+          {"$ref": "#/components/parameters/series"},
+          {"$ref": "#/components/parameters/min_moves"},
+          {"$ref": "#/components/parameters/max_moves"},
+          {"$ref": "#/components/parameters/lens"}
+        ],
+        "responses": {
+          "200": {
+            "description": "The Scouting Report.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/OpponentPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "404": {"$ref": "#/components/responses/NotFound"}
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "opponent_id": {
+        "name": "opponent_id",
+        "in": "path",
+        "required": true,
+        "description": "The opaque opponent ID, as listed by GET /api/v1/opponents.",
+        "schema": {"$ref": "#/components/schemas/OpponentId"}
+      }
+    },
+    "schemas": {
+      "OpponentId": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(uscf-[0-9]+|name-[A-Za-z0-9_-]+)$",
+        "description": "Opaque, URL-safe opponent ID; clients must not parse it. Derived server-side from the whole (unfiltered) archive, so filters never change it. Form 1, 'uscf-<USCF member ID>': used when the opponent's matched Games carry exactly one USCF member ID and no other Opponent name carries that same ID (strictly unambiguous, as in ADR 0007). It survives a Chapter-header rename of the opponent. Form 2, 'name-<base64url without padding of the UTF-8 Opponent name, trimmed>': every other opponent. Reversible, so it needs no lookup table and cannot collide. The server must keep resolving a name- ID after the opponent later gains a USCF match (decode it and look up the name), so a client's saved ID never breaks; responses always carry the current canonical ID. Games with a blank Opponent name have no opponent ID and are never listed."
+      },
+      "OpponentPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Scouting Report. Source: pages/opponents.py update_scouting_report -> pgn_stats_core.scouting_report (head_to_head, opening_summary, termination_counts, lessons_table); uscf_identity from pages/opponents.py _uscf_identity -> data.get_opponent_profiles() (the opponent's UscfProfile.rating('R')).",
+        "required": ["games_count", "opponent_id", "opponent", "uscf_identity", "record",
+                     "their_rating", "rating_gap", "games", "openings_as_white",
+                     "openings_as_black", "terminations", "lessons"],
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0, "description": "Games against this opponent after filters, Forfeits included."},
+          "opponent_id": {"$ref": "#/components/schemas/OpponentId"},
+          "opponent": {"type": "string", "description": "The Opponent name as the Chapters spell it."},
+          "uscf_identity": {
+            "oneOf": [{"$ref": "#/components/schemas/OpponentUscfIdentity"}, {"type": "null"}],
+            "description": "Null when none of the filtered Games against them matched a USCF Game Record (the web then renders no identity block, ADR 0003)."
+          },
+          "record": {"$ref": "#/components/schemas/OpponentRecord"},
+          "their_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their rating in the most recent dated, rated Game against them (lens-aware: the USCF crosstable value under Live)."
+          },
+          "rating_gap": {
+            "type": ["integer", "null"],
+            "description": "their_rating minus the player's rating in his most recent dated, rated Game within the filters. Positive means they are rated above him (the harder Game; the web colors it as a loss). Null when either rating is unknown."
+          },
+          "games": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/GameSummary"},
+            "description": "Every Game against them, oldest first (undated last), Forfeits excluded. Tapping a row opens the Game."
+          },
+          "openings_as_white": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/OpponentOpening"},
+            "description": "What they played when the player had White, most-played first. Empty shows 'No opening data'."
+          },
+          "openings_as_black": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/OpponentOpening"},
+            "description": "What they played when the player had Black, most-played first. Empty shows 'No opening data'."
+          },
+          "terminations": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/OpponentTermination"},
+            "description": "How the Games against them ended, most frequent first (Forfeits included)."
+          },
+          "lessons": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/OpponentLesson"},
+            "description": "Every Lesson written after facing them, newest first. Empty shows 'No Lessons written from these games yet.' When non-empty the web offers 'Review before facing <opponent>', which the client maps to GET /api/v1/lessons?review=true&opponent=<opponent_id>."
+          }
+        }
+      },
+      "OpponentUscfIdentity": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The opponent's official USCF identity and their rating then vs now.",
+        "required": ["member_id", "name", "profile_url", "rating_when_last_played",
+                     "current_rating", "rating_change"],
+        "properties": {
+          "member_id": {"type": "string", "description": "USCF member ID, taken from the first matched Game in the filtered set."},
+          "name": {"type": "string", "description": "Their name as USCF records it, falling back to the Opponent name when USCF has none."},
+          "profile_url": {"type": "string", "description": "Their page on ratings.uschess.org."},
+          "rating_when_last_played": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Same value as OpponentPayload.their_rating."
+          },
+          "current_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their current Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular."
+          },
+          "rating_change": {
+            "type": ["integer", "null"],
+            "description": "current_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then."
+          }
+        }
+      },
+      "OpponentRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The player's head-to-head score against them, Forfeits excluded.",
+        "required": ["games", "win", "draw", "loss", "score_points", "score"],
+        "properties": {
+          "games": {"type": "integer", "minimum": 0},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "score_points": {"type": "number", "minimum": 0, "description": "Wins plus half the draws."},
+          "score": {"type": "string", "description": "The display score exactly as the web shows it, e.g. '2.5/4' ('0/0' when empty)."}
+        }
+      },
+      "OpponentOpening": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One opening they played against the player. Games without an ECO code are left out.",
+        "required": ["eco", "opening", "games", "win", "draw", "loss"],
+        "properties": {
+          "eco": {"type": "string"},
+          "opening": {"type": "string", "description": "Opening name; empty when unknown (the web then shows the ECO code in its place)."},
+          "games": {"type": "integer", "minimum": 1},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0}
+        }
+      },
+      "OpponentTermination": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["termination", "games"],
+        "properties": {
+          "termination": {"type": "string"},
+          "games": {"type": "integer", "minimum": 1}
+        }
+      },
+      "OpponentLesson": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Lesson card. A Game with two Lessons gives two cards. The card's Tags are its Game's Tags (game.tags, with sources).",
+        "required": ["text", "game"],
+        "properties": {
+          "text": {"type": "string", "description": "The Lesson text, 'Lesson:' prefix stripped."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      }
+    }
+  }
+}

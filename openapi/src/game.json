@@ -1,0 +1,229 @@
+{
+  "paths": {
+    "/api/v1/games/{game_id}": {
+      "get": {
+        "operationId": "getGame",
+        "tags": ["screens"],
+        "summary": "One Game in full: board PGNs, Engine view, Lessons, Tags, metadata, USCF Game Record.",
+        "description": "The Game detail screen. Takes no filter or lens parameters: the web page is a plain layout with no FILTER_INPUTS callback, and it reads the unfiltered store, so ratings here are the typed values from the Chapter headers (never lensed). The Game is looked up by its Game ID (the last path segment of the ChapterURL, as the web's /game/<chapter_id> does).",
+        "parameters": [{"$ref": "#/components/parameters/game_id"}],
+        "responses": {
+          "200": {
+            "description": "The Game.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/GamePayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "404": {"$ref": "#/components/responses/NotFound"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GamePayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Everything the Game detail page shows for one Game. Enrichment is always present: an un-analysed Game has engine.state awaiting_analysis, an unmatched Game has uscf_record null, a Game without Lessons has lessons []. Source: pages/game_detail.py layout -> _find_game (data.get_df), _board_section/_game_pgn (pgn_stats_core.mainline_movetext, pgn_stats_core.has_my_analysis, data.get_coach_chapter), _engine_section/_eval_chart/_judgment_row (data.get_game_analysis, data.get_game_summary, engine_analysis_core.win_pct_from_cp), _critical_moment_section, _lessons_card (components.tag_chips), _metadata_card, _uscf_facts_card (components.USCF_RATING_SYSTEM_LABELS, components.uscf_member_url), _forfeit_tag.",
+        "required": ["game", "player_color", "forfeit", "board", "engine", "metadata",
+                     "lessons", "tags", "uscf_record"],
+        "properties": {
+          "game": {"$ref": "#/components/schemas/GameSummary"},
+          "player_color": {
+            "$ref": "#/components/schemas/Color",
+            "description": "The color the player had: orient the board with it at the bottom (the web's data-orientation)."
+          },
+          "forfeit": {
+            "type": "boolean",
+            "description": "A Forfeit: the Chapter exists but no game was played (opponent no-show), so USCF never rated it. The web shows a prominent Forfeit tag."
+          },
+          "board": {"$ref": "#/components/schemas/GameBoardPgns"},
+          "engine": {"$ref": "#/components/schemas/GameEngineView"},
+          "metadata": {"$ref": "#/components/schemas/GameMetadata"},
+          "lessons": {
+            "type": "array",
+            "description": "The Game's Lessons (text after 'Lesson:'), in Chapter order. [] when none; the web then teaches the 'Lesson:' convention.",
+            "items": {"type": "string"}
+          },
+          "tags": {
+            "type": "array",
+            "description": "The Game's Tags with their source (mine or engine), in the order the web renders the chips. A Tag missing from the Game's source map is mine.",
+            "items": {"$ref": "#/components/schemas/Tag"}
+          },
+          "uscf_record": {
+            "oneOf": [{"$ref": "#/components/schemas/GameUscfRecord"}, {"type": "null"}],
+            "description": "The matched USCF Game Record, or null when the Game is unmatched (no USCF facts are ever invented)."
+          }
+        }
+      },
+      "GameBoardPgns": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One self-contained PGN per board view (headers Event, Date, Round, White, Black, Result, plus FEN and SetUp for a custom start position, then movetext), exactly as the web builds them for pgn-viewer. A view with no content is null and gets no tab. When the Game has no recorded moves every view is null and the web shows 'No board for this game'.",
+        "required": ["game", "my_analysis", "engine", "coach"],
+        "properties": {
+          "game": {
+            "type": ["string", "null"],
+            "description": "The Game view: the bare played line, comments, evals, NAGs, and variations stripped. Null only when the Game has no recorded moves."
+          },
+          "my_analysis": {
+            "type": ["string", "null"],
+            "description": "The My Analysis view: the full retained movetext with the player's own variations and comments. Null unless the player annotated the Chapter himself (pgn_stats_core.has_my_analysis)."
+          },
+          "engine": {
+            "type": ["string", "null"],
+            "description": "The Engine view's board: the full retained movetext, carrying the [%eval] comments and the engine variations Lichess embedded. The web builds no PGN for this view (its Engine view is a data panel beside a hidden board), so this follows the issue 110 spec: present iff the Game has moves and engine.state is analyzed, else null."
+          },
+          "coach": {
+            "type": ["string", "null"],
+            "description": "The Coach view: the matched coach Chapter's movetext under this Game's headers, with all his variations and notes. Null when no coach Chapter matched this Game (or the Game has no moves, as on the web)."
+          }
+        }
+      },
+      "GameEngineView": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The Engine view panel and the critical-moment banner above the board. When state is awaiting_analysis, ai_summary is \"\", win_probability and judged_moves are [], and critical_moment is null; the web then shows the 'Awaiting analysis' hint teaching the one click on Lichess.",
+        "required": ["state", "ai_summary", "win_probability", "judged_moves", "critical_moment"],
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": ["analyzed", "awaiting_analysis"],
+            "description": "analyzed when the Study export carried computer analysis for this Chapter; awaiting_analysis otherwise."
+          },
+          "ai_summary": {
+            "type": "string",
+            "description": "The AI Summary paragraph, or \"\" (no ANTHROPIC_API_KEY, un-analysed, or any failure). The web omits the paragraph when empty."
+          },
+          "win_probability": {
+            "type": "array",
+            "description": "The evaluation chart: one point per played move, in ply order. The web plots x = ply / 2 (Move) against White's win % with a level line at 50.",
+            "items": {"$ref": "#/components/schemas/GameWinProbabilityPoint"}
+          },
+          "judged_moves": {
+            "type": "array",
+            "description": "The player's judged moves (his Error Profile), in move order, each with the engine's recommended correction.",
+            "items": {"$ref": "#/components/schemas/GameJudgedMove"}
+          },
+          "critical_moment": {
+            "oneOf": [{"$ref": "#/components/schemas/GameCriticalMoment"}, {"type": "null"}],
+            "description": "The Game's single biggest win-probability swing, or null (un-analysed, or no swing found)."
+          }
+        }
+      },
+      "GameWinProbabilityPoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One played move on the eval chart. Tap jumps the board to this ply.",
+        "required": ["ply", "move_number", "side", "san", "white_win_pct"],
+        "properties": {
+          "ply": {"type": "integer", "minimum": 1, "description": "1-based half-move number."},
+          "move_number": {"type": "integer", "minimum": 1, "description": "Full move number, (ply + 1) // 2."},
+          "side": {"$ref": "#/components/schemas/Color"},
+          "san": {"type": "string"},
+          "white_win_pct": {
+            "type": "number", "minimum": 0, "maximum": 100,
+            "description": "White's win probability after this move, 0..100 (win_pct_from_cp of eval_after in centipawns). The web hovers it as a whole number."
+          }
+        }
+      },
+      "GameJudgedMove": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One judged move: its Severity and the correction. The web labels it '12. Nf3' for a White move, '12… Nf6' for a Black one (by ply parity).",
+        "required": ["ply", "move_number", "san", "severity", "best_move", "refutation"],
+        "properties": {
+          "ply": {"type": "integer", "minimum": 1},
+          "move_number": {"type": "integer", "minimum": 1},
+          "san": {"type": "string"},
+          "severity": {"type": "string", "enum": ["inaccuracy", "mistake", "blunder"]},
+          "best_move": {
+            "type": ["string", "null"],
+            "description": "The engine's recommended move (SAN), or null when it named none (the web then shows only the severity)."
+          },
+          "refutation": {
+            "type": "array",
+            "description": "The refutation line after best_move, in SAN, as the engine gave it (the MoveEval refutation_line without its first move). [] when none or when best_move is null.",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "GameCriticalMoment": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The critical-moment banner: headline plus detail 'eval +0.30 -> -2.10 · engine preferred Bd4'.",
+        "required": ["ply", "move_number", "side", "san", "by_player", "headline",
+                     "eval_before", "eval_after", "best_move"],
+        "properties": {
+          "ply": {"type": "integer", "minimum": 1},
+          "move_number": {"type": "integer", "minimum": 1},
+          "side": {"$ref": "#/components/schemas/Color"},
+          "san": {"type": "string"},
+          "by_player": {
+            "type": "boolean",
+            "description": "True when the player made the swing (the web's player tone), false when the opponent did."
+          },
+          "headline": {
+            "type": "string",
+            "description": "The verdict framed for the player, e.g. 'Won after your opponent's blunder on move 16 (Bd4)'."
+          },
+          "eval_before": {"type": "number", "description": "Pawns, White's perspective (the web shows it signed to two decimals)."},
+          "eval_after": {"type": "number", "description": "Pawns, White's perspective."},
+          "best_move": {
+            "type": ["string", "null"],
+            "description": "The move the engine preferred at that ply (SAN), or null."
+          }
+        }
+      },
+      "GameMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The Game card's rows as the Chapter headers carry them. The web hides a row whose value is empty or '?'; here those are \"\" or null.",
+        "required": ["date", "series", "round", "color", "result", "termination",
+                     "player_rating", "opponent_rating", "eco", "opening", "moves",
+                     "study_name"],
+        "properties": {
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "series": {"type": "string", "description": "The Series (PGN Event header), labelled 'Event' on the web; \"\" when unset."},
+          "round": {"type": "string", "description": "The Round header exactly as typed (e.g. '3' or '3.1'); \"\" when unset or '?'."},
+          "color": {"$ref": "#/components/schemas/Color"},
+          "result": {"type": "string", "description": "The PGN Result, e.g. 1-0."},
+          "termination": {"type": "string"},
+          "player_rating": {"$ref": "#/components/schemas/Rating", "description": "The typed rating from the Chapter header (not lensed)."},
+          "opponent_rating": {"$ref": "#/components/schemas/Rating", "description": "The typed opponent rating from the Chapter header."},
+          "eco": {"type": "string"},
+          "opening": {"type": "string"},
+          "moves": {"type": ["integer", "null"], "description": "Full moves played."},
+          "study_name": {"type": "string", "description": "The Study holding this Chapter."}
+        }
+      },
+      "GameUscfRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The USCF record card for a matched Game: what USCF officially recorded. The page keeps displaying the Lichess version of every fact; color_conflict badges a disagreement and points at Reconciliation (web-only).",
+        "required": ["rated_event_id", "rated_event_name", "section", "rating_system",
+                     "rating_system_label", "matched_by", "opponent_name", "opponent_id",
+                     "opponent_url", "uscf_color", "color_conflict"],
+        "properties": {
+          "rated_event_id": {"type": "string", "description": "The Rated Event's USCF event ID (the key for the event route)."},
+          "rated_event_name": {"type": "string"},
+          "section": {"type": "string", "description": "The Section USCF rated, e.g. U1600."},
+          "rating_system": {"type": "string", "description": "USCF rating-system code: R, D, Q, B, OR, OQ, OB."},
+          "rating_system_label": {"type": "string", "description": "Its display name, e.g. 'Dual (Regular + Quick)'; the code itself when unknown."},
+          "matched_by": {
+            "type": "string", "enum": ["id", "name"],
+            "description": "How the match was made: by opponent member ID, or by the strictly-unambiguous name fallback (worth an eyeball)."
+          },
+          "opponent_name": {"type": "string", "description": "The opponent as USCF registers them."},
+          "opponent_id": {"type": "string", "description": "The opponent's USCF member ID."},
+          "opponent_url": {"type": "string", "description": "The opponent's page on ratings.uschess.org; \"\" when no ID."},
+          "uscf_color": {
+            "oneOf": [{"$ref": "#/components/schemas/Color"}, {"type": "null"}],
+            "description": "The player's color according to USCF, or null when the record carries none."
+          },
+          "color_conflict": {"type": "boolean", "description": "USCF's color disagrees with the Chapter's."}
+        }
+      }
+    }
+  }
+}

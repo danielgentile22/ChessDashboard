@@ -1,0 +1,250 @@
+{
+  "paths": {
+    "/api/v1/opponents": {
+      "get": {
+        "operationId": "getOpponents",
+        "tags": [
+          "screens"
+        ],
+        "summary": "The Opponents screen",
+        "description": "Who the player faces and how it goes: the searchable opponent list that opens a Scouting Report (GET /api/v1/opponents/{opponent_id}), the W/D/L record against repeat opponents, W/D/L by opponent-rating-difference bucket, and outcome vs opponent rating. Every chart honors the global filters and the lens. Forfeits never count in records, buckets, or the scatter (a no-show win is not a win over an opponent).",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Opponents screen.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpponentsPayload"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OpponentsPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The Opponents screen. Source: pages/opponents.py layout + update_scout_options -> components.opponent_options (the picker, unfiltered); update_opponents -> pgn_stats_core.opponent_summary; update_bucket -> pgn_stats_core.opponent_rating_bucket_summary; update_scatter -> pgn_stats_core.outcome_vs_rating_data.",
+        "required": [
+          "games_count",
+          "opponents",
+          "records",
+          "rating_buckets",
+          "outcome_vs_rating"
+        ],
+        "properties": {
+          "games_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Games after filters."
+          },
+          "opponents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsListItem"
+            },
+            "description": "The Scouting Report picker: every named opponent in the whole archive, sorted by name. Deliberately unfiltered, like the web dropdown, so any opponent is searchable; the report itself honors the filters. Searching is client-side."
+          },
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsRecord"
+            },
+            "description": "W/D/L against opponents played more than once, most Games first (ties: most wins first), capped at the top 25 like the web chart. Empty shows 'No repeat opponents in current filter'."
+          },
+          "rating_buckets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsRatingBucket"
+            },
+            "description": "W/D/L by opponent rating minus the player's rating, in bucket order (weakest opponents first). Only buckets holding a Game appear. Games where either rating is unknown are left out. Empty shows 'Need rated games'."
+          },
+          "outcome_vs_rating": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsOutcomePoint"
+            },
+            "description": "Scatter of outcome against opponent rating, one point per rated Game. Empty shows 'Need rated games'."
+          }
+        }
+      },
+      "OpponentsListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "opponent_id",
+          "opponent"
+        ],
+        "properties": {
+          "opponent_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque opponent ID (schema OpponentId, defined with GET /api/v1/opponents/{opponent_id}); pass it to that route."
+          },
+          "opponent": {
+            "type": "string",
+            "description": "The Opponent name as the Chapters spell it."
+          }
+        }
+      },
+      "OpponentsRecord": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One stacked horizontal bar: the player's W/D/L against one repeat opponent. The bar hover reads the count per outcome.",
+        "required": [
+          "opponent_id",
+          "opponent",
+          "games",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "properties": {
+          "opponent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Opaque opponent ID (schema OpponentId), so a bar can open the Scouting Report. Null for Games with a blank Opponent name, which have no ID."
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 2
+          },
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "OpponentsRatingBucket": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One stacked bar: W/D/L against opponents in one rating-difference bucket (opponent rating minus the player's, lens-aware). Positive means a stronger opponent.",
+        "required": [
+          "bucket",
+          "games",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "properties": {
+          "bucket": {
+            "type": "string",
+            "enum": [
+              "< −200",
+              "−200 to −101",
+              "−100 to −1",
+              "0 to +99",
+              "+100 to +199",
+              "≥ +200"
+            ],
+            "description": "The web's bucket label, verbatim (with the Unicode minus sign U+2212). Lower bounds are inclusive."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "OpponentsOutcomePoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One scatter point. x is opponent_rating, y is outcome_value (ticks Loss/Draw/Win), color is outcome; the hover reads the rating, the opponent, and the date.",
+        "required": [
+          "opponent_rating",
+          "outcome",
+          "outcome_value",
+          "opponent",
+          "date"
+        ],
+        "properties": {
+          "opponent_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their rating in that Game (lens-aware). Never null here: unrated Games are left out."
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "outcome_value": {
+            "type": "number",
+            "enum": [
+              0,
+              0.5,
+              1
+            ],
+            "description": "1 for a Win, 0.5 for a Draw, 0 for a Loss."
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          }
+        }
+      }
+    }
+  }
+}

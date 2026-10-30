@@ -1,0 +1,679 @@
+{
+  "paths": {
+    "/api/v1/trends": {
+      "get": {
+        "operationId": "getTrends",
+        "tags": [
+          "screens"
+        ],
+        "summary": "The Trends screen",
+        "description": "Activity calendar, the dual-line Official/Live rating chart (typed-rating fallback without USCF), cumulative win rate, games per month, win rate by weekday, game length, results by time control, the fatigue check, and the upset tracker. Takes the global filters and lens; the USCF rating series obey only start/end.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Trends screen",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendsPayload"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TrendsCalendarGame": {
+        "description": "One Game on a calendar day, for the day's hover detail (\"Win vs Opponent A\").",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "game_id",
+          "outcome",
+          "opponent"
+        ],
+        "properties": {
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "opponent": {
+            "type": "string"
+          }
+        }
+      },
+      "TrendsCalendarDay": {
+        "description": "A calendar day with at least one finished, non-Forfeit Game. Days absent from the list render as empty cells.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "net",
+          "game_list"
+        ],
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "net": {
+            "type": "integer",
+            "description": "win minus loss. Drives the cell color (clamped to -3..3 on the web) and the +/− glyph."
+          },
+          "game_list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarGame"
+            },
+            "description": "That day's Games in play order."
+          }
+        }
+      },
+      "TrendsCalendarYear": {
+        "description": "One year's calendar block (the header reads \"<games> games · <wins>W <losses>L\").",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "year",
+          "games",
+          "wins",
+          "losses",
+          "days"
+        ],
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "wins": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "losses": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarDay"
+            },
+            "description": "Ascending by date."
+          }
+        }
+      },
+      "TrendsOfficialPoint": {
+        "description": "One Official Rating supplement.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "month",
+          "rating"
+        ],
+        "properties": {
+          "month": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The supplement date."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Official Rating published in that supplement. Plotted as a step line."
+          }
+        }
+      },
+      "TrendsLivePoint": {
+        "description": "One Section's effect on the Live Rating.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "end_date",
+          "rating",
+          "pre_rating",
+          "event_id",
+          "event_name",
+          "section_name"
+        ],
+        "properties": {
+          "end_date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The Section's end date (the x value)."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Live Rating after the Section (post), rounded to a whole number."
+          },
+          "pre_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Live Rating before the Section; null for the first Section ever played (hover reads \"unrated\")."
+          },
+          "event_id": {
+            "type": "string",
+            "description": "The Rated Event's USCF event ID."
+          },
+          "event_name": {
+            "type": "string",
+            "description": "The Rated Event name, verbatim from USCF (typos included)."
+          },
+          "section_name": {
+            "type": "string"
+          }
+        }
+      },
+      "TrendsTypedPoint": {
+        "description": "One point of the fallback chart, from the Studies' typed ratings.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "rating",
+          "trend"
+        ],
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The hand-typed header rating on the day's last Game, under the active lens."
+          },
+          "trend": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The linear-trend line value at this point (least-squares fit over point index); null on every point when there are fewer than 3 points."
+          }
+        }
+      },
+      "TrendsRatingChart": {
+        "description": "\"Your rating over time\". All three arrays empty is the empty state (\"No rating data\", or \"No rating data in this date range\" in uscf mode).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mode",
+          "emphasized",
+          "official",
+          "live",
+          "typed"
+        ],
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "uscf",
+              "typed"
+            ],
+            "description": "uscf: the dual-line Official/Live chart, chosen when either full USCF series exists (before date trimming). typed: USCF never reached or not configured, so the chart degrades to typed header ratings."
+          },
+          "emphasized": {
+            "$ref": "#/components/schemas/Lens",
+            "description": "Which line is full strength (the active lens); the other recedes but is always drawn. The lens hides nothing here."
+          },
+          "official": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsOfficialPoint"
+            },
+            "description": "mode uscf only (else []). Trimmed to start/end; no other filter applies to rating series."
+          },
+          "live": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsLivePoint"
+            },
+            "description": "mode uscf only (else []). Trimmed to start/end."
+          },
+          "typed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsTypedPoint"
+            },
+            "description": "mode typed only (else []). Follows every filter."
+          }
+        }
+      },
+      "TrendsWinRatePoint": {
+        "description": "One point of the cumulative win rate (one per day, finished, dated, non-Forfeit Games). The web draws a 50% reference line.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "win_rate_pct",
+          "cum_wins",
+          "cum_games"
+        ],
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "win_rate_pct": {
+            "type": "number",
+            "description": "Cumulative win rate 0..100 through this day (unrounded)."
+          },
+          "cum_wins": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cum_games": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "TrendsMonth": {
+        "description": "One bar of \"Games per month\" (months with Games only).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "year_month",
+          "games",
+          "wins",
+          "win_rate_pct"
+        ],
+        "properties": {
+          "year_month": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}$",
+            "description": "YYYY-MM."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "wins": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win_rate_pct": {
+            "type": "number",
+            "description": "0..100, one decimal (hover)."
+          }
+        }
+      },
+      "TrendsWeekday": {
+        "description": "One bar of \"Win rate by day of week\" (weekdays with Games only, Mon to Sun).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "day_of_week",
+          "games",
+          "wins",
+          "win_rate_pct"
+        ],
+        "properties": {
+          "day_of_week": {
+            "type": "string",
+            "enum": [
+              "Mon",
+              "Tue",
+              "Wed",
+              "Thu",
+              "Fri",
+              "Sat",
+              "Sun"
+            ]
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "wins": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win_rate_pct": {
+            "type": "number",
+            "description": "0..100, one decimal. The bar height; the web colors it on a 30..70 scale with a 50% line."
+          }
+        }
+      },
+      "TrendsGameLength": {
+        "description": "One finished, non-Forfeit Game with a known length. The client bins these (the web uses 30 bins, overlaid per outcome).",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "moves",
+          "outcome"
+        ],
+        "properties": {
+          "moves": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Full moves played."
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          }
+        }
+      },
+      "TrendsAverageLength": {
+        "description": "\"Average game length\" stat strip. All null is the \"No data\" state.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "win",
+          "draw",
+          "loss"
+        ],
+        "properties": {
+          "win": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Mean full moves in Wins, one decimal; null when none (tile hidden)."
+          },
+          "draw": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Same for Draws."
+          },
+          "loss": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Same for Losses."
+          }
+        }
+      },
+      "TrendsTimeControl": {
+        "description": "One stacked bar of \"Results by time control\". Finished, non-Forfeit Games; slowest first, unparseable last.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "time_control",
+          "speed",
+          "minutes",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct"
+        ],
+        "properties": {
+          "time_control": {
+            "type": "string",
+            "description": "The TimeControl header verbatim; \"\" when not recorded (the web labels it \"(not recorded)\")."
+          },
+          "speed": {
+            "type": "string",
+            "enum": [
+              "Classical",
+              "Rapid",
+              "Blitz",
+              "Unknown"
+            ],
+            "description": "From estimated minutes: 60+ Classical, 10+ Rapid, else Blitz; Unknown when unparseable."
+          },
+          "minutes": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Estimated total thinking time per player in minutes (base + one minute per second of increment); null when unparseable."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win_rate_pct": {
+            "type": "number",
+            "description": "0..100, one decimal."
+          }
+        }
+      },
+      "TrendsRound": {
+        "description": "One bar of \"Score by round: the fatigue check\". Ascending by round.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "round",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct",
+          "score_pct",
+          "reliable"
+        ],
+        "properties": {
+          "round": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The round number: the USCF crosstable round when matched, else the typed Round header."
+          },
+          "games": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "draw": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loss": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "win_rate_pct": {
+            "type": "number",
+            "description": "0..100, one decimal."
+          },
+          "score_pct": {
+            "type": "number",
+            "description": "(win + draw/2) / games as 0..100, one decimal. The bar height."
+          },
+          "reliable": {
+            "type": "boolean",
+            "description": "games >= 3. Unreliable rounds render dimmed with \"too few to conclude\"."
+          }
+        }
+      },
+      "TrendsUpset": {
+        "description": "One upset row; tap opens the Game.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "game",
+          "margin"
+        ],
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "margin": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Rating points between the two players, unsigned (the web shows + for giant kills, − for upset losses)."
+          }
+        }
+      },
+      "TrendsUpsets": {
+        "description": "The upset tracker. Each list empty shows its own explanatory line.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "giant_kills",
+          "upset_losses"
+        ],
+        "properties": {
+          "giant_kills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsUpset"
+            },
+            "description": "Wins over higher-rated opponents, biggest margin first. Both ratings known; Forfeits never count."
+          },
+          "upset_losses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsUpset"
+            },
+            "description": "Losses to lower-rated opponents, biggest margin first."
+          }
+        }
+      },
+      "TrendsPayload": {
+        "description": "The Trends screen: rating, win rate, activity, and playing conditions over time. Source: pages/trends.py update_activity_calendar -> pgn_stats_core.daily_activity; update_rating -> uscf_core.rating_trend_series(data.get_official_series, data.get_live_series) or pgn_stats_core.player_rating_over_time (+ numpy.polyfit trend in _typed_rating_fig); update_winrate -> pgn_stats_core.win_rate_over_time; update_monthly, update_dow -> pgn_stats_core.activity_data; update_length_hist, update_length_stats -> pgn_stats_core.game_length_data; update_time_control -> pgn_stats_core.time_control_summary; update_round_performance -> pgn_stats_core.round_performance; update_upsets -> pgn_stats_core.upset_tracker.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "games_count",
+          "calendar",
+          "rating_chart",
+          "win_rate",
+          "games_per_month",
+          "win_rate_by_weekday",
+          "game_lengths",
+          "average_length",
+          "time_controls",
+          "rounds",
+          "upsets"
+        ],
+        "properties": {
+          "games_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Games after the filters (Forfeits included). 0 means the client shows the empty state."
+          },
+          "calendar": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarYear"
+            },
+            "description": "Activity calendar, newest year first. Empty: \"No dated games in this filter\"."
+          },
+          "rating_chart": {
+            "$ref": "#/components/schemas/TrendsRatingChart"
+          },
+          "win_rate": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsWinRatePoint"
+            },
+            "description": "Ascending by date."
+          },
+          "games_per_month": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsMonth"
+            },
+            "description": "Ascending."
+          },
+          "win_rate_by_weekday": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsWeekday"
+            }
+          },
+          "game_lengths": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsGameLength"
+            }
+          },
+          "average_length": {
+            "$ref": "#/components/schemas/TrendsAverageLength"
+          },
+          "time_controls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsTimeControl"
+            }
+          },
+          "rounds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendsRound"
+            }
+          },
+          "upsets": {
+            "$ref": "#/components/schemas/TrendsUpsets"
+          }
+        }
+      }
+    }
+  }
+}

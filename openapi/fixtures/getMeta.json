@@ -1,0 +1,165 @@
+{
+  "demo_mode": false,
+  "filter_options": {
+    "max_date": "2024-06-16",
+    "max_moves": 6,
+    "min_date": "2024-01-06",
+    "min_moves": 3,
+    "series": [
+      "Summer Cup",
+      "Test Open"
+    ],
+    "terminations": [
+      "Normal",
+      "loss by checkmate",
+      "loss by resignation",
+      "win by checkmate",
+      "win by resignation"
+    ]
+  },
+  "freshness": {
+    "lichess": {
+      "cached_at": null,
+      "source": "lichess",
+      "synced_at": "2026-01-01T00:00:00Z"
+    },
+    "uscf": {
+      "available": true,
+      "enabled": true,
+      "synced_at": "2026-01-01T00:00:00Z",
+      "unavailable_since": null
+    }
+  },
+  "games_total": 7,
+  "new_achievements": [],
+  "player": "Test Player",
+  "presets": [
+    {
+      "filters": {
+        "colors": [
+          "White",
+          "Black"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "series": [],
+        "start": null,
+        "terminations": []
+      },
+      "id": "all",
+      "label": "All games"
+    },
+    {
+      "filters": {
+        "colors": [
+          "White",
+          "Black"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "series": [],
+        "start": "2024-01-06",
+        "terminations": []
+      },
+      "id": "last_20",
+      "label": "Last 20"
+    },
+    {
+      "filters": {
+        "colors": [
+          "White",
+          "Black"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "series": [],
+        "start": "2026-01-01",
+        "terminations": []
+      },
+      "id": "this_year",
+      "label": "This year"
+    },
+    {
+      "filters": {
+        "colors": [
+          "White"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "series": [],
+        "start": null,
+        "terminations": []
+      },
+      "id": "white",
+      "label": "White only"
+    },
+    {
+      "filters": {
+        "colors": [
+          "Black"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "series": [],
+        "start": null,
+        "terminations": []
+      },
+      "id": "black",
+      "label": "Black only"
+    },
+    {
+      "filters": {
+        "colors": [
+          "White",
+          "Black"
+        ],
+        "end": null,
+        "max_moves": 6,
+        "min_moves": 3,
+        "outcomes": [
+          "Win"
+        ],
+        "series": [],
+        "start": null,
+        "terminations": []
+      },
+      "id": "wins",
+      "label": "Wins only"
+    }
+  ],
+  "session": {
+    "can_write": true,
+    "role": "owner",
+    "username": null
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "paths": {
+    "/api/v1/openings": {
+      "get": {
+        "operationId": "getOpenings",
+        "tags": ["screens"],
+        "summary": "The Openings screen: repertoire tree, ECO families, top openings.",
+        "description": "Where the repertoire wins and leaks points. The repertoire tree is embedded whole for both colors (the web's As White / As Black toggle is a client-side switch, not a parameter), and every branch carries the Games that reached it, so drilling into a branch needs no second request. Forfeits are excluded from every section (one forced move is not repertoire data).",
+        "parameters": [
+          {"$ref": "#/components/parameters/colors"},
+          {"$ref": "#/components/parameters/outcomes"},
+          {"$ref": "#/components/parameters/terminations"},
+          {"$ref": "#/components/parameters/start"},
+          {"$ref": "#/components/parameters/end"},
+          {"$ref": "#/components/parameters/series"},
+          {"$ref": "#/components/parameters/min_moves"},
+          {"$ref": "#/components/parameters/max_moves"},
+          {"$ref": "#/components/parameters/lens"}
+        ],
+        "responses": {
+          "200": {
+            "description": "The Openings screen for this filter state.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/OpeningsPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OpeningsPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Everything the Openings page shows. An empty repertoire tree for a color (game_count 0) is that color's empty state; empty eco_families / top_openings arrays are the chart and table empty states. Source: pages/openings.py update_repertoire -> pgn_stats_core.repertoire_tree (called once per color); update_opening_family and update_opening_table -> pgn_stats_core.opening_summary.",
+        "required": ["games_count", "repertoire", "eco_families", "top_openings"],
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0, "description": "Games after filters (Forfeits included; the sections below drop them)."},
+          "repertoire": {"$ref": "#/components/schemas/OpeningsRepertoire"},
+          "eco_families": {
+            "type": "array",
+            "description": "The Win rate by ECO family stacked bar chart, most-played family first. Games with no ECO are left out.",
+            "items": {"$ref": "#/components/schemas/OpeningsEcoFamily"}
+          },
+          "top_openings": {
+            "type": "array",
+            "maxItems": 50,
+            "description": "The Top openings table: one row per (ECO, Opening) pair, most-played first, the first 50 rows (opening_summary(...)[1].head(50)).",
+            "items": {"$ref": "#/components/schemas/OpeningsOpening"}
+          }
+        }
+      },
+      "OpeningsRepertoire": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One repertoire tree per color.",
+        "required": ["white", "black"],
+        "properties": {
+          "white": {"$ref": "#/components/schemas/OpeningsRepertoireTree"},
+          "black": {"$ref": "#/components/schemas/OpeningsRepertoireTree"}
+        }
+      },
+      "OpeningsRepertoireTree": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Every Game as one color (Forfeits and move-less Games excluded), arranged move by move. The header line reads '<game_count> games, <score_pct>% overall score. Branches scoring below that across <min_games>+ games are flagged.'",
+        "required": ["color", "game_count", "score_pct", "min_games", "moves"],
+        "properties": {
+          "color": {"$ref": "#/components/schemas/Color"},
+          "game_count": {"type": "integer", "minimum": 0, "description": "Games in this tree. 0 is the 'No games as <color> in this filter' empty state."},
+          "score_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "The baseline every branch is judged against: the chess score as this color, 0..100 (wins 1, draws 0.5), one decimal. 0 when game_count is 0."},
+          "min_games": {"type": "integer", "minimum": 1, "description": "How many Games a branch needs before it can be flagged (3 today)."},
+          "moves": {
+            "type": "array",
+            "description": "First-move nodes, most-played first, ties alphabetical by SAN.",
+            "items": {"$ref": "#/components/schemas/OpeningsRepertoireNode"}
+          }
+        }
+      },
+      "OpeningsRepertoireNode": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One move of the repertoire tree. A node with game_count 1 is a leaf the web renders as a single row linking straight to games[0]; it never has children. A node with several Games expands into its child moves plus the Games that ended here. The score marker (above / at / below baseline) is score_pct compared with the tree's score_pct; the client derives it.",
+        "required": ["san", "ply", "game_count", "win", "draw", "loss", "score_pct", "underperforming", "games", "ended_here", "moves"],
+        "properties": {
+          "san": {"type": "string", "description": "The move in SAN, e.g. Nf6."},
+          "ply": {"type": "integer", "minimum": 1, "description": "1-based half-move number. The web label is '<(ply+1)//2>. <san>' for odd plies and '<(ply+1)//2>... <san>' for even ones."},
+          "game_count": {"type": "integer", "minimum": 1, "description": "Games that went this way."},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "score_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "This branch's chess score, 0..100, one decimal."},
+          "underperforming": {"type": "boolean", "description": "The leaking-points flag: true when game_count >= min_games and score_pct is below the tree's baseline score_pct."},
+          "games": {
+            "type": "array",
+            "description": "Every Game that reached this position: the drill-down list for the branch.",
+            "items": {"$ref": "#/components/schemas/OpeningsGameRef"}
+          },
+          "ended_here": {
+            "type": "array",
+            "description": "The subset of games whose move list stops at exactly this position (the web's 'ended here' rows). Games that kept going are reached through moves.",
+            "items": {"$ref": "#/components/schemas/OpeningsGameRef"}
+          },
+          "moves": {
+            "type": "array",
+            "description": "The next moves, most-played first. Always empty when game_count is 1.",
+            "items": {"$ref": "#/components/schemas/OpeningsRepertoireNode"}
+          }
+        }
+      },
+      "OpeningsGameRef": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "A compact link to one Game, rendered '<outcome> vs <opponent>'. Tap opens GET /api/v1/games/{game_id}.",
+        "required": ["game_id", "opponent", "outcome", "date"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"},
+          "opponent": {"type": "string"},
+          "outcome": {"$ref": "#/components/schemas/Outcome"},
+          "date": {"$ref": "#/components/schemas/IsoDate"}
+        }
+      },
+      "OpeningsEcoFamily": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One bar of the ECO family chart (stacked Win/Draw/Loss counts; the hover shows each count).",
+        "required": ["eco_family", "family_name", "game_count", "win", "draw", "loss", "win_rate_pct"],
+        "properties": {
+          "eco_family": {"type": "string", "description": "The ECO letter, A..E."},
+          "family_name": {"type": "string", "description": "The axis label, e.g. 'B: Semi-Open'; an unknown letter reads '<letter>: Other'."},
+          "game_count": {"type": "integer", "minimum": 1},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "win_rate_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Wins / games, 0..100, one decimal (draws count 0)."}
+        }
+      },
+      "OpeningsOpening": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One row of the Top openings table.",
+        "required": ["eco", "opening", "game_count", "win", "draw", "loss", "win_rate_pct"],
+        "properties": {
+          "eco": {"type": "string", "description": "The ECO code, e.g. B22."},
+          "opening": {"type": "string", "description": "The PGN Opening header; empty when unset."},
+          "game_count": {"type": "integer", "minimum": 1},
+          "win": {"type": "integer", "minimum": 0},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "win_rate_pct": {"type": "number", "minimum": 0, "maximum": 100, "description": "Wins / games, 0..100, one decimal (the web's Win % column)."}
+        }
+      }
+    }
+  }
+}

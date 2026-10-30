@@ -1,0 +1,117 @@
+{
+  "paths": {
+    "/api/v1/meta": {
+      "get": {
+        "operationId": "getMeta",
+        "tags": ["meta"],
+        "summary": "Who is signed in, filter options, presets, freshness",
+        "description": "Everything a client needs before it draws a screen. Unfiltered: options and bounds describe every Game, and update after a Sync.",
+        "responses": {
+          "200": {"description": "The meta payload.", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/MetaPayload"}}}},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MetaPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["player", "session", "demo_mode", "games_total", "filter_options", "presets", "freshness", "new_achievements"],
+        "description": "Source: data accessors (get_player, synced_at, source, cached_at, uscf_*, get_new_achievements) -> payloads.meta.build_meta; options and presets from payloads.meta.filter_bounds / preset_filters, the same functions the web filter drawer uses.",
+        "properties": {
+          "player": {"type": "string", "description": "The player's name as detected or configured."},
+          "session": {"$ref": "#/components/schemas/SessionIdentity"},
+          "demo_mode": {"type": "boolean", "description": "Read-only demo deployment: Sync is off for everyone."},
+          "games_total": {"type": "integer", "minimum": 0, "description": "Every Game, before filters."},
+          "filter_options": {"$ref": "#/components/schemas/MetaFilterOptions"},
+          "presets": {"type": "array", "items": {"$ref": "#/components/schemas/MetaPreset"}},
+          "freshness": {"$ref": "#/components/schemas/MetaFreshness"},
+          "new_achievements": {"type": "array", "items": {"$ref": "#/components/schemas/MetaAchievement"}, "description": "Official USCF achievements first seen by the last Sync."}
+        }
+      },
+      "MetaFilterOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["terminations", "series", "min_date", "max_date", "min_moves", "max_moves"],
+        "properties": {
+          "terminations": {"type": "array", "items": {"type": "string"}},
+          "series": {"type": "array", "items": {"type": "string"}},
+          "min_date": {"$ref": "#/components/schemas/IsoDate"},
+          "max_date": {"$ref": "#/components/schemas/IsoDate"},
+          "min_moves": {"type": "integer"},
+          "max_moves": {"type": "integer"}
+        }
+      },
+      "MetaFilterState": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "A complete filter selection, named like the query parameters.",
+        "required": ["colors", "outcomes", "terminations", "series", "start", "end", "min_moves", "max_moves"],
+        "properties": {
+          "colors": {"type": "array", "items": {"$ref": "#/components/schemas/Color"}},
+          "outcomes": {"type": "array", "items": {"$ref": "#/components/schemas/Outcome"}},
+          "terminations": {"type": "array", "items": {"type": "string"}},
+          "series": {"type": "array", "items": {"type": "string"}},
+          "start": {"$ref": "#/components/schemas/IsoDate"},
+          "end": {"$ref": "#/components/schemas/IsoDate"},
+          "min_moves": {"type": "integer"},
+          "max_moves": {"type": "integer"}
+        }
+      },
+      "MetaPreset": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "filters"],
+        "properties": {
+          "id": {"type": "string", "enum": ["all", "last_20", "this_year", "white", "black", "wins"]},
+          "label": {"type": "string"},
+          "filters": {"$ref": "#/components/schemas/MetaFilterState"}
+        }
+      },
+      "MetaFreshness": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lichess", "uscf"],
+        "properties": {
+          "lichess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["synced_at", "source", "cached_at"],
+            "properties": {
+              "synced_at": {"$ref": "#/components/schemas/Timestamp"},
+              "source": {"type": "string", "enum": ["lichess", "cache"], "description": "cache when Lichess was unreachable and the last Sync's PGN cache is shown."},
+              "cached_at": {"$ref": "#/components/schemas/Timestamp"}
+            }
+          },
+          "uscf": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["enabled", "available", "synced_at", "unavailable_since"],
+            "properties": {
+              "enabled": {"type": "boolean", "description": "A USCF member ID is configured. When false, show no USCF freshness at all."},
+              "available": {"type": "boolean", "description": "USCF data is present (live or cached)."},
+              "synced_at": {"$ref": "#/components/schemas/Timestamp"},
+              "unavailable_since": {"type": ["string", "null"], "description": "The web's 'USCF unavailable since <time>' warning, verbatim, or null."}
+            }
+          }
+        }
+      },
+      "MetaAchievement": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["achievement_id", "kind", "title", "detail", "date", "event_id", "event_name"],
+        "properties": {
+          "achievement_id": {"type": "string"},
+          "kind": {"type": "string", "enum": ["norm", "award"]},
+          "title": {"type": "string"},
+          "detail": {"type": "string"},
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "event_id": {"type": "string", "description": "The Rated Event it was earned at; empty if unknown."},
+          "event_name": {"type": "string"}
+        }
+      }
+    }
+  }
+}

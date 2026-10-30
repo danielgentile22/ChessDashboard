@@ -24,6 +24,7 @@ import pandas as pd
 from dash import Input, Output, State, callback, callback_context, dcc, html, no_update
 
 import data
+from payloads.meta import filter_bounds, preset_filters
 from pgn_stats_core import apply_filters
 from uscf_core import OFFICIAL_LENS, apply_rating_lens
 
@@ -93,29 +94,11 @@ def _label(text: str) -> html.Label:
     return html.Label(text, className="filter-label")
 
 
-def _data_bounds(df: pd.DataFrame) -> dict:
-    """Option lists and ranges derived from the current Games."""
-    terminations = sorted(
-        [t for t in df["Termination"].dropna().unique() if str(t).strip()]
-    ) if not df.empty else []
-    events = sorted(
-        [e for e in df["Event"].dropna().unique() if str(e).strip()]
-    ) if not df.empty else []
-
-    dated = df[df["Date_dt"].notna()] if not df.empty else df
-    min_date = dated["Date_dt"].min().date().isoformat() if len(dated) else None
-    max_date = dated["Date_dt"].max().date().isoformat() if len(dated) else None
-
-    moves = df["FullMoves"].dropna() if not df.empty else pd.Series(dtype=float)
-    min_mv = int(moves.min()) if not moves.empty else 1
-    max_mv = int(moves.max()) if not moves.empty else 100
-
-    return dict(terminations=terminations, events=events,
-                min_date=min_date, max_date=max_date,
-                min_mv=min_mv, max_mv=max_mv)
+# One home for the option lists and ranges, shared with the API's meta route.
+_data_bounds = filter_bounds
 
 
-def make_filter_button() -> html.Div:
+def make_filter_button() -> html.Button:
     """The header button that opens the filter drawer, with an active-count badge."""
     return html.Button(
         className="header-btn", id="filter-drawer-button", children=[
@@ -258,33 +241,14 @@ def apply_preset(n_all, n20, n_year, n_white, n_black, n_wins):
         return (no_update,) * 7
     btn = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    df = data.get_df()
-    b = _data_bounds(df)
-    dated = df[df["Date_dt"].notna()]
-
-    # Every preset is a complete starting point: reset all filters to
-    # "everything", then apply the preset's one specialization.  Dates default to
-    # None (no bound) so undated Games stay visible unless a preset narrows dates.
-    colors = ["White", "Black"]
-    outcomes = ["Win", "Draw", "Loss"]
-    terminations: list[str] = []
-    events: list[str] = []
-    moves = [b["min_mv"], b["max_mv"]]
-    start = end = None
-
-    if btn == "preset-last20":
-        if not dated.empty:  # window over dated Games only (NaT sorts last)
-            start = dated.sort_values("Date_dt").tail(20)["Date_dt"].min().date().isoformat()
-    elif btn == "preset-year":
-        start = f"{date.today().year}-01-01"
-    elif btn == "preset-white":
-        colors = ["White"]
-    elif btn == "preset-black":
-        colors = ["Black"]
-    elif btn == "preset-wins":
-        outcomes = ["Win"]
-
-    return colors, outcomes, terminations, events, moves, start, end
+    preset = {
+        "preset-all": "all", "preset-last20": "last_20", "preset-year": "this_year",
+        "preset-white": "white", "preset-black": "black", "preset-wins": "wins",
+    }.get(btn, "all")
+    # The same preset definitions the API's meta route serves to the phone.
+    f = preset_filters(preset, data.get_df(), date.today())
+    return (f["colors"], f["outcomes"], f["terminations"], f["series"],
+            [f["min_moves"], f["max_moves"]], f["start"], f["end"])
 
 
 def _date_range_label(df: pd.DataFrame) -> str:

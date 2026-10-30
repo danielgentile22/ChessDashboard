@@ -1,0 +1,60 @@
+{
+  "paths": {
+    "/api/v1/session": {
+      "post": {
+        "operationId": "createSession",
+        "tags": ["session"],
+        "summary": "Sign in and get a bearer token",
+        "description": "Accepts the same credentials as the web login: the owner password (owner mode), {\"guest\": true} (owner mode only), or username plus password (multi-user mode). Runs the same throttle as the web login, shared with it. An ungated server signs anyone in as the owner. Tokens are stateless: sign-out is the client forgetting its token; rotating SECRET_KEY signs out every phone and browser.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SessionRequest"}}}
+        },
+        "responses": {
+          "200": {"description": "Signed in.", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SessionGrant"}}}},
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "403": {"$ref": "#/components/responses/Forbidden"},
+          "429": {"description": "Too many wrong passwords from this address; wait a few minutes.", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SessionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Credentials. Send password (and username in multi-user mode), or guest: true.",
+        "properties": {
+          "username": {"type": "string"},
+          "password": {"type": "string"},
+          "guest": {"type": "boolean", "default": false}
+        }
+      },
+      "SessionIdentity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "username", "can_write"],
+        "properties": {
+          "role": {"$ref": "#/components/schemas/Role"},
+          "username": {"type": ["string", "null"], "description": "Set only in multi-user mode."},
+          "can_write": {"type": "boolean", "description": "Whether Sync is allowed. False for a guest."}
+        }
+      },
+      "SessionGrant": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["token", "role", "username", "can_write", "expires_at"],
+        "properties": {
+          "token": {"type": "string", "description": "Send as Authorization: Bearer <token>. Store it in the Keychain."},
+          "role": {"$ref": "#/components/schemas/Role"},
+          "username": {"type": ["string", "null"]},
+          "can_write": {"type": "boolean"},
+          "expires_at": {"type": "string", "format": "date-time", "description": "When the token stops working (7 days after sign-in, like the web session)."}
+        }
+      }
+    }
+  }
+}

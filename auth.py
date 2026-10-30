@@ -20,6 +20,12 @@ It runs in one of two modes:
 With neither configured the server is ungated and every request can write
 (local development, demo mode, and most of the test suite).
 
+The JSON API (ADR 0008) signs in through :func:`token_sign_in` with the same
+credentials and the same throttle, and gets a signed, expiring bearer token
+carrying the same role and username a session cookie would.  The gate accepts
+either; :func:`current_user`, :func:`current_role` and :func:`can_write`
+resolve a token exactly like a session, so every write check covers the API.
+
 Public API
 ----------
 install_auth   Install the gate + login/logout routes on a Flask server.
@@ -27,23 +33,28 @@ current_user   The authenticated username for the current request (or None).
 current_role   ``OWNER`` / ``GUEST`` for the current request (or None).
 can_write      Whether the current request may change state or call a paid API.
 is_guest       Whether the current request is a signed-in guest.
+token_sign_in  Check API credentials and mint a bearer token.
 Auth           The installed gate's handle.
 """
 from __future__ import annotations
 
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 
 from flask import (
     Flask,
     Response,
     current_app,
+    g,
     has_request_context,
+    jsonify,
     redirect,
     request,
     session,
 )
+from itsdangerous import BadSignature, URLSafeTimedSerializer
 from markupsafe import escape
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -96,7 +107,17 @@ _PUBLIC_PREFIXES = (
     "/_reload-hash",
     "/_favicon.ico",
 )
-_PUBLIC_PATHS = ("/health", "/favicon.ico")
+# The API's sign-in route is the one /api/ path reachable without a token.
+API_SESSION_PATH = "/api/v1/session"
+_API_PREFIX = "/api/"
+_PUBLIC_PATHS = ("/health", "/favicon.ico", API_SESSION_PATH)
+
+# One lifetime for both doors: the web session cookie and the API token.
+TOKEN_LIFETIME = timedelta(days=7)
+_TOKEN_SALT = "chess-dashboard-api-token"
+# Ungated servers have no SECRET_KEY to sign with; their tokens are never
+# checked (nothing is gated), so any key will do.
+_UNGATED_TOKEN_KEY = "ungated"
 
 # The page description, for search results and link previews.  A gated site
 # serves the login page to every crawler, so it carries it too.
@@ -145,8 +166,9 @@ class Auth:
         return bool(self.owner_password_hash) and check_password_hash(
             self.owner_password_hash or "", password)
 
-    def role_of(self, sess) -> str | None:
-        """The role a session holds, or None if it isn't signed in."""
+    def role_of(self, sess: Mapping) -> str | None:
+        """The role a session (or a token's claims) holds, or None if it
+        isn't signed in."""
         if self.owner_mode:
             role = sess.get(_ROLE_KEY)
             return role if role in (OWNER, GUEST) else None
@@ -159,16 +181,49 @@ def _gate() -> Auth | None:
     return current_app.extensions.get(_EXTENSION)
 
 
+def _token_serializer(secret_key: str | bytes | None) -> URLSafeTimedSerializer:
+    return URLSafeTimedSerializer(secret_key or _UNGATED_TOKEN_KEY, salt=_TOKEN_SALT)
+
+
+def _bearer_claims() -> dict | None:
+    """The verified claims of the request's bearer token, or None when the
+    token is missing, tampered, signed with another key, or expired."""
+    header = request.headers.get("Authorization", "")
+    scheme, _, token = header.partition(" ")
+    if scheme.lower() != "bearer" or not token.strip():
+        return None
+    try:
+        claims = _token_serializer(current_app.secret_key).loads(
+            token.strip(), max_age=int(TOKEN_LIFETIME.total_seconds()))
+    except BadSignature:  # also covers SignatureExpired
+        return None
+    return claims if isinstance(claims, dict) else None
+
+
+def _identity() -> Mapping:
+    """Who the current request says it is: its bearer token's claims when it
+    sends an ``Authorization`` header, else its session cookie.
+
+    A request that sends a bad token is nobody, even with a cookie: the API
+    client must learn its token died rather than ride a stale browser session.
+    """
+    if "identity" not in g:
+        if "Authorization" in request.headers:
+            g.identity = _bearer_claims() or {}
+        else:
+            g.identity = session
+    return g.identity
+
+
 def current_user() -> str | None:
     """The authenticated username for the current request, or None.
 
-    Only multi-user sessions carry a username.  Outside a request context
-    (e.g. a background thread) nobody is logged in.
+    Only multi-user sessions and tokens carry a username.  Outside a request
+    context (e.g. a background thread) nobody is logged in.
     """
-    try:
-        return session.get(_USER_KEY)
-    except RuntimeError:
+    if not has_request_context():
         return None
+    return _identity().get(_USER_KEY)
 
 
 def current_role() -> str | None:
@@ -177,7 +232,7 @@ def current_role() -> str | None:
     if not has_request_context():
         return None
     gate = _gate()
-    return gate.role_of(session) if gate is not None else None
+    return gate.role_of(_identity()) if gate is not None else None
 
 
 def is_guest() -> bool:
@@ -198,7 +253,66 @@ def can_write() -> bool:
     gate = _gate()
     if gate is None:
         return True
-    return gate.role_of(session) == OWNER
+    return gate.role_of(_identity()) == OWNER
+
+
+class SignInError(Exception):
+    """An API sign-in refused: carries the error code and HTTP status."""
+
+    def __init__(self, code: str, message: str, status: int) -> None:
+        super().__init__(message)
+        self.code = code
+        self.message = message
+        self.status = status
+
+
+@dataclass(frozen=True)
+class TokenGrant:
+    """A minted API token and what it grants."""
+
+    token: str
+    role: str
+    username: str | None
+    can_write: bool
+    expires_at: datetime
+
+
+def token_sign_in(username: str, password: str, *, guest: bool = False) -> TokenGrant:
+    """Check API credentials exactly like the web login and mint a bearer token.
+
+    Same credentials (owner password, guest, or username + password), same
+    throttle table, same role.  An ungated server signs anyone in as the
+    owner, mirroring that every request there can write.  Raises
+    :class:`SignInError` on refusal.
+    """
+    gate = _gate()
+    if gate is None:
+        role, user = OWNER, None
+    elif guest:
+        if not gate.owner_mode:
+            raise SignInError("forbidden", "Guest access is off on this server.", 403)
+        role, user = GUEST, None
+    else:
+        user = None if gate.owner_mode else (username or None)
+        throttle_key = (request.remote_addr or "?", user or OWNER)
+        if _throttled(throttle_key):
+            raise SignInError("throttled", "Too many attempts. Wait a few minutes.", 429)
+        if gate.owner_mode:
+            ok = gate.authenticate_owner(password)
+        else:
+            ok = gate.authenticate(username, password) is not None
+        if not ok:
+            _record_failure(throttle_key)
+            wrong = "Wrong password." if gate.owner_mode else "Wrong username or password."
+            raise SignInError("unauthenticated", wrong, 401)
+        _login_fails.pop(throttle_key, None)
+        role = OWNER
+    claims = {_ROLE_KEY: role, **({_USER_KEY: user} if user else {})}
+    token = _token_serializer(current_app.secret_key).dumps(claims)
+    return TokenGrant(
+        token=token, role=role, username=user, can_write=role == OWNER,
+        expires_at=datetime.now(UTC) + TOKEN_LIFETIME,
+    )
 
 
 def install_auth(
@@ -230,7 +344,7 @@ def install_auth(
         SESSION_COOKIE_SECURE=secure_cookies,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
-        PERMANENT_SESSION_LIFETIME=timedelta(days=7),
+        PERMANENT_SESSION_LIFETIME=TOKEN_LIFETIME,
     )
     gate = Auth(users, owner_password_hash)
     server.extensions[_EXTENSION] = gate
@@ -252,8 +366,14 @@ def install_auth(
         path = request.path
         if path in _PUBLIC_PATHS or any(path.startswith(p) for p in _PUBLIC_PREFIXES):
             return None
-        if gate.role_of(session) is not None:
+        if gate.role_of(_identity()) is not None:
             return None
+        if path.startswith(_API_PREFIX):
+            # A native client can't follow a redirect to an HTML login page.
+            return jsonify(error={
+                "code": "unauthenticated",
+                "message": "Sign in: send a valid bearer token.",
+            }), 401
         return redirect(login_path)
 
     @server.route(login_path, methods=["GET", "POST"])

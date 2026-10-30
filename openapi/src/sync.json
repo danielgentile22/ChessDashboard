@@ -1,0 +1,130 @@
+{
+  "paths": {
+    "/api/v1/sync": {
+      "post": {
+        "operationId": "runSync",
+        "tags": ["screens"],
+        "summary": "Run a Sync (owner only) and return what the web toast shows.",
+        "description": "Re-Syncs the caller's designated Studies (and USCF, coach Studies, analysis) and atomically swaps the store, exactly like the web Sync button. No request body. Status mapping of data.refresh(): success -> 200 with status success; already_running -> 200 with status already_running (the web shows a warning toast, not a failure, and the in-flight Sync will still land), with empty lists; demo -> 403 forbidden with the refresh error as the message ('Demo mode is read-only; Sync is disabled.'), because demo mode, like a guest, may not write; error (Lichess unreachable, no Games found, store never initialized, enrichment raised) -> 502 sync_failed with the refresh error as the message, and the current data stays untouched. A guest (auth.can_write() false) gets 403 forbidden before any Sync runs.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Sync completed, or one was already running.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SyncPayload"}}}
+          },
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "403": {"$ref": "#/components/responses/Forbidden"},
+          "502": {
+            "description": "The Sync failed (error code sync_failed); the server keeps showing the current data.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SyncPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The Sync toast and celebration banner as data. On already_running every list is [] and the freshness fields describe the data currently shown. Source: shell.py run_sync -> data.refresh (RefreshOutcome: status, new_games, failures), shell._describe_new_games, shell._per_source_freshness (data.synced_at, data.uscf_synced_at, data.uscf_unavailable_since), pgn_stats_core.milestone_deltas, data.get_new_achievements.",
+        "required": ["status", "new_games", "milestones", "new_achievements", "failures",
+                     "synced_at", "uscf_synced_at", "uscf_unavailable_since"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["success", "already_running"],
+            "description": "success: the store was swapped ('Sync complete'); already_running: a Sync was in progress, nothing was done ('Sync already running')."
+          },
+          "new_games": {
+            "type": "array",
+            "description": "Games whose ChapterURL was not in the previous Sync, in store order. [] means 'No new games. Everything is already up to date.'",
+            "items": {"$ref": "#/components/schemas/SyncNewGame"}
+          },
+          "milestones": {
+            "type": "array",
+            "description": "Personal bests the new Games set (the celebration banner), comparing the pre-Sync and post-Sync stores.",
+            "items": {"$ref": "#/components/schemas/SyncMilestone"}
+          },
+          "new_achievements": {
+            "type": "array",
+            "description": "Official USCF achievements (norms, awards) first seen by this Sync. [] on the very first recording and whenever USCF was unreachable.",
+            "items": {"$ref": "#/components/schemas/SyncAchievement"}
+          },
+          "failures": {
+            "type": "array",
+            "description": "Designated Studies this Sync could not fetch; the Sync still succeeded on the rest. The web toast lists their IDs ('couldn't fetch: ...').",
+            "items": {"$ref": "#/components/schemas/SyncFailure"}
+          },
+          "synced_at": {
+            "$ref": "#/components/schemas/Timestamp",
+            "description": "When the last successful Lichess Sync completed. The toast renders it as 'synced X ago'."
+          },
+          "uscf_synced_at": {
+            "$ref": "#/components/schemas/Timestamp",
+            "description": "When USCF data was last fetched; null when USCF is not configured or never reached."
+          },
+          "uscf_unavailable_since": {
+            "type": ["string", "null"],
+            "description": "'USCF unavailable since <time>' when the USCF data shown is the cache of an earlier Sync, else null."
+          }
+        }
+      },
+      "SyncNewGame": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One new Game, as the toast lists it ('vs Edwards (Win)'). Tap opens the Game.",
+        "required": ["game_id", "opponent", "outcome", "result", "date"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"},
+          "opponent": {"type": "string"},
+          "outcome": {"$ref": "#/components/schemas/Outcome"},
+          "result": {"type": "string", "description": "The PGN Result, e.g. 1-0."},
+          "date": {"$ref": "#/components/schemas/IsoDate"}
+        }
+      },
+      "SyncMilestone": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One personal best broken by this Sync.",
+        "required": ["kind", "old", "new", "description"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["peak_rating", "win_streak", "giant_kill"],
+            "description": "peak_rating: a new highest rating; win_streak: a new longest win Streak (in Games); giant_kill: a win over the highest-rated opponent yet."
+          },
+          "old": {"type": "integer", "description": "The previous best (a rating, or a Streak length for win_streak)."},
+          "new": {"type": "integer", "description": "The new best, same unit as old."},
+          "description": {"type": "string", "description": "The celebration text, e.g. 'New peak rating: 1571 (was 1545)'."}
+        }
+      },
+      "SyncAchievement": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One newly recognized official USCF achievement. The web celebrates it as 'Official USCF achievement: <title> (<rated_event_name>)'.",
+        "required": ["achievement_id", "kind", "title", "detail", "date",
+                     "rated_event_id", "rated_event_name"],
+        "properties": {
+          "achievement_id": {"type": "string"},
+          "kind": {"type": "string", "enum": ["norm", "award"]},
+          "title": {"type": "string", "description": "e.g. 'Fourth Category norm'."},
+          "detail": {"type": "string", "description": "e.g. 'Scored 4.5 in 5 games'; \"\" when none."},
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "rated_event_id": {"type": "string", "description": "The Rated Event it was earned at; \"\" when unknown."},
+          "rated_event_name": {"type": "string", "description": "\"\" when unknown."}
+        }
+      },
+      "SyncFailure": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One designated Study the Sync could not fetch.",
+        "required": ["study_id", "reason"],
+        "properties": {
+          "study_id": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

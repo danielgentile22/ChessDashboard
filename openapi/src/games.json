@@ -1,0 +1,32 @@
+{
+  "paths": {
+    "/api/v1/games": {
+      "get": {
+        "operationId": "getGames",
+        "tags": ["screens"],
+        "summary": "Every Game, filtered",
+        "description": "The full Games list with each Game's USCF match status. Sorting and search are client-side over this list, as on the web table.",
+        "parameters": [{"$ref": "#/components/parameters/colors"}, {"$ref": "#/components/parameters/outcomes"}, {"$ref": "#/components/parameters/terminations"}, {"$ref": "#/components/parameters/start"}, {"$ref": "#/components/parameters/end"}, {"$ref": "#/components/parameters/series"}, {"$ref": "#/components/parameters/min_moves"}, {"$ref": "#/components/parameters/max_moves"}, {"$ref": "#/components/parameters/lens"}],
+        "responses": {
+          "200": {"description": "The Games payload.", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/GamesPayload"}}}},
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GamesPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["games_count", "games"],
+        "description": "Source: pages/games.py update_games_table -> payloads.common.game_summaries.",
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0},
+          "games": {"type": "array", "items": {"$ref": "#/components/schemas/GameSummary"}, "description": "In archive order (the filtered DataFrame's order)."}
+        }
+      }
+    }
+  }
+}

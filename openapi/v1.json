@@ -1,0 +1,5222 @@
+{
+  "components": {
+    "parameters": {
+      "colors": {
+        "description": "Player colors to keep (repeatable). Omitted means both.",
+        "explode": true,
+        "in": "query",
+        "name": "colors",
+        "required": false,
+        "schema": {
+          "items": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "type": "array"
+        }
+      },
+      "end": {
+        "description": "Last date to keep (inclusive).",
+        "in": "query",
+        "name": "end",
+        "required": false,
+        "schema": {
+          "format": "date",
+          "type": "string"
+        }
+      },
+      "game_id": {
+        "description": "The opaque Game ID (stable across Syncs, derived from the ChapterURL).",
+        "in": "path",
+        "name": "game_id",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/GameId"
+        }
+      },
+      "lens": {
+        "description": "Which rating series powers every rating-derived number. A lens, not a filter: it never hides Games.",
+        "in": "query",
+        "name": "lens",
+        "required": false,
+        "schema": {
+          "$ref": "#/components/schemas/Lens"
+        }
+      },
+      "max_moves": {
+        "description": "Longest Game to keep, in full moves.",
+        "in": "query",
+        "name": "max_moves",
+        "required": false,
+        "schema": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "min_moves": {
+        "description": "Shortest Game to keep, in full moves.",
+        "in": "query",
+        "name": "min_moves",
+        "required": false,
+        "schema": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "opponent_id": {
+        "description": "The opaque opponent ID, as listed by GET /api/v1/opponents.",
+        "in": "path",
+        "name": "opponent_id",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/OpponentId"
+        }
+      },
+      "outcomes": {
+        "description": "Outcomes to keep (repeatable). Omitted means all three.",
+        "explode": true,
+        "in": "query",
+        "name": "outcomes",
+        "required": false,
+        "schema": {
+          "items": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "type": "array"
+        }
+      },
+      "series": {
+        "description": "Series to keep (repeatable, the PGN Event header). Omitted means all.",
+        "explode": true,
+        "in": "query",
+        "name": "series",
+        "required": false,
+        "schema": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "start": {
+        "description": "First date to keep (inclusive). Setting any date bound drops undated Games, as on the web.",
+        "in": "query",
+        "name": "start",
+        "required": false,
+        "schema": {
+          "format": "date",
+          "type": "string"
+        }
+      },
+      "terminations": {
+        "description": "Terminations to keep (repeatable). Omitted means all.",
+        "explode": true,
+        "in": "query",
+        "name": "terminations",
+        "required": false,
+        "schema": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "A malformed request (e.g. an unparseable filter value)."
+      },
+      "Forbidden": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Signed in, but the role may not do this (e.g. a guest calling Sync)."
+      },
+      "NotFound": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "No such resource (an unknown Game ID, opponent, or Rated Event)."
+      },
+      "Unauthenticated": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "No valid session cookie or bearer token (missing, expired, or tampered), or wrong credentials."
+      }
+    },
+    "schemas": {
+      "AnalysisAccuracyPoint": {
+        "additionalProperties": false,
+        "description": "One analysed Game on the Accuracy line, with the rating overlay value and the hover values (opponent, date). Tap drills into the Game.",
+        "properties": {
+          "accuracy": {
+            "description": "The player's Accuracy for this Game, 0..100 (the web hovers it to one decimal).",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating"
+          }
+        },
+        "required": [
+          "game_id",
+          "date",
+          "accuracy",
+          "rating",
+          "opponent"
+        ],
+        "type": "object"
+      },
+      "AnalysisAwaitingGame": {
+        "additionalProperties": false,
+        "description": "One Game awaiting analysis: its name, date, and the 'Request on Lichess' link.",
+        "properties": {
+          "chapter_url": {
+            "description": "The Chapter on Lichess, where analysis is requested. Never empty here.",
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "name": {
+            "description": "The Chapter name, falling back to the opponent, then to 'Game' (as the web row does).",
+            "type": "string"
+          }
+        },
+        "required": [
+          "game_id",
+          "name",
+          "date",
+          "chapter_url"
+        ],
+        "type": "object"
+      },
+      "AnalysisMistakeTypeDistribution": {
+        "additionalProperties": false,
+        "description": "The tactical vs positional split of the player's mistakes across every analysed Game (the donut). Both zero means 'No mistakes in your analysed games yet'; the web drops a zero slice.",
+        "properties": {
+          "positional": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "tactical": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tactical",
+          "positional"
+        ],
+        "type": "object"
+      },
+      "AnalysisMistakeTypePoint": {
+        "additionalProperties": false,
+        "description": "One analysed Game's tactical and positional mistake counts, with the rating overlay value.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "positional": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "tactical": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "game_id",
+          "date",
+          "tactical",
+          "positional",
+          "rating",
+          "opponent"
+        ],
+        "type": "object"
+      },
+      "AnalysisMoveBucket": {
+        "additionalProperties": false,
+        "description": "One histogram bar: how many mistakes landed on this full-move number.",
+        "properties": {
+          "count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "move_number": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "move_number",
+          "count"
+        ],
+        "type": "object"
+      },
+      "AnalysisPayload": {
+        "additionalProperties": false,
+        "description": "Everything the Analysis page shows. When has_analysis is false the web shows only the 'No games analyzed yet' empty state plus the awaiting list; the aggregate fields are then their empty values (zero counts, []). Unfiltered and unlensed: the rating overlay is the player's typed rating per Game (PlayerRatingNum on the store DataFrame), not the Official/Live lens. Source: pages/analysis.py update_analysis/_render_analysis -> data.has_any_analysis, data.get_mistake_type_distribution (engine_analysis_core.mistake_type_distribution), data.get_accuracy_trend (analysis_trends.accuracy_trend), data.get_mistake_type_trend (analysis_trends.mistake_type_trend), data.get_phase_type_matrix (analysis_trends.phase_type_matrix), data.get_mistake_move_histogram (analysis_trends.mistake_move_histogram), data.get_awaiting_analysis.",
+        "properties": {
+          "accuracy_trend": {
+            "description": "One point per analysed Game with a known Accuracy, oldest first (undated Games last). Empty before any analysis.",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisAccuracyPoint"
+            },
+            "type": "array"
+          },
+          "awaiting_analysis": {
+            "description": "Games with a Chapter whose Study export carried no engine evaluations, in store order. The web card title shows the count.",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisAwaitingGame"
+            },
+            "type": "array"
+          },
+          "has_analysis": {
+            "description": "True once at least one Game carries requested computer analysis. False drives the empty state.",
+            "type": "boolean"
+          },
+          "mistake_move_histogram": {
+            "description": "Mistake counts per move number, ascending, only move numbers that carry at least one mistake (inaccuracies, mistakes, and blunders all count). Empty when there are none.",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisMoveBucket"
+            },
+            "type": "array"
+          },
+          "mistake_type_distribution": {
+            "$ref": "#/components/schemas/AnalysisMistakeTypeDistribution"
+          },
+          "mistake_type_trend": {
+            "description": "One point per analysed Game, oldest first (undated last). A clean Game is a 0/0 point so the rating line stays continuous. The web stacks tactical and positional as bars.",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisMistakeTypePoint"
+            },
+            "type": "array"
+          },
+          "phase_type_matrix": {
+            "description": "The Phase x Mistake Type heatmap as three rows in the order opening, middlegame, endgame, zero-filled. Empty ([]) when no analysed Game has a mistake (the web shows 'No mistakes to map yet').",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisPhaseRow"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "has_analysis",
+          "mistake_type_distribution",
+          "accuracy_trend",
+          "mistake_type_trend",
+          "phase_type_matrix",
+          "mistake_move_histogram",
+          "awaiting_analysis"
+        ],
+        "type": "object"
+      },
+      "AnalysisPhaseRow": {
+        "additionalProperties": false,
+        "description": "One Phase row of the matrix: mistake counts per Mistake Type. The hottest cell across rows is the worst specific combination.",
+        "properties": {
+          "phase": {
+            "enum": [
+              "opening",
+              "middlegame",
+              "endgame"
+            ],
+            "type": "string"
+          },
+          "positional": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "tactical": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "phase",
+          "tactical",
+          "positional"
+        ],
+        "type": "object"
+      },
+      "Color": {
+        "enum": [
+          "White",
+          "Black"
+        ],
+        "type": "string"
+      },
+      "Error": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "enum": [
+                  "bad_request",
+                  "unauthenticated",
+                  "throttled",
+                  "forbidden",
+                  "not_found",
+                  "sync_failed",
+                  "not_implemented"
+                ],
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "EventCrosstableRound": {
+        "additionalProperties": false,
+        "description": "One round cell (uscf_core.RoundOutcome). The web renders a letter: Win/WinForfeit W, Loss L, Draw D, Forfeit F, ByeFull B, ByeHalf b, Unpaired or anything else a dot; its tooltip reads 'R<round_number>: <outcome> vs <opponent_name>'.",
+        "properties": {
+          "color": {
+            "description": "White, Black, or Unknown (byes and forfeits have no color), as USCF sends it.",
+            "type": "string"
+          },
+          "game_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GameId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set only on the player's own row (is_player), when a filtered Game has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
+          },
+          "opponent_member_id": {
+            "description": "Empty for byes and unpaired rounds.",
+            "type": "string"
+          },
+          "opponent_name": {
+            "description": "Empty for byes and unpaired rounds.",
+            "type": "string"
+          },
+          "outcome": {
+            "description": "USCF's round outcome, passed through: Win, Loss, Draw, WinForfeit, Forfeit, ByeFull, ByeHalf, or Unpaired (an unrecognized value renders as a dot).",
+            "type": "string"
+          },
+          "round_number": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "round_number",
+          "outcome",
+          "color",
+          "opponent_member_id",
+          "opponent_name",
+          "game_id"
+        ],
+        "type": "object"
+      },
+      "EventCrosstableRow": {
+        "additionalProperties": false,
+        "description": "One player's line in a Section's crosstable (uscf_core.StandingEntry). The player's own row is highlighted and its rounds link to his Games.",
+        "properties": {
+          "is_player": {
+            "description": "This row is the dashboard's player (member_id equals the USCF profile's member ID). At most one row per Section.",
+            "type": "boolean"
+          },
+          "member_id": {
+            "description": "USCF member ID.",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ordinal": {
+            "description": "Final placement, 1 = Section winner.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "post_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Regular post-rating, whole number; null when unknown (the web then shows no rating)."
+          },
+          "pre_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Regular pre-rating, whole number; null means the player walked in unrated (the web shows 'unrated -> <post>')."
+          },
+          "rating_change": {
+            "description": "round(post) - round(pre); null when either is null.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "rounds": {
+            "description": "One entry per round, in round order.",
+            "items": {
+              "$ref": "#/components/schemas/EventCrosstableRound"
+            },
+            "type": "array"
+          },
+          "score": {
+            "description": "Points scored in the Section. Halves are possible.",
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "ordinal",
+          "member_id",
+          "name",
+          "is_player",
+          "pre_rating",
+          "post_rating",
+          "rating_change",
+          "score",
+          "rounds"
+        ],
+        "type": "object"
+      },
+      "EventGameRow": {
+        "additionalProperties": false,
+        "description": "One Game line in the Rated Event: 'R<round> <color> <outcome> vs <opponent> <opponent_rating>' plus a Forfeit marker. Tap opens GET /api/v1/games/{game.game_id}.",
+        "properties": {
+          "forfeit": {
+            "description": "The Game is a Forfeit.",
+            "type": "boolean"
+          },
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "round": {
+            "description": "The REAL round from the cached crosstable (UscfRound) when known, falling back to the hand-typed Round header; null shows as a dash. May differ from game.round, which is the typed one.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "round",
+          "forfeit",
+          "game"
+        ],
+        "type": "object"
+      },
+      "EventPayload": {
+        "additionalProperties": false,
+        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.series_summary (its _rated_event_group entry for this event_id, merged across Series) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "end": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "event_id": {
+            "description": "The USCF event ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "forfeit_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "game_count": {
+            "description": "Games over the board (Forfeits excluded).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "description": "This Rated Event's Games, in date then round order.",
+            "items": {
+              "$ref": "#/components/schemas/EventGameRow"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "description": "This Rated Event's Games after filters, Forfeits included (the same rows as games).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "name": {
+            "description": "USCF's official name, e.g. 'ACC JUNE 2025' (falls back to the Games' UscfEventName when the member-events list lacks it).",
+            "type": "string"
+          },
+          "performance_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Performance rating over this Rated Event's filtered Games (Forfeits and unrated opponents excluded); null when none qualify."
+          },
+          "player_count": {
+            "description": "The Rated Event's whole field, from USCF; null when unknown.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "post_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Live Rating walking out (after the last played Section), whole number; null when unknown."
+          },
+          "pre_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or unknown."
+          },
+          "rating_change": {
+            "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "score": {
+            "description": "Tournament points: wins + 0.5 x draws + Forfeit wins. The web reads 'Score <score> . <game_count> games + <forfeit_count> forfeit wins'.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "sections": {
+            "description": "The Sections the player's filtered Games were played in, sorted by name.",
+            "items": {
+              "$ref": "#/components/schemas/EventSection"
+            },
+            "type": "array"
+          },
+          "series": {
+            "description": "The Series (PGN Event headers) this Rated Event's Games sit under, usually exactly one.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "start": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "win": {
+            "description": "Wins over the board (Forfeits excluded); likewise draw and loss.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "games_count",
+          "event_id",
+          "name",
+          "series",
+          "start",
+          "end",
+          "player_count",
+          "game_count",
+          "forfeit_count",
+          "win",
+          "draw",
+          "loss",
+          "score",
+          "pre_rating",
+          "post_rating",
+          "rating_change",
+          "performance_rating",
+          "games",
+          "sections"
+        ],
+        "type": "object"
+      },
+      "EventSection": {
+        "additionalProperties": false,
+        "description": "One Section of the Rated Event the player played, with its final placement and full crosstable. Summary line: 'Finished <ordinal(placement)> of <player_count>', or '<player_count> players' when placement is null.",
+        "properties": {
+          "crosstable": {
+            "description": "Every player's row, in final placement order.",
+            "items": {
+              "$ref": "#/components/schemas/EventCrosstableRow"
+            },
+            "type": "array"
+          },
+          "has_crosstable": {
+            "description": "Whether the crosstable for (event_id, name) is cached. False: placement and player_count are null and crosstable is empty (the web shows no crosstable block).",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The Section name, e.g. 'U1600'.",
+            "type": "string"
+          },
+          "placement": {
+            "description": "The player's final ordinal (1 = Section winner); null when no crosstable or the player's member ID isn't in it.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "player_count": {
+            "description": "Rows in the crosstable; null when no crosstable.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "has_crosstable",
+          "placement",
+          "player_count",
+          "crosstable"
+        ],
+        "type": "object"
+      },
+      "EventsGameRow": {
+        "additionalProperties": false,
+        "description": "One Game line inside a Rated Event or the unmatched block: 'R<round> <color> <outcome> vs <opponent> <opponent_rating>' plus a Forfeit marker. Tap opens GET /api/v1/games/{game.game_id}.",
+        "properties": {
+          "forfeit": {
+            "description": "The Game is a Forfeit.",
+            "type": "boolean"
+          },
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "round": {
+            "description": "The REAL round from the cached crosstable (UscfRound) when known, falling back to the hand-typed Round header (RoundNum); null shows as a dash. May differ from game.round, which is the typed one.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "round",
+          "forfeit",
+          "game"
+        ],
+        "type": "object"
+      },
+      "EventsPayload": {
+        "additionalProperties": false,
+        "description": "Everything the Events page shows. Empty series is the 'No events in this filter' empty state; empty series_performance is the chart's empty state; empty unplayed_events hides that card. Source: pages/events.py update_event_bar -> pgn_stats_core.event_summary; update_series_groups -> uscf_core.series_summary(df_f, data.get_live_series(), data.get_uscf_events()) + pgn_stats_core.performance_rating_stats per UscfEventId + data.get_uscf_standings() / data.get_uscf_profile().member_id for placements; update_unplayed -> uscf_core.unplayed_events(data.get_df(), data.get_uscf_events(), start, end).",
+        "properties": {
+          "games_count": {
+            "description": "Games after filters.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "series": {
+            "description": "Series -> Rated Events groups, oldest first by first Game date (undated Series last).",
+            "items": {
+              "$ref": "#/components/schemas/EventsSeries"
+            },
+            "type": "array"
+          },
+          "series_performance": {
+            "description": "The Performance per Series stacked W/D/L bar chart: the 20 most recent Series by first Game date, oldest first (the web draws the list reversed, newest on top). Forfeits count here, as in event_summary. Games with an empty Series are left out.",
+            "items": {
+              "$ref": "#/components/schemas/EventsSeriesBar"
+            },
+            "maxItems": 20,
+            "type": "array"
+          },
+          "unplayed_events": {
+            "description": "The 'Entered, never played' card: Rated Events the player entered with no Games anywhere in the UNFILTERED store (no-shows, online-only events). Only the start/end filters apply, to the event's start date; undated events always show.",
+            "items": {
+              "$ref": "#/components/schemas/EventsUnplayedEvent"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "games_count",
+          "series_performance",
+          "series",
+          "unplayed_events"
+        ],
+        "type": "object"
+      },
+      "EventsRatedEvent": {
+        "additionalProperties": false,
+        "description": "One Rated Event card inside a Series. Tap pushes GET /api/v1/events/{event_id} for its crosstables.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "end": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "event_id": {
+            "description": "The USCF event ID; the path key of the event route.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "forfeit_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "game_count": {
+            "description": "Games over the board (Forfeits excluded).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "description": "This Rated Event's Games, in date then round order.",
+            "items": {
+              "$ref": "#/components/schemas/EventsGameRow"
+            },
+            "type": "array"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "name": {
+            "description": "USCF's official name, e.g. 'ACC JUNE 2025'.",
+            "type": "string"
+          },
+          "performance_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Performance rating over this Rated Event's filtered Games (pgn_stats_core.performance_rating_stats, Forfeits and unrated opponents excluded); null when none qualify."
+          },
+          "player_count": {
+            "description": "The Rated Event's whole field, from USCF; null when unknown.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "post_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Live Rating walking out (after the last played Section), whole number; null when unknown. With pre_rating null and post_rating set, the web shows 'unrated -> <post>'."
+          },
+          "pre_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or no Live series point."
+          },
+          "rating_change": {
+            "description": "round(post) - round(pre) of the Live Rating; null when either is null. Independent of the lens (always the Live series, as on the web).",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "score": {
+            "description": "Tournament points, Forfeit wins included.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "sections": {
+            "description": "The Sections this Series' Games were played in, sorted by name, each with the final placement when its crosstable is cached.",
+            "items": {
+              "$ref": "#/components/schemas/EventsSectionPlacement"
+            },
+            "type": "array"
+          },
+          "start": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "event_id",
+          "name",
+          "start",
+          "end",
+          "player_count",
+          "sections",
+          "game_count",
+          "forfeit_count",
+          "win",
+          "draw",
+          "loss",
+          "score",
+          "pre_rating",
+          "post_rating",
+          "rating_change",
+          "performance_rating",
+          "games"
+        ],
+        "type": "object"
+      },
+      "EventsSectionPlacement": {
+        "additionalProperties": false,
+        "description": "One Section the player played, with the crosstable summary line 'Finished <placement> of <player_count>'.",
+        "properties": {
+          "has_crosstable": {
+            "description": "Whether the crosstable for (event_id, name) is cached. False: placement and player_count are null and the detail screen shows no crosstable for it.",
+            "type": "boolean"
+          },
+          "name": {
+            "description": "The Section name, e.g. 'U1600'.",
+            "type": "string"
+          },
+          "placement": {
+            "description": "The player's final ordinal in the Section (1 = Section winner); null when no crosstable or the player's member ID isn't in it.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "player_count": {
+            "description": "Rows in the Section's crosstable; null when no crosstable.",
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "has_crosstable",
+          "placement",
+          "player_count"
+        ],
+        "type": "object"
+      },
+      "EventsSeries": {
+        "additionalProperties": false,
+        "description": "One Series (the PGN Event header) as an expandable group. Header: '<game_count> games, <forfeit_count> forfeits, <win>W <draw>D <loss>L, <score> pts, best streak <longest_win_streak>W' (forfeits shown only when nonzero, the streak only when >= 2).",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "first_date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "forfeit_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "game_count": {
+            "description": "Games played over the board (Forfeits excluded).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "longest_win_streak": {
+            "description": "The longest Streak of wins in this Series, date order, Forfeits excluded.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "rated_events": {
+            "description": "The Rated Events this Series' matched Games belong to, chronological by start date (undated last).",
+            "items": {
+              "$ref": "#/components/schemas/EventsRatedEvent"
+            },
+            "type": "array"
+          },
+          "score": {
+            "description": "Tournament points: wins + 0.5 x draws + Forfeit wins. Halves are possible.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "series": {
+            "type": "string"
+          },
+          "unmatched_games": {
+            "description": "The 'Not part of any Rated Event' block: Games in this Series with no Rated Event (Forfeits and Games USCF hasn't rated yet). Empty hides the block.",
+            "items": {
+              "$ref": "#/components/schemas/EventsGameRow"
+            },
+            "type": "array"
+          },
+          "win": {
+            "description": "Wins over the board (Forfeits excluded); likewise draw and loss.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "series",
+          "first_date",
+          "game_count",
+          "forfeit_count",
+          "win",
+          "draw",
+          "loss",
+          "score",
+          "longest_win_streak",
+          "rated_events",
+          "unmatched_games"
+        ],
+        "type": "object"
+      },
+      "EventsSeriesBar": {
+        "additionalProperties": false,
+        "description": "One bar of the Performance per Series chart; the hover shows each count.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "first_date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "series": {
+            "type": "string"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "series",
+          "first_date",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "type": "object"
+      },
+      "EventsUnplayedEvent": {
+        "additionalProperties": false,
+        "description": "One entered-but-never-played Rated Event. Not tappable (it has no Games, so the event route 404s for it).",
+        "properties": {
+          "end": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "event_id": {
+            "description": "The USCF event ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "player_count": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "start": {
+            "$ref": "#/components/schemas/IsoDate"
+          }
+        },
+        "required": [
+          "event_id",
+          "name",
+          "start",
+          "end",
+          "player_count"
+        ],
+        "type": "object"
+      },
+      "GameBoardPgns": {
+        "additionalProperties": false,
+        "description": "One self-contained PGN per board view (headers Event, Date, Round, White, Black, Result, plus FEN and SetUp for a custom start position, then movetext), exactly as the web builds them for pgn-viewer. A view with no content is null and gets no tab. When the Game has no recorded moves every view is null and the web shows 'No board for this game'.",
+        "properties": {
+          "coach": {
+            "description": "The Coach view: the matched coach Chapter's movetext under this Game's headers, with all his variations and notes. Null when no coach Chapter matched this Game (or the Game has no moves, as on the web).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "engine": {
+            "description": "The Engine view's board: the full retained movetext, carrying the [%eval] comments and the engine variations Lichess embedded. The web builds no PGN for this view (its Engine view is a data panel beside a hidden board), so this follows the issue 110 spec: present iff the Game has moves and engine.state is analyzed, else null.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "game": {
+            "description": "The Game view: the bare played line, comments, evals, NAGs, and variations stripped. Null only when the Game has no recorded moves.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "my_analysis": {
+            "description": "The My Analysis view: the full retained movetext with the player's own variations and comments. Null unless the player annotated the Chapter himself (pgn_stats_core.has_my_analysis).",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "game",
+          "my_analysis",
+          "engine",
+          "coach"
+        ],
+        "type": "object"
+      },
+      "GameColor": {
+        "description": "The player's color in a Game; Unknown when the player's name matches neither side.",
+        "enum": [
+          "White",
+          "Black",
+          "Unknown"
+        ],
+        "type": "string"
+      },
+      "GameCriticalMoment": {
+        "additionalProperties": false,
+        "description": "The critical-moment banner: headline plus detail 'eval +0.30 -> -2.10 \u00b7 engine preferred Bd4'.",
+        "properties": {
+          "best_move": {
+            "description": "The move the engine preferred at that ply (SAN), or null.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "by_player": {
+            "description": "True when the player made the swing (the web's player tone), false when the opponent did.",
+            "type": "boolean"
+          },
+          "eval_after": {
+            "description": "Pawns, White's perspective.",
+            "type": "number"
+          },
+          "eval_before": {
+            "description": "Pawns, White's perspective (the web shows it signed to two decimals).",
+            "type": "number"
+          },
+          "headline": {
+            "description": "The verdict framed for the player, e.g. 'Won after your opponent's blunder on move 16 (Bd4)'.",
+            "type": "string"
+          },
+          "move_number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "ply": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "san": {
+            "type": "string"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Color"
+          }
+        },
+        "required": [
+          "ply",
+          "move_number",
+          "side",
+          "san",
+          "by_player",
+          "headline",
+          "eval_before",
+          "eval_after",
+          "best_move"
+        ],
+        "type": "object"
+      },
+      "GameEngineView": {
+        "additionalProperties": false,
+        "description": "The Engine view panel and the critical-moment banner above the board. When state is awaiting_analysis, ai_summary is \"\", win_probability and judged_moves are [], and critical_moment is null; the web then shows the 'Awaiting analysis' hint teaching the one click on Lichess.",
+        "properties": {
+          "ai_summary": {
+            "description": "The AI Summary paragraph, or \"\" (no ANTHROPIC_API_KEY, un-analysed, or any failure). The web omits the paragraph when empty.",
+            "type": "string"
+          },
+          "critical_moment": {
+            "description": "The Game's single biggest win-probability swing, or null (un-analysed, or no swing found).",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GameCriticalMoment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "judged_moves": {
+            "description": "The player's judged moves (his Error Profile), in move order, each with the engine's recommended correction.",
+            "items": {
+              "$ref": "#/components/schemas/GameJudgedMove"
+            },
+            "type": "array"
+          },
+          "state": {
+            "description": "analyzed when the Study export carried computer analysis for this Chapter; awaiting_analysis otherwise.",
+            "enum": [
+              "analyzed",
+              "awaiting_analysis"
+            ],
+            "type": "string"
+          },
+          "win_probability": {
+            "description": "The evaluation chart: one point per played move, in ply order. The web plots x = ply / 2 (Move) against White's win % with a level line at 50.",
+            "items": {
+              "$ref": "#/components/schemas/GameWinProbabilityPoint"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "state",
+          "ai_summary",
+          "win_probability",
+          "judged_moves",
+          "critical_moment"
+        ],
+        "type": "object"
+      },
+      "GameId": {
+        "description": "Opaque Game ID. Today the last path segment of the ChapterURL, matching the web's /game/<id>; clients must not parse it.",
+        "minLength": 1,
+        "type": "string"
+      },
+      "GameJudgedMove": {
+        "additionalProperties": false,
+        "description": "One judged move: its Severity and the correction. The web labels it '12. Nf3' for a White move, '12\u2026 Nf6' for a Black one (by ply parity).",
+        "properties": {
+          "best_move": {
+            "description": "The engine's recommended move (SAN), or null when it named none (the web then shows only the severity).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "move_number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "ply": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "refutation": {
+            "description": "The refutation line after best_move, in SAN, as the engine gave it (the MoveEval refutation_line without its first move). [] when none or when best_move is null.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "san": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "inaccuracy",
+              "mistake",
+              "blunder"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "ply",
+          "move_number",
+          "san",
+          "severity",
+          "best_move",
+          "refutation"
+        ],
+        "type": "object"
+      },
+      "GameMetadata": {
+        "additionalProperties": false,
+        "description": "The Game card's rows as the Chapter headers carry them. The web hides a row whose value is empty or '?'; here those are \"\" or null.",
+        "properties": {
+          "color": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "eco": {
+            "type": "string"
+          },
+          "moves": {
+            "description": "Full moves played.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "opening": {
+            "type": "string"
+          },
+          "opponent_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The typed opponent rating from the Chapter header."
+          },
+          "player_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The typed rating from the Chapter header (not lensed)."
+          },
+          "result": {
+            "description": "The PGN Result, e.g. 1-0.",
+            "type": "string"
+          },
+          "round": {
+            "description": "The Round header exactly as typed (e.g. '3' or '3.1'); \"\" when unset or '?'.",
+            "type": "string"
+          },
+          "series": {
+            "description": "The Series (PGN Event header), labelled 'Event' on the web; \"\" when unset.",
+            "type": "string"
+          },
+          "study_name": {
+            "description": "The Study holding this Chapter.",
+            "type": "string"
+          },
+          "termination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "series",
+          "round",
+          "color",
+          "result",
+          "termination",
+          "player_rating",
+          "opponent_rating",
+          "eco",
+          "opening",
+          "moves",
+          "study_name"
+        ],
+        "type": "object"
+      },
+      "GameOutcome": {
+        "description": "The player's outcome; Unknown for an unfinished or unparseable result.",
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss",
+          "Unknown"
+        ],
+        "type": "string"
+      },
+      "GamePayload": {
+        "additionalProperties": false,
+        "description": "Everything the Game detail page shows for one Game. Enrichment is always present: an un-analysed Game has engine.state awaiting_analysis, an unmatched Game has uscf_record null, a Game without Lessons has lessons []. Source: pages/game_detail.py layout -> _find_game (data.get_df), _board_section/_game_pgn (pgn_stats_core.mainline_movetext, pgn_stats_core.has_my_analysis, data.get_coach_chapter), _engine_section/_eval_chart/_judgment_row (data.get_game_analysis, data.get_game_summary, engine_analysis_core.win_pct_from_cp), _critical_moment_section, _lessons_card (components.tag_chips), _metadata_card, _uscf_facts_card (components.USCF_RATING_SYSTEM_LABELS, components.uscf_member_url), _forfeit_tag.",
+        "properties": {
+          "board": {
+            "$ref": "#/components/schemas/GameBoardPgns"
+          },
+          "engine": {
+            "$ref": "#/components/schemas/GameEngineView"
+          },
+          "forfeit": {
+            "description": "A Forfeit: the Chapter exists but no game was played (opponent no-show), so USCF never rated it. The web shows a prominent Forfeit tag.",
+            "type": "boolean"
+          },
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "lessons": {
+            "description": "The Game's Lessons (text after 'Lesson:'), in Chapter order. [] when none; the web then teaches the 'Lesson:' convention.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/GameMetadata"
+          },
+          "player_color": {
+            "$ref": "#/components/schemas/Color",
+            "description": "The color the player had: orient the board with it at the bottom (the web's data-orientation)."
+          },
+          "tags": {
+            "description": "The Game's Tags with their source (mine or engine), in the order the web renders the chips. A Tag missing from the Game's source map is mine.",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "type": "array"
+          },
+          "uscf_record": {
+            "description": "The matched USCF Game Record, or null when the Game is unmatched (no USCF facts are ever invented).",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GameUscfRecord"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "game",
+          "player_color",
+          "forfeit",
+          "board",
+          "engine",
+          "metadata",
+          "lessons",
+          "tags",
+          "uscf_record"
+        ],
+        "type": "object"
+      },
+      "GameSummary": {
+        "additionalProperties": false,
+        "description": "One Game as a list row, everywhere a Game is listed (Games, Lessons, Scouting Report, crosstables, milestones). Tap opens GET /api/v1/games/{game_id}.",
+        "properties": {
+          "chapter_url": {
+            "description": "The Chapter on Lichess.",
+            "type": "string"
+          },
+          "color": {
+            "$ref": "#/components/schemas/GameColor"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "eco": {
+            "type": "string"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "has_lesson": {
+            "type": "boolean"
+          },
+          "moves": {
+            "description": "Full moves played.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "opening": {
+            "type": "string"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "opponent_rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/GameOutcome"
+          },
+          "player_rating": {
+            "$ref": "#/components/schemas/Rating"
+          },
+          "result": {
+            "description": "The PGN Result, e.g. 1-0.",
+            "type": "string"
+          },
+          "round": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "series": {
+            "description": "The Series (PGN Event header); empty when unset.",
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "type": "array"
+          },
+          "termination": {
+            "type": "string"
+          },
+          "uscf_status": {
+            "$ref": "#/components/schemas/UscfMatchStatus"
+          }
+        },
+        "required": [
+          "game_id",
+          "chapter_url",
+          "date",
+          "series",
+          "round",
+          "opponent",
+          "opponent_rating",
+          "color",
+          "player_rating",
+          "outcome",
+          "result",
+          "termination",
+          "moves",
+          "eco",
+          "opening",
+          "has_lesson",
+          "tags",
+          "uscf_status"
+        ],
+        "type": "object"
+      },
+      "GameUscfRecord": {
+        "additionalProperties": false,
+        "description": "The USCF record card for a matched Game: what USCF officially recorded. The page keeps displaying the Lichess version of every fact; color_conflict badges a disagreement and points at Reconciliation (web-only).",
+        "properties": {
+          "color_conflict": {
+            "description": "USCF's color disagrees with the Chapter's.",
+            "type": "boolean"
+          },
+          "matched_by": {
+            "description": "How the match was made: by opponent member ID, or by the strictly-unambiguous name fallback (worth an eyeball).",
+            "enum": [
+              "id",
+              "name"
+            ],
+            "type": "string"
+          },
+          "opponent_id": {
+            "description": "The opponent's USCF member ID.",
+            "type": "string"
+          },
+          "opponent_name": {
+            "description": "The opponent as USCF registers them.",
+            "type": "string"
+          },
+          "opponent_url": {
+            "description": "The opponent's page on ratings.uschess.org; \"\" when no ID.",
+            "type": "string"
+          },
+          "rated_event_id": {
+            "description": "The Rated Event's USCF event ID (the key for the event route).",
+            "type": "string"
+          },
+          "rated_event_name": {
+            "type": "string"
+          },
+          "rating_system": {
+            "description": "USCF rating-system code: R, D, Q, B, OR, OQ, OB.",
+            "type": "string"
+          },
+          "rating_system_label": {
+            "description": "Its display name, e.g. 'Dual (Regular + Quick)'; the code itself when unknown.",
+            "type": "string"
+          },
+          "section": {
+            "description": "The Section USCF rated, e.g. U1600.",
+            "type": "string"
+          },
+          "uscf_color": {
+            "description": "The player's color according to USCF, or null when the record carries none.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Color"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "rated_event_id",
+          "rated_event_name",
+          "section",
+          "rating_system",
+          "rating_system_label",
+          "matched_by",
+          "opponent_name",
+          "opponent_id",
+          "opponent_url",
+          "uscf_color",
+          "color_conflict"
+        ],
+        "type": "object"
+      },
+      "GameWinProbabilityPoint": {
+        "additionalProperties": false,
+        "description": "One played move on the eval chart. Tap jumps the board to this ply.",
+        "properties": {
+          "move_number": {
+            "description": "Full move number, (ply + 1) // 2.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "ply": {
+            "description": "1-based half-move number.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "san": {
+            "type": "string"
+          },
+          "side": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "white_win_pct": {
+            "description": "White's win probability after this move, 0..100 (win_pct_from_cp of eval_after in centipawns). The web hovers it as a whole number.",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "ply",
+          "move_number",
+          "side",
+          "san",
+          "white_win_pct"
+        ],
+        "type": "object"
+      },
+      "GamesPayload": {
+        "additionalProperties": false,
+        "description": "Source: pages/games.py update_games_table -> payloads.common.game_summaries.",
+        "properties": {
+          "games": {
+            "description": "In archive order (the filtered DataFrame's order).",
+            "items": {
+              "$ref": "#/components/schemas/GameSummary"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "games_count",
+          "games"
+        ],
+        "type": "object"
+      },
+      "IsoDate": {
+        "description": "YYYY-MM-DD, or null when undated.",
+        "format": "date",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "Lens": {
+        "default": "official",
+        "enum": [
+          "official",
+          "live"
+        ],
+        "type": "string"
+      },
+      "LessonsCoachNote": {
+        "additionalProperties": false,
+        "description": "One Coach's Note: the coach's prose, where in the Game it was written, and the Game.",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "move_number": {
+            "description": "The 1-based full move the comment sits on; 0 for a chapter-level comment (the web shows 'before the game').",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "move_number",
+          "game"
+        ],
+        "type": "object"
+      },
+      "LessonsLesson": {
+        "additionalProperties": false,
+        "description": "One Lesson card. A Game with two Lessons gives two cards. The card's Tags are its Game's Tags (game.tags, with sources so engine-emitted Tags render with the muted marker).",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "text": {
+            "description": "The Lesson text, 'Lesson:' prefix stripped.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "game"
+        ],
+        "type": "object"
+      },
+      "LessonsOpponent": {
+        "additionalProperties": false,
+        "properties": {
+          "opponent": {
+            "type": "string"
+          },
+          "opponent_id": {
+            "description": "Opaque opponent ID (schema OpponentId); pass it as the `opponent` param.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "opponent_id",
+          "opponent"
+        ],
+        "type": "object"
+      },
+      "LessonsPayload": {
+        "additionalProperties": false,
+        "description": "The Lessons screen. An empty lessons list shows the web's convention explainer (write a Chapter comment starting with 'Lesson:'; add #hashtags; the canonical taxonomy chips). Source: pages/lessons.py update_lessons_page -> pgn_stats_core.lessons_table + _tag_strip -> pgn_stats_core.tag_counts (CANONICAL_TAGS); update_weakness_callouts -> pgn_stats_core.recurring_weaknesses; layout + update_lesson_opponent_options -> components.opponent_options(with_lessons_only=True); _review_overlay -> pgn_stats_core.review_queue(data.get_df()); _coach_notes_feed -> data.get_coach_notes.",
+        "properties": {
+          "coach_notes": {
+            "description": "The Coach's Notes feed: the coach's prose on Games a Coach Study chapter matched, newest Game first, move order within a Game. Unfiltered. Empty when there is no coach content; the web then omits the feed entirely. Render it visually distinct from the user's Lessons: these are never the user's own takeaways.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsCoachNote"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "description": "Games after the global filters (before tags/opponent narrow the list).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "lessons": {
+            "description": "Every Lesson after the global filters, tags, and opponent, newest first (undated last). The web's count label is this array's length.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsLesson"
+            },
+            "type": "array"
+          },
+          "lessons_opponents": {
+            "description": "The opponent picker: every named opponent the player has at least one Lesson against, across the whole archive, sorted by name.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsOpponent"
+            },
+            "type": "array"
+          },
+          "recurring_weaknesses": {
+            "description": "Tags that keep showing up in recent losses, most severe first. Empty below threshold (the web then renders nothing: silence over noise).",
+            "items": {
+              "$ref": "#/components/schemas/LessonsWeakness"
+            },
+            "type": "array"
+          },
+          "review": {
+            "description": "The pre-game review queue when review=true, else null.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LessonsReview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tag_counts": {
+            "description": "Every Tag on the filtered Games (not narrowed by tags/opponent): canonical taxonomy Tags first in taxonomy order (only those with a count), then freeform Tags by descending count, ties by name. Each chip toggles that Tag in the `tags` param. Empty shows 'No Tags in your archive yet'.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsTagCount"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "games_count",
+          "lessons",
+          "tag_counts",
+          "recurring_weaknesses",
+          "lessons_opponents",
+          "review",
+          "coach_notes"
+        ],
+        "type": "object"
+      },
+      "LessonsReview": {
+        "additionalProperties": false,
+        "description": "Pre-game review mode: a card-by-card walk through the most relevant Lessons, built from the whole archive (filters ignored). The client steps through cards and ends on the web's send-off ('That's everything. Now go play.'). Empty cards shows 'Nothing to review yet'.",
+        "properties": {
+          "cards": {
+            "description": "Most relevant first: recurring-weakness Lessons, then Lessons against the primed opponent, then everything else; newest first within each group.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsReviewCard"
+            },
+            "type": "array"
+          },
+          "opponent": {
+            "description": "That opponent's name, for the 'vs <opponent>' subtitle; null alongside opponent_id.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "opponent_id": {
+            "description": "The opponent the queue is primed with (schema OpponentId), or null when none was given or the ID resolved to no opponent.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "opponent_id",
+          "opponent",
+          "cards"
+        ],
+        "type": "object"
+      },
+      "LessonsReviewCard": {
+        "additionalProperties": false,
+        "description": "One review card: why it is in the queue, the Lesson, and its Game (opponent, outcome, date, and Tags with sources all come from game).",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "reason": {
+            "description": "The reason line, verbatim: 'Recurring weakness: #tactics #endgame', 'You're facing <opponent>', or 'Recent lesson'.",
+            "type": "string"
+          },
+          "reason_kind": {
+            "description": "The queue group (review_queue priority 0, 1, 2). The web highlights recurring_weakness.",
+            "enum": [
+              "recurring_weakness",
+              "facing_opponent",
+              "recent"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "description": "The Lesson text, 'Lesson:' prefix stripped.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason_kind",
+          "reason",
+          "text",
+          "game"
+        ],
+        "type": "object"
+      },
+      "LessonsTagCount": {
+        "additionalProperties": false,
+        "description": "One Tag chip with its count. Not a Tag object: one Tag name aggregates both sources here, so the split is carried as counts. Each Game gives a Tag exactly one source (hand-written wins when Daniel also typed a Tag the engine emits), so count == mine_count + engine_count.",
+        "properties": {
+          "canonical": {
+            "description": "True for the seven taxonomy Tags; false for a freeform Tag (the web styles those differently so fragmentation stays visible).",
+            "type": "boolean"
+          },
+          "count": {
+            "description": "Filtered Games carrying this Tag.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "engine_count": {
+            "description": "Of those, Games where the Tag is engine-emitted (source engine). Always 0 for calculation, time-trouble, and freeform Tags.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "mine_count": {
+            "description": "Of those, Games where the Tag is hand-written (source mine).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "name": {
+            "description": "The Tag without its leading #.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "canonical",
+          "count",
+          "mine_count",
+          "engine_count"
+        ],
+        "type": "object"
+      },
+      "LessonsWeakness": {
+        "additionalProperties": false,
+        "description": "One recurring-weakness callout: a Tag on at least 3 of the last 10 Losses that also shows up in losses more than in wins and draws over the same span. Forfeits never count.",
+        "properties": {
+          "games": {
+            "description": "The Losses behind the callout, in date order (any without a ChapterURL left out); the web links each as 'Game N'.",
+            "items": {
+              "$ref": "#/components/schemas/LessonsWeaknessGame"
+            },
+            "type": "array"
+          },
+          "loss_count": {
+            "description": "How many of the windowed Losses carry the Tag.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "severity": {
+            "description": "Ranking score 0..1 (share of windowed Losses times loss association), rounded to 3 decimals. The web uses it only to order callouts.",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "stat": {
+            "description": "The headline, verbatim, e.g. '#time-trouble appears in 6 of your last 8 losses'.",
+            "type": "string"
+          },
+          "tag": {
+            "description": "The Tag without its leading #.",
+            "type": "string"
+          },
+          "window": {
+            "description": "The months the window spans, e.g. 'Mar \u2013 Jun 2024' or 'Jun 2024'; empty when those Games are undated.",
+            "type": "string"
+          },
+          "window_losses": {
+            "description": "How many Losses the window holds (at most 10).",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag",
+          "loss_count",
+          "window_losses",
+          "stat",
+          "window",
+          "severity",
+          "games"
+        ],
+        "type": "object"
+      },
+      "LessonsWeaknessGame": {
+        "additionalProperties": false,
+        "properties": {
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          }
+        },
+        "required": [
+          "game_id"
+        ],
+        "type": "object"
+      },
+      "MetaAchievement": {
+        "additionalProperties": false,
+        "properties": {
+          "achievement_id": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "event_id": {
+            "description": "The Rated Event it was earned at; empty if unknown.",
+            "type": "string"
+          },
+          "event_name": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "norm",
+              "award"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "achievement_id",
+          "kind",
+          "title",
+          "detail",
+          "date",
+          "event_id",
+          "event_name"
+        ],
+        "type": "object"
+      },
+      "MetaFilterOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "max_date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "max_moves": {
+            "type": "integer"
+          },
+          "min_date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "min_moves": {
+            "type": "integer"
+          },
+          "series": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "terminations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "terminations",
+          "series",
+          "min_date",
+          "max_date",
+          "min_moves",
+          "max_moves"
+        ],
+        "type": "object"
+      },
+      "MetaFilterState": {
+        "additionalProperties": false,
+        "description": "A complete filter selection, named like the query parameters.",
+        "properties": {
+          "colors": {
+            "items": {
+              "$ref": "#/components/schemas/Color"
+            },
+            "type": "array"
+          },
+          "end": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "max_moves": {
+            "type": "integer"
+          },
+          "min_moves": {
+            "type": "integer"
+          },
+          "outcomes": {
+            "items": {
+              "$ref": "#/components/schemas/Outcome"
+            },
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "start": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "terminations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "colors",
+          "outcomes",
+          "terminations",
+          "series",
+          "start",
+          "end",
+          "min_moves",
+          "max_moves"
+        ],
+        "type": "object"
+      },
+      "MetaFreshness": {
+        "additionalProperties": false,
+        "properties": {
+          "lichess": {
+            "additionalProperties": false,
+            "properties": {
+              "cached_at": {
+                "$ref": "#/components/schemas/Timestamp"
+              },
+              "source": {
+                "description": "cache when Lichess was unreachable and the last Sync's PGN cache is shown.",
+                "enum": [
+                  "lichess",
+                  "cache"
+                ],
+                "type": "string"
+              },
+              "synced_at": {
+                "$ref": "#/components/schemas/Timestamp"
+              }
+            },
+            "required": [
+              "synced_at",
+              "source",
+              "cached_at"
+            ],
+            "type": "object"
+          },
+          "uscf": {
+            "additionalProperties": false,
+            "properties": {
+              "available": {
+                "description": "USCF data is present (live or cached).",
+                "type": "boolean"
+              },
+              "enabled": {
+                "description": "A USCF member ID is configured. When false, show no USCF freshness at all.",
+                "type": "boolean"
+              },
+              "synced_at": {
+                "$ref": "#/components/schemas/Timestamp"
+              },
+              "unavailable_since": {
+                "description": "The web's 'USCF unavailable since <time>' warning, verbatim, or null.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "enabled",
+              "available",
+              "synced_at",
+              "unavailable_since"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "lichess",
+          "uscf"
+        ],
+        "type": "object"
+      },
+      "MetaPayload": {
+        "additionalProperties": false,
+        "description": "Source: data accessors (get_player, synced_at, source, cached_at, uscf_*, get_new_achievements) -> payloads.meta.build_meta; options and presets from payloads.meta.filter_bounds / preset_filters, the same functions the web filter drawer uses.",
+        "properties": {
+          "demo_mode": {
+            "description": "Read-only demo deployment: Sync is off for everyone.",
+            "type": "boolean"
+          },
+          "filter_options": {
+            "$ref": "#/components/schemas/MetaFilterOptions"
+          },
+          "freshness": {
+            "$ref": "#/components/schemas/MetaFreshness"
+          },
+          "games_total": {
+            "description": "Every Game, before filters.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "new_achievements": {
+            "description": "Official USCF achievements first seen by the last Sync.",
+            "items": {
+              "$ref": "#/components/schemas/MetaAchievement"
+            },
+            "type": "array"
+          },
+          "player": {
+            "description": "The player's name as detected or configured.",
+            "type": "string"
+          },
+          "presets": {
+            "items": {
+              "$ref": "#/components/schemas/MetaPreset"
+            },
+            "type": "array"
+          },
+          "session": {
+            "$ref": "#/components/schemas/SessionIdentity"
+          }
+        },
+        "required": [
+          "player",
+          "session",
+          "demo_mode",
+          "games_total",
+          "filter_options",
+          "presets",
+          "freshness",
+          "new_achievements"
+        ],
+        "type": "object"
+      },
+      "MetaPreset": {
+        "additionalProperties": false,
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/MetaFilterState"
+          },
+          "id": {
+            "enum": [
+              "all",
+              "last_20",
+              "this_year",
+              "white",
+              "black",
+              "wins"
+            ],
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "filters"
+        ],
+        "type": "object"
+      },
+      "OpeningsEcoFamily": {
+        "additionalProperties": false,
+        "description": "One bar of the ECO family chart (stacked Win/Draw/Loss counts; the hover shows each count).",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "eco_family": {
+            "description": "The ECO letter, A..E.",
+            "type": "string"
+          },
+          "family_name": {
+            "description": "The axis label, e.g. 'B: Semi-Open'; an unknown letter reads '<letter>: Other'.",
+            "type": "string"
+          },
+          "game_count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "Wins / games, 0..100, one decimal (draws count 0).",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "eco_family",
+          "family_name",
+          "game_count",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct"
+        ],
+        "type": "object"
+      },
+      "OpeningsGameRef": {
+        "additionalProperties": false,
+        "description": "A compact link to one Game, rendered '<outcome> vs <opponent>'. Tap opens GET /api/v1/games/{game_id}.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          }
+        },
+        "required": [
+          "game_id",
+          "opponent",
+          "outcome",
+          "date"
+        ],
+        "type": "object"
+      },
+      "OpeningsOpening": {
+        "additionalProperties": false,
+        "description": "One row of the Top openings table.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "eco": {
+            "description": "The ECO code, e.g. B22.",
+            "type": "string"
+          },
+          "game_count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "opening": {
+            "description": "The PGN Opening header; empty when unset.",
+            "type": "string"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "Wins / games, 0..100, one decimal (the web's Win % column).",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "eco",
+          "opening",
+          "game_count",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct"
+        ],
+        "type": "object"
+      },
+      "OpeningsPayload": {
+        "additionalProperties": false,
+        "description": "Everything the Openings page shows. An empty repertoire tree for a color (game_count 0) is that color's empty state; empty eco_families / top_openings arrays are the chart and table empty states. Source: pages/openings.py update_repertoire -> pgn_stats_core.repertoire_tree (called once per color); update_opening_family and update_opening_table -> pgn_stats_core.opening_summary.",
+        "properties": {
+          "eco_families": {
+            "description": "The Win rate by ECO family stacked bar chart, most-played family first. Games with no ECO are left out.",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsEcoFamily"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "description": "Games after filters (Forfeits included; the sections below drop them).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "repertoire": {
+            "$ref": "#/components/schemas/OpeningsRepertoire"
+          },
+          "top_openings": {
+            "description": "The Top openings table: one row per (ECO, Opening) pair, most-played first, the first 50 rows (opening_summary(...)[1].head(50)).",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsOpening"
+            },
+            "maxItems": 50,
+            "type": "array"
+          }
+        },
+        "required": [
+          "games_count",
+          "repertoire",
+          "eco_families",
+          "top_openings"
+        ],
+        "type": "object"
+      },
+      "OpeningsRepertoire": {
+        "additionalProperties": false,
+        "description": "One repertoire tree per color.",
+        "properties": {
+          "black": {
+            "$ref": "#/components/schemas/OpeningsRepertoireTree"
+          },
+          "white": {
+            "$ref": "#/components/schemas/OpeningsRepertoireTree"
+          }
+        },
+        "required": [
+          "white",
+          "black"
+        ],
+        "type": "object"
+      },
+      "OpeningsRepertoireNode": {
+        "additionalProperties": false,
+        "description": "One move of the repertoire tree. A node with game_count 1 is a leaf the web renders as a single row linking straight to games[0]; it never has children. A node with several Games expands into its child moves plus the Games that ended here. The score marker (above / at / below baseline) is score_pct compared with the tree's score_pct; the client derives it.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "ended_here": {
+            "description": "The subset of games whose move list stops at exactly this position (the web's 'ended here' rows). Games that kept going are reached through moves.",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsGameRef"
+            },
+            "type": "array"
+          },
+          "game_count": {
+            "description": "Games that went this way.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "games": {
+            "description": "Every Game that reached this position: the drill-down list for the branch.",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsGameRef"
+            },
+            "type": "array"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "moves": {
+            "description": "The next moves, most-played first. Always empty when game_count is 1.",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsRepertoireNode"
+            },
+            "type": "array"
+          },
+          "ply": {
+            "description": "1-based half-move number. The web label is '<(ply+1)//2>. <san>' for odd plies and '<(ply+1)//2>... <san>' for even ones.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "san": {
+            "description": "The move in SAN, e.g. Nf6.",
+            "type": "string"
+          },
+          "score_pct": {
+            "description": "This branch's chess score, 0..100, one decimal.",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          },
+          "underperforming": {
+            "description": "The leaking-points flag: true when game_count >= min_games and score_pct is below the tree's baseline score_pct.",
+            "type": "boolean"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "san",
+          "ply",
+          "game_count",
+          "win",
+          "draw",
+          "loss",
+          "score_pct",
+          "underperforming",
+          "games",
+          "ended_here",
+          "moves"
+        ],
+        "type": "object"
+      },
+      "OpeningsRepertoireTree": {
+        "additionalProperties": false,
+        "description": "Every Game as one color (Forfeits and move-less Games excluded), arranged move by move. The header line reads '<game_count> games, <score_pct>% overall score. Branches scoring below that across <min_games>+ games are flagged.'",
+        "properties": {
+          "color": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "game_count": {
+            "description": "Games in this tree. 0 is the 'No games as <color> in this filter' empty state.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min_games": {
+            "description": "How many Games a branch needs before it can be flagged (3 today).",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "moves": {
+            "description": "First-move nodes, most-played first, ties alphabetical by SAN.",
+            "items": {
+              "$ref": "#/components/schemas/OpeningsRepertoireNode"
+            },
+            "type": "array"
+          },
+          "score_pct": {
+            "description": "The baseline every branch is judged against: the chess score as this color, 0..100 (wins 1, draws 0.5), one decimal. 0 when game_count is 0.",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": [
+          "color",
+          "game_count",
+          "score_pct",
+          "min_games",
+          "moves"
+        ],
+        "type": "object"
+      },
+      "OpponentId": {
+        "description": "Opaque, URL-safe opponent ID; clients must not parse it. Derived server-side from the whole (unfiltered) archive, so filters never change it. Form 1, 'uscf-<USCF member ID>': used when the opponent's matched Games carry exactly one USCF member ID and no other Opponent name carries that same ID (strictly unambiguous, as in ADR 0007). It survives a Chapter-header rename of the opponent. Form 2, 'name-<base64url without padding of the UTF-8 Opponent name, trimmed>': every other opponent. Reversible, so it needs no lookup table and cannot collide. The server must keep resolving a name- ID after the opponent later gains a USCF match (decode it and look up the name), so a client's saved ID never breaks; responses always carry the current canonical ID. Games with a blank Opponent name have no opponent ID and are never listed.",
+        "minLength": 1,
+        "pattern": "^(uscf-[0-9]+|name-[A-Za-z0-9_-]+)$",
+        "type": "string"
+      },
+      "OpponentLesson": {
+        "additionalProperties": false,
+        "description": "One Lesson card. A Game with two Lessons gives two cards. The card's Tags are its Game's Tags (game.tags, with sources).",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "text": {
+            "description": "The Lesson text, 'Lesson:' prefix stripped.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "game"
+        ],
+        "type": "object"
+      },
+      "OpponentOpening": {
+        "additionalProperties": false,
+        "description": "One opening they played against the player. Games without an ECO code are left out.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "eco": {
+            "type": "string"
+          },
+          "games": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "opening": {
+            "description": "Opening name; empty when unknown (the web then shows the ECO code in its place).",
+            "type": "string"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "eco",
+          "opening",
+          "games",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "type": "object"
+      },
+      "OpponentPayload": {
+        "additionalProperties": false,
+        "description": "One Scouting Report. Source: pages/opponents.py update_scouting_report -> pgn_stats_core.scouting_report (head_to_head, opening_summary, termination_counts, lessons_table); uscf_identity from pages/opponents.py _uscf_identity -> data.get_opponent_profiles() (the opponent's UscfProfile.rating('R')).",
+        "properties": {
+          "games": {
+            "description": "Every Game against them, oldest first (undated last), Forfeits excluded. Tapping a row opens the Game.",
+            "items": {
+              "$ref": "#/components/schemas/GameSummary"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "description": "Games against this opponent after filters, Forfeits included.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "lessons": {
+            "description": "Every Lesson written after facing them, newest first. Empty shows 'No Lessons written from these games yet.' When non-empty the web offers 'Review before facing <opponent>', which the client maps to GET /api/v1/lessons?review=true&opponent=<opponent_id>.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentLesson"
+            },
+            "type": "array"
+          },
+          "openings_as_black": {
+            "description": "What they played when the player had Black, most-played first. Empty shows 'No opening data'.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentOpening"
+            },
+            "type": "array"
+          },
+          "openings_as_white": {
+            "description": "What they played when the player had White, most-played first. Empty shows 'No opening data'.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentOpening"
+            },
+            "type": "array"
+          },
+          "opponent": {
+            "description": "The Opponent name as the Chapters spell it.",
+            "type": "string"
+          },
+          "opponent_id": {
+            "$ref": "#/components/schemas/OpponentId"
+          },
+          "rating_gap": {
+            "description": "their_rating minus the player's rating in his most recent dated, rated Game within the filters. Positive means they are rated above him (the harder Game; the web colors it as a loss). Null when either rating is unknown.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "record": {
+            "$ref": "#/components/schemas/OpponentRecord"
+          },
+          "terminations": {
+            "description": "How the Games against them ended, most frequent first (Forfeits included).",
+            "items": {
+              "$ref": "#/components/schemas/OpponentTermination"
+            },
+            "type": "array"
+          },
+          "their_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their rating in the most recent dated, rated Game against them (lens-aware: the USCF crosstable value under Live)."
+          },
+          "uscf_identity": {
+            "description": "Null when none of the filtered Games against them matched a USCF Game Record (the web then renders no identity block, ADR 0003).",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OpponentUscfIdentity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "games_count",
+          "opponent_id",
+          "opponent",
+          "uscf_identity",
+          "record",
+          "their_rating",
+          "rating_gap",
+          "games",
+          "openings_as_white",
+          "openings_as_black",
+          "terminations",
+          "lessons"
+        ],
+        "type": "object"
+      },
+      "OpponentRecord": {
+        "additionalProperties": false,
+        "description": "The player's head-to-head score against them, Forfeits excluded.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "score": {
+            "description": "The display score exactly as the web shows it, e.g. '2.5/4' ('0/0' when empty).",
+            "type": "string"
+          },
+          "score_points": {
+            "description": "Wins plus half the draws.",
+            "minimum": 0,
+            "type": "number"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "score_points",
+          "score"
+        ],
+        "type": "object"
+      },
+      "OpponentTermination": {
+        "additionalProperties": false,
+        "properties": {
+          "games": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "termination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "termination",
+          "games"
+        ],
+        "type": "object"
+      },
+      "OpponentUscfIdentity": {
+        "additionalProperties": false,
+        "description": "The opponent's official USCF identity and their rating then vs now.",
+        "properties": {
+          "current_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their current Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular."
+          },
+          "member_id": {
+            "description": "USCF member ID, taken from the first matched Game in the filtered set.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Their name as USCF records it, falling back to the Opponent name when USCF has none.",
+            "type": "string"
+          },
+          "profile_url": {
+            "description": "Their page on ratings.uschess.org.",
+            "type": "string"
+          },
+          "rating_change": {
+            "description": "current_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "rating_when_last_played": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Same value as OpponentPayload.their_rating."
+          }
+        },
+        "required": [
+          "member_id",
+          "name",
+          "profile_url",
+          "rating_when_last_played",
+          "current_rating",
+          "rating_change"
+        ],
+        "type": "object"
+      },
+      "OpponentsListItem": {
+        "additionalProperties": false,
+        "properties": {
+          "opponent": {
+            "description": "The Opponent name as the Chapters spell it.",
+            "type": "string"
+          },
+          "opponent_id": {
+            "description": "Opaque opponent ID (schema OpponentId, defined with GET /api/v1/opponents/{opponent_id}); pass it to that route.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "opponent_id",
+          "opponent"
+        ],
+        "type": "object"
+      },
+      "OpponentsOutcomePoint": {
+        "additionalProperties": false,
+        "description": "One scatter point. x is opponent_rating, y is outcome_value (ticks Loss/Draw/Win), color is outcome; the hover reads the rating, the opponent, and the date.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "opponent_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Their rating in that Game (lens-aware). Never null here: unrated Games are left out."
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "outcome_value": {
+            "description": "1 for a Win, 0.5 for a Draw, 0 for a Loss.",
+            "enum": [
+              0,
+              0.5,
+              1
+            ],
+            "type": "number"
+          }
+        },
+        "required": [
+          "opponent_rating",
+          "outcome",
+          "outcome_value",
+          "opponent",
+          "date"
+        ],
+        "type": "object"
+      },
+      "OpponentsPayload": {
+        "additionalProperties": false,
+        "description": "The Opponents screen. Source: pages/opponents.py layout + update_scout_options -> components.opponent_options (the picker, unfiltered); update_opponents -> pgn_stats_core.opponent_summary; update_bucket -> pgn_stats_core.opponent_rating_bucket_summary; update_scatter -> pgn_stats_core.outcome_vs_rating_data.",
+        "properties": {
+          "games_count": {
+            "description": "Games after filters.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "opponents": {
+            "description": "The Scouting Report picker: every named opponent in the whole archive, sorted by name. Deliberately unfiltered, like the web dropdown, so any opponent is searchable; the report itself honors the filters. Searching is client-side.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsListItem"
+            },
+            "type": "array"
+          },
+          "outcome_vs_rating": {
+            "description": "Scatter of outcome against opponent rating, one point per rated Game. Empty shows 'Need rated games'.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsOutcomePoint"
+            },
+            "type": "array"
+          },
+          "rating_buckets": {
+            "description": "W/D/L by opponent rating minus the player's rating, in bucket order (weakest opponents first). Only buckets holding a Game appear. Games where either rating is unknown are left out. Empty shows 'Need rated games'.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsRatingBucket"
+            },
+            "type": "array"
+          },
+          "records": {
+            "description": "W/D/L against opponents played more than once, most Games first (ties: most wins first), capped at the top 25 like the web chart. Empty shows 'No repeat opponents in current filter'.",
+            "items": {
+              "$ref": "#/components/schemas/OpponentsRecord"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "games_count",
+          "opponents",
+          "records",
+          "rating_buckets",
+          "outcome_vs_rating"
+        ],
+        "type": "object"
+      },
+      "OpponentsRatingBucket": {
+        "additionalProperties": false,
+        "description": "One stacked bar: W/D/L against opponents in one rating-difference bucket (opponent rating minus the player's, lens-aware). Positive means a stronger opponent.",
+        "properties": {
+          "bucket": {
+            "description": "The web's bucket label, verbatim (with the Unicode minus sign U+2212). Lower bounds are inclusive.",
+            "enum": [
+              "< \u2212200",
+              "\u2212200 to \u2212101",
+              "\u2212100 to \u22121",
+              "0 to +99",
+              "+100 to +199",
+              "\u2265 +200"
+            ],
+            "type": "string"
+          },
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "bucket",
+          "games",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "type": "object"
+      },
+      "OpponentsRecord": {
+        "additionalProperties": false,
+        "description": "One stacked horizontal bar: the player's W/D/L against one repeat opponent. The bar hover reads the count per outcome.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "minimum": 2,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "opponent_id": {
+            "description": "Opaque opponent ID (schema OpponentId), so a bar can open the Scouting Report. Null for Games with a blank Opponent name, which have no ID.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "opponent_id",
+          "opponent",
+          "games",
+          "win",
+          "draw",
+          "loss"
+        ],
+        "type": "object"
+      },
+      "Outcome": {
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss"
+        ],
+        "type": "string"
+      },
+      "OverviewFormIndicator": {
+        "additionalProperties": false,
+        "description": "The fire/cold indicator the web shows in the header.",
+        "properties": {
+          "blazing": {
+            "description": "Fire at a win Streak of 5 or more (the web adds an extra glow; the flame grows with count, capped).",
+            "type": "boolean"
+          },
+          "count": {
+            "description": "The Streak length the indicator shows; 0 when kind is none.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "kind": {
+            "description": "fire: current win Streak of 2 or more. cold: current loss Streak of 3 or more (shown only when there is no fire). none otherwise.",
+            "enum": [
+              "none",
+              "fire",
+              "cold"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "count",
+          "blazing"
+        ],
+        "type": "object"
+      },
+      "OverviewFormOutcome": {
+        "description": "A Game's outcome in the form strip. Unknown is an unfinished Game (PGN Result `*`), which the web still shows as a badge.",
+        "enum": [
+          "Win",
+          "Draw",
+          "Loss",
+          "Unknown"
+        ],
+        "type": "string"
+      },
+      "OverviewKpis": {
+        "additionalProperties": false,
+        "description": "The KPI bar. Total Games is the payload's games_count.",
+        "properties": {
+          "current_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The player rating on the latest dated, rated Game, under the active lens."
+          },
+          "draw_pct": {
+            "description": "Draws, same basis and unit as win_pct.",
+            "type": "number"
+          },
+          "favorite_opening": {
+            "description": "Most-played opening name over non-Forfeit Games; \"\" when none (the core returns an em dash placeholder, the payload builder maps it to \"\").",
+            "type": "string"
+          },
+          "longest_win_streak": {
+            "description": "Longest run of consecutive Wins (Forfeits never extend a Streak).",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss_pct": {
+            "description": "Losses, same basis and unit as win_pct.",
+            "type": "number"
+          },
+          "peak_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Highest player rating on any Game in the filter, under the active lens."
+          },
+          "performance_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "Performance rating over Games with a rated opponent (Forfeits excluded); null when there are none."
+          },
+          "unique_opponents": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_pct": {
+            "description": "Wins as a percentage 0..100 (one decimal) of finished, non-Forfeit Games (Win + Draw + Loss). 0 when there are none.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "win_pct",
+          "draw_pct",
+          "loss_pct",
+          "current_rating",
+          "peak_rating",
+          "performance_rating",
+          "longest_win_streak",
+          "unique_opponents",
+          "favorite_opening"
+        ],
+        "type": "object"
+      },
+      "OverviewMilestone": {
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "null when undated (the web then shows the raw PGN date, sorted last)."
+          },
+          "description": {
+            "description": "e.g. \"First win (vs Opponent A)\", \"Achieved peak rating: 1545\", \"Fourth Category norm, ACC JUNE 2025 (Scored 4.5 in 5 games)\".",
+            "type": "string"
+          },
+          "event_id": {
+            "description": "For uscf: the Rated Event's USCF event ID (\"\" if unknown). \"\" for Game milestones.",
+            "type": "string"
+          },
+          "game_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GameId"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Game the milestone points at; null for uscf."
+          },
+          "game_num": {
+            "description": "The Game's 1-based chronological number within the filter; null for uscf.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "kind": {
+            "description": "uscf is an official USCF achievement (norm or award), rendered gold with a USCF badge and linking to Events; every other kind is a Game milestone.",
+            "enum": [
+              "first",
+              "win",
+              "draw",
+              "loss",
+              "milestone",
+              "peak",
+              "streak",
+              "uscf"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "date",
+          "game_num",
+          "game_id",
+          "event_id",
+          "description"
+        ],
+        "type": "object"
+      },
+      "OverviewOutcomeCounts": {
+        "additionalProperties": false,
+        "description": "The Win / Draw / Loss donut. Forfeits excluded; the web hides zero wedges.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "unknown": {
+            "description": "Unfinished Games; the web shows a dim wedge when non-zero.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "win",
+          "draw",
+          "loss",
+          "unknown"
+        ],
+        "type": "object"
+      },
+      "OverviewPayload": {
+        "additionalProperties": false,
+        "description": "The Overview screen: \"how am I doing?\". Everything follows the filters and lens except uscf_card, which follows Syncs. Source: pages/overview.py update_kpis -> pgn_stats_core.kpi_stats; update_uscf_card -> data.get_uscf_profile, data.get_live_series, data.uscf_failure, data.uscf_unavailable_since, uscf_core.membership_alert; update_top_weakness -> pgn_stats_core.recurring_weaknesses[0]; update_streak -> pgn_stats_core.streaks, plus shell.py update_form -> pgn_stats_core.current_form, components.form_indicator; update_wdl -> pgn_stats_core.win_draw_loss_counts; update_terminations -> pgn_stats_core.termination_counts; update_milestones -> pgn_stats_core.compute_milestones + uscf_core.achievement_milestones(data.get_uscf_achievements).",
+        "properties": {
+          "games_count": {
+            "description": "Games after the filters (Forfeits included). 0 means the client shows the empty state.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "kpis": {
+            "$ref": "#/components/schemas/OverviewKpis"
+          },
+          "milestones": {
+            "description": "Chronological across both kinds; undated last; same-date ties by game_num, achievements after Games. USCF achievements obey only the start/end filters, never the Game filters.",
+            "items": {
+              "$ref": "#/components/schemas/OverviewMilestone"
+            },
+            "type": "array"
+          },
+          "outcome_counts": {
+            "$ref": "#/components/schemas/OverviewOutcomeCounts"
+          },
+          "streak": {
+            "$ref": "#/components/schemas/OverviewStreak"
+          },
+          "terminations": {
+            "description": "Descending by games.",
+            "items": {
+              "$ref": "#/components/schemas/OverviewTermination"
+            },
+            "type": "array"
+          },
+          "top_weakness": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewWeakness"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "uscf_card": {
+            "$ref": "#/components/schemas/OverviewUscfCard"
+          }
+        },
+        "required": [
+          "games_count",
+          "kpis",
+          "uscf_card",
+          "top_weakness",
+          "streak",
+          "outcome_counts",
+          "terminations",
+          "milestones"
+        ],
+        "type": "object"
+      },
+      "OverviewStreak": {
+        "additionalProperties": false,
+        "description": "The current Streak and last-20 form. Forfeits are excluded throughout.",
+        "properties": {
+          "current_count": {
+            "description": "Length of the current Streak of that outcome.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "current_outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewFormOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Outcome of the current Streak (the latest Game's); null when no Games (the core's \"N/A\")."
+          },
+          "indicator": {
+            "$ref": "#/components/schemas/OverviewFormIndicator"
+          },
+          "last_20": {
+            "description": "Outcomes of the last 20 non-Forfeit Games, oldest to newest (undated Games sort last). The header's last-5 dots are the final 5. Empty when no Games.",
+            "items": {
+              "$ref": "#/components/schemas/OverviewFormOutcome"
+            },
+            "type": "array"
+          },
+          "longest_unbeaten": {
+            "description": "Longest run without a Loss (\"Unbeaten streak\").",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "longest_win_streak": {
+            "description": "Longest run of Wins (\"Win streak\").",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "last_20",
+          "longest_unbeaten",
+          "longest_win_streak",
+          "current_outcome",
+          "current_count",
+          "indicator"
+        ],
+        "type": "object"
+      },
+      "OverviewTermination": {
+        "additionalProperties": false,
+        "description": "One bar of \"How games ended\". Forfeits included.",
+        "properties": {
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "termination": {
+            "description": "The full termination reason (the web truncates the axis label at 30 characters, the hover shows it whole).",
+            "type": "string"
+          }
+        },
+        "required": [
+          "termination",
+          "games"
+        ],
+        "type": "object"
+      },
+      "OverviewUscfCard": {
+        "additionalProperties": false,
+        "description": "The USCF profile card. Follows Syncs, not filters: official data is never filtered, so this block is identical for every filter state and lens.",
+        "properties": {
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfProfile"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Present iff state is ok."
+          },
+          "state": {
+            "description": "disabled: no USCF member ID configured, the web renders no card. unavailable: USCF never reached and nothing cached, render the unavailable notice. ok: profile is present (possibly from cache, see unavailable_since).",
+            "enum": [
+              "disabled",
+              "unavailable",
+              "ok"
+            ],
+            "type": "string"
+          },
+          "unavailable_reason": {
+            "description": "Why USCF is unavailable (data.uscf_failure); \"\" otherwise.",
+            "type": "string"
+          },
+          "unavailable_since": {
+            "description": "The staleness notice when the profile comes from the last successful Sync's cache, e.g. \"USCF unavailable since 2026-05-01 14:02 UTC\"; null when fresh.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "profile",
+          "unavailable_reason",
+          "unavailable_since"
+        ],
+        "type": "object"
+      },
+      "OverviewUscfProfile": {
+        "additionalProperties": false,
+        "description": "The member's official identity at a glance.",
+        "properties": {
+          "live_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The current Live Rating (post of the last Live series point), rounded to a whole number; null when there is no Live series (the web then shows the Regular tile alone)."
+          },
+          "member_id": {
+            "type": "string"
+          },
+          "membership_alert": {
+            "description": "Lapsed or expiring-within-90-days warning, evaluated against the server's today; null when all is well.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "membership_expires": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "membership_status": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "national_rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "official_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Official Rating (Regular system, R), shown side by side with live_rating."
+          },
+          "online_regular": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Online Regular (OR) entry."
+          },
+          "quick": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Quick (Q) entry."
+          },
+          "regular": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OverviewUscfRating"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The Regular (R) entry, for the provisional/floor note under the Official and Live pair."
+          },
+          "state": {
+            "description": "Two-letter state the member represents; \"\" when unknown (the web then labels the rank \"State rank\").",
+            "type": "string"
+          },
+          "state_rank": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "member_id",
+          "name",
+          "state",
+          "membership_status",
+          "membership_expires",
+          "membership_alert",
+          "official_rating",
+          "live_rating",
+          "regular",
+          "quick",
+          "online_regular",
+          "national_rank",
+          "state_rank"
+        ],
+        "type": "object"
+      },
+      "OverviewUscfRating": {
+        "additionalProperties": false,
+        "description": "One rating system's entry on the member profile. null at the use site when the profile has no entry for that system (shown as Unrated).",
+        "properties": {
+          "floor": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The rating floor; null when none."
+          },
+          "games_played": {
+            "description": "Provisional game count; null once established.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "is_provisional": {
+            "type": "boolean"
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating"
+          }
+        },
+        "required": [
+          "rating",
+          "is_provisional",
+          "games_played",
+          "floor"
+        ],
+        "type": "object"
+      },
+      "OverviewWeakness": {
+        "additionalProperties": false,
+        "description": "The most severe recurring weakness. null at the use site below threshold (silence over noise).",
+        "properties": {
+          "game_ids": {
+            "description": "The Losses behind the callout (the web's compact form links to the Lessons page instead).",
+            "items": {
+              "$ref": "#/components/schemas/GameId"
+            },
+            "type": "array"
+          },
+          "loss_count": {
+            "description": "How many of the windowed Losses carry the Tag.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "severity": {
+            "description": "Ranking score 0..1 (three decimals).",
+            "type": "number"
+          },
+          "stat": {
+            "description": "The headline, e.g. \"#time-trouble appears in 6 of your last 8 losses\".",
+            "type": "string"
+          },
+          "tag": {
+            "$ref": "#/components/schemas/Tag",
+            "description": "The recurring Tag. Its source is engine only when every Game behind the callout carries it as engine-emitted, else mine."
+          },
+          "window": {
+            "description": "The period the window spans, e.g. \"Mar 2024 \u2013 Jun 2024\" or \"Mar 2024\"; \"\" when undated.",
+            "type": "string"
+          },
+          "window_losses": {
+            "description": "How many Losses the window holds (up to 10).",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag",
+          "loss_count",
+          "window_losses",
+          "stat",
+          "window",
+          "severity",
+          "game_ids"
+        ],
+        "type": "object"
+      },
+      "Rating": {
+        "description": "A rating as a whole number (the Live Rating keeps decimals only internally), or null when unknown.",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "Role": {
+        "description": "owner may write (Sync); guest is read-only. Multi-user accounts are owners of their own store.",
+        "enum": [
+          "owner",
+          "guest"
+        ],
+        "type": "string"
+      },
+      "SessionGrant": {
+        "additionalProperties": false,
+        "properties": {
+          "can_write": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "description": "When the token stops working (7 days after sign-in, like the web session).",
+            "format": "date-time",
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "token": {
+            "description": "Send as Authorization: Bearer <token>. Store it in the Keychain.",
+            "type": "string"
+          },
+          "username": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "token",
+          "role",
+          "username",
+          "can_write",
+          "expires_at"
+        ],
+        "type": "object"
+      },
+      "SessionIdentity": {
+        "additionalProperties": false,
+        "properties": {
+          "can_write": {
+            "description": "Whether Sync is allowed. False for a guest.",
+            "type": "boolean"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "username": {
+            "description": "Set only in multi-user mode.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "role",
+          "username",
+          "can_write"
+        ],
+        "type": "object"
+      },
+      "SessionRequest": {
+        "additionalProperties": false,
+        "description": "Credentials. Send password (and username in multi-user mode), or guest: true.",
+        "properties": {
+          "guest": {
+            "default": false,
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SyncAchievement": {
+        "additionalProperties": false,
+        "description": "One newly recognized official USCF achievement. The web celebrates it as 'Official USCF achievement: <title> (<rated_event_name>)'.",
+        "properties": {
+          "achievement_id": {
+            "type": "string"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "detail": {
+            "description": "e.g. 'Scored 4.5 in 5 games'; \"\" when none.",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "norm",
+              "award"
+            ],
+            "type": "string"
+          },
+          "rated_event_id": {
+            "description": "The Rated Event it was earned at; \"\" when unknown.",
+            "type": "string"
+          },
+          "rated_event_name": {
+            "description": "\"\" when unknown.",
+            "type": "string"
+          },
+          "title": {
+            "description": "e.g. 'Fourth Category norm'.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "achievement_id",
+          "kind",
+          "title",
+          "detail",
+          "date",
+          "rated_event_id",
+          "rated_event_name"
+        ],
+        "type": "object"
+      },
+      "SyncFailure": {
+        "additionalProperties": false,
+        "description": "One designated Study the Sync could not fetch.",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "study_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "study_id",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "SyncMilestone": {
+        "additionalProperties": false,
+        "description": "One personal best broken by this Sync.",
+        "properties": {
+          "description": {
+            "description": "The celebration text, e.g. 'New peak rating: 1571 (was 1545)'.",
+            "type": "string"
+          },
+          "kind": {
+            "description": "peak_rating: a new highest rating; win_streak: a new longest win Streak (in Games); giant_kill: a win over the highest-rated opponent yet.",
+            "enum": [
+              "peak_rating",
+              "win_streak",
+              "giant_kill"
+            ],
+            "type": "string"
+          },
+          "new": {
+            "description": "The new best, same unit as old.",
+            "type": "integer"
+          },
+          "old": {
+            "description": "The previous best (a rating, or a Streak length for win_streak).",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "kind",
+          "old",
+          "new",
+          "description"
+        ],
+        "type": "object"
+      },
+      "SyncNewGame": {
+        "additionalProperties": false,
+        "description": "One new Game, as the toast lists it ('vs Edwards (Win)'). Tap opens the Game.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          },
+          "result": {
+            "description": "The PGN Result, e.g. 1-0.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "game_id",
+          "opponent",
+          "outcome",
+          "result",
+          "date"
+        ],
+        "type": "object"
+      },
+      "SyncPayload": {
+        "additionalProperties": false,
+        "description": "The Sync toast and celebration banner as data. On already_running every list is [] and the freshness fields describe the data currently shown. Source: shell.py run_sync -> data.refresh (RefreshOutcome: status, new_games, failures), shell._describe_new_games, shell._per_source_freshness (data.synced_at, data.uscf_synced_at, data.uscf_unavailable_since), pgn_stats_core.milestone_deltas, data.get_new_achievements.",
+        "properties": {
+          "failures": {
+            "description": "Designated Studies this Sync could not fetch; the Sync still succeeded on the rest. The web toast lists their IDs ('couldn't fetch: ...').",
+            "items": {
+              "$ref": "#/components/schemas/SyncFailure"
+            },
+            "type": "array"
+          },
+          "milestones": {
+            "description": "Personal bests the new Games set (the celebration banner), comparing the pre-Sync and post-Sync stores.",
+            "items": {
+              "$ref": "#/components/schemas/SyncMilestone"
+            },
+            "type": "array"
+          },
+          "new_achievements": {
+            "description": "Official USCF achievements (norms, awards) first seen by this Sync. [] on the very first recording and whenever USCF was unreachable.",
+            "items": {
+              "$ref": "#/components/schemas/SyncAchievement"
+            },
+            "type": "array"
+          },
+          "new_games": {
+            "description": "Games whose ChapterURL was not in the previous Sync, in store order. [] means 'No new games. Everything is already up to date.'",
+            "items": {
+              "$ref": "#/components/schemas/SyncNewGame"
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "success: the store was swapped ('Sync complete'); already_running: a Sync was in progress, nothing was done ('Sync already running').",
+            "enum": [
+              "success",
+              "already_running"
+            ],
+            "type": "string"
+          },
+          "synced_at": {
+            "$ref": "#/components/schemas/Timestamp",
+            "description": "When the last successful Lichess Sync completed. The toast renders it as 'synced X ago'."
+          },
+          "uscf_synced_at": {
+            "$ref": "#/components/schemas/Timestamp",
+            "description": "When USCF data was last fetched; null when USCF is not configured or never reached."
+          },
+          "uscf_unavailable_since": {
+            "description": "'USCF unavailable since <time>' when the USCF data shown is the cache of an earlier Sync, else null.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "new_games",
+          "milestones",
+          "new_achievements",
+          "failures",
+          "synced_at",
+          "uscf_synced_at",
+          "uscf_unavailable_since"
+        ],
+        "type": "object"
+      },
+      "Tag": {
+        "additionalProperties": false,
+        "description": "A Tag without its leading #, with who wrote it: mine (hand-written in a chapter comment) or engine (emitted from the Error Profile).",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/TagSource"
+          }
+        },
+        "required": [
+          "name",
+          "source"
+        ],
+        "type": "object"
+      },
+      "TagSource": {
+        "enum": [
+          "mine",
+          "engine"
+        ],
+        "type": "string"
+      },
+      "Timestamp": {
+        "description": "UTC ISO 8601, or null when never.",
+        "format": "date-time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "TrendsAverageLength": {
+        "additionalProperties": false,
+        "description": "\"Average game length\" stat strip. All null is the \"No data\" state.",
+        "properties": {
+          "draw": {
+            "description": "Same for Draws.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "loss": {
+            "description": "Same for Losses.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "win": {
+            "description": "Mean full moves in Wins, one decimal; null when none (tile hidden).",
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "win",
+          "draw",
+          "loss"
+        ],
+        "type": "object"
+      },
+      "TrendsCalendarDay": {
+        "additionalProperties": false,
+        "description": "A calendar day with at least one finished, non-Forfeit Game. Days absent from the list render as empty cells.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "game_list": {
+            "description": "That day's Games in play order.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarGame"
+            },
+            "type": "array"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "net": {
+            "description": "win minus loss. Drives the cell color (clamped to -3..3 on the web) and the +/\u2212 glyph.",
+            "type": "integer"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "net",
+          "game_list"
+        ],
+        "type": "object"
+      },
+      "TrendsCalendarGame": {
+        "additionalProperties": false,
+        "description": "One Game on a calendar day, for the day's hover detail (\"Win vs Opponent A\").",
+        "properties": {
+          "game_id": {
+            "$ref": "#/components/schemas/GameId"
+          },
+          "opponent": {
+            "type": "string"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          }
+        },
+        "required": [
+          "game_id",
+          "outcome",
+          "opponent"
+        ],
+        "type": "object"
+      },
+      "TrendsCalendarYear": {
+        "additionalProperties": false,
+        "description": "One year's calendar block (the header reads \"<games> games \u00b7 <wins>W <losses>L\").",
+        "properties": {
+          "days": {
+            "description": "Ascending by date.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarDay"
+            },
+            "type": "array"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "losses": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "wins": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "year": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "year",
+          "games",
+          "wins",
+          "losses",
+          "days"
+        ],
+        "type": "object"
+      },
+      "TrendsGameLength": {
+        "additionalProperties": false,
+        "description": "One finished, non-Forfeit Game with a known length. The client bins these (the web uses 30 bins, overlaid per outcome).",
+        "properties": {
+          "moves": {
+            "description": "Full moves played.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/Outcome"
+          }
+        },
+        "required": [
+          "moves",
+          "outcome"
+        ],
+        "type": "object"
+      },
+      "TrendsLivePoint": {
+        "additionalProperties": false,
+        "description": "One Section's effect on the Live Rating.",
+        "properties": {
+          "end_date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The Section's end date (the x value)."
+          },
+          "event_id": {
+            "description": "The Rated Event's USCF event ID.",
+            "type": "string"
+          },
+          "event_name": {
+            "description": "The Rated Event name, verbatim from USCF (typos included).",
+            "type": "string"
+          },
+          "pre_rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Live Rating before the Section; null for the first Section ever played (hover reads \"unrated\")."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Live Rating after the Section (post), rounded to a whole number."
+          },
+          "section_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "end_date",
+          "rating",
+          "pre_rating",
+          "event_id",
+          "event_name",
+          "section_name"
+        ],
+        "type": "object"
+      },
+      "TrendsMonth": {
+        "additionalProperties": false,
+        "description": "One bar of \"Games per month\" (months with Games only).",
+        "properties": {
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "0..100, one decimal (hover).",
+            "type": "number"
+          },
+          "wins": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "year_month": {
+            "description": "YYYY-MM.",
+            "pattern": "^[0-9]{4}-[0-9]{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "year_month",
+          "games",
+          "wins",
+          "win_rate_pct"
+        ],
+        "type": "object"
+      },
+      "TrendsOfficialPoint": {
+        "additionalProperties": false,
+        "description": "One Official Rating supplement.",
+        "properties": {
+          "month": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The supplement date."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The Official Rating published in that supplement. Plotted as a step line."
+          }
+        },
+        "required": [
+          "month",
+          "rating"
+        ],
+        "type": "object"
+      },
+      "TrendsPayload": {
+        "additionalProperties": false,
+        "description": "The Trends screen: rating, win rate, activity, and playing conditions over time. Source: pages/trends.py update_activity_calendar -> pgn_stats_core.daily_activity; update_rating -> uscf_core.rating_trend_series(data.get_official_series, data.get_live_series) or pgn_stats_core.player_rating_over_time (+ numpy.polyfit trend in _typed_rating_fig); update_winrate -> pgn_stats_core.win_rate_over_time; update_monthly, update_dow -> pgn_stats_core.activity_data; update_length_hist, update_length_stats -> pgn_stats_core.game_length_data; update_time_control -> pgn_stats_core.time_control_summary; update_round_performance -> pgn_stats_core.round_performance; update_upsets -> pgn_stats_core.upset_tracker.",
+        "properties": {
+          "average_length": {
+            "$ref": "#/components/schemas/TrendsAverageLength"
+          },
+          "calendar": {
+            "description": "Activity calendar, newest year first. Empty: \"No dated games in this filter\".",
+            "items": {
+              "$ref": "#/components/schemas/TrendsCalendarYear"
+            },
+            "type": "array"
+          },
+          "game_lengths": {
+            "items": {
+              "$ref": "#/components/schemas/TrendsGameLength"
+            },
+            "type": "array"
+          },
+          "games_count": {
+            "description": "Games after the filters (Forfeits included). 0 means the client shows the empty state.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games_per_month": {
+            "description": "Ascending.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsMonth"
+            },
+            "type": "array"
+          },
+          "rating_chart": {
+            "$ref": "#/components/schemas/TrendsRatingChart"
+          },
+          "rounds": {
+            "items": {
+              "$ref": "#/components/schemas/TrendsRound"
+            },
+            "type": "array"
+          },
+          "time_controls": {
+            "items": {
+              "$ref": "#/components/schemas/TrendsTimeControl"
+            },
+            "type": "array"
+          },
+          "upsets": {
+            "$ref": "#/components/schemas/TrendsUpsets"
+          },
+          "win_rate": {
+            "description": "Ascending by date.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsWinRatePoint"
+            },
+            "type": "array"
+          },
+          "win_rate_by_weekday": {
+            "items": {
+              "$ref": "#/components/schemas/TrendsWeekday"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "games_count",
+          "calendar",
+          "rating_chart",
+          "win_rate",
+          "games_per_month",
+          "win_rate_by_weekday",
+          "game_lengths",
+          "average_length",
+          "time_controls",
+          "rounds",
+          "upsets"
+        ],
+        "type": "object"
+      },
+      "TrendsRatingChart": {
+        "additionalProperties": false,
+        "description": "\"Your rating over time\". All three arrays empty is the empty state (\"No rating data\", or \"No rating data in this date range\" in uscf mode).",
+        "properties": {
+          "emphasized": {
+            "$ref": "#/components/schemas/Lens",
+            "description": "Which line is full strength (the active lens); the other recedes but is always drawn. The lens hides nothing here."
+          },
+          "live": {
+            "description": "mode uscf only (else []). Trimmed to start/end.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsLivePoint"
+            },
+            "type": "array"
+          },
+          "mode": {
+            "description": "uscf: the dual-line Official/Live chart, chosen when either full USCF series exists (before date trimming). typed: USCF never reached or not configured, so the chart degrades to typed header ratings.",
+            "enum": [
+              "uscf",
+              "typed"
+            ],
+            "type": "string"
+          },
+          "official": {
+            "description": "mode uscf only (else []). Trimmed to start/end; no other filter applies to rating series.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsOfficialPoint"
+            },
+            "type": "array"
+          },
+          "typed": {
+            "description": "mode typed only (else []). Follows every filter.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsTypedPoint"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "mode",
+          "emphasized",
+          "official",
+          "live",
+          "typed"
+        ],
+        "type": "object"
+      },
+      "TrendsRound": {
+        "additionalProperties": false,
+        "description": "One bar of \"Score by round: the fatigue check\". Ascending by round.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "reliable": {
+            "description": "games >= 3. Unreliable rounds render dimmed with \"too few to conclude\".",
+            "type": "boolean"
+          },
+          "round": {
+            "description": "The round number: the USCF crosstable round when matched, else the typed Round header.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "score_pct": {
+            "description": "(win + draw/2) / games as 0..100, one decimal. The bar height.",
+            "type": "number"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "0..100, one decimal.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "round",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct",
+          "score_pct",
+          "reliable"
+        ],
+        "type": "object"
+      },
+      "TrendsTimeControl": {
+        "additionalProperties": false,
+        "description": "One stacked bar of \"Results by time control\". Finished, non-Forfeit Games; slowest first, unparseable last.",
+        "properties": {
+          "draw": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "loss": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minutes": {
+            "description": "Estimated total thinking time per player in minutes (base + one minute per second of increment); null when unparseable.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "speed": {
+            "description": "From estimated minutes: 60+ Classical, 10+ Rapid, else Blitz; Unknown when unparseable.",
+            "enum": [
+              "Classical",
+              "Rapid",
+              "Blitz",
+              "Unknown"
+            ],
+            "type": "string"
+          },
+          "time_control": {
+            "description": "The TimeControl header verbatim; \"\" when not recorded (the web labels it \"(not recorded)\").",
+            "type": "string"
+          },
+          "win": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "0..100, one decimal.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "time_control",
+          "speed",
+          "minutes",
+          "games",
+          "win",
+          "draw",
+          "loss",
+          "win_rate_pct"
+        ],
+        "type": "object"
+      },
+      "TrendsTypedPoint": {
+        "additionalProperties": false,
+        "description": "One point of the fallback chart, from the Studies' typed ratings.",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "rating": {
+            "$ref": "#/components/schemas/Rating",
+            "description": "The hand-typed header rating on the day's last Game, under the active lens."
+          },
+          "trend": {
+            "description": "The linear-trend line value at this point (least-squares fit over point index); null on every point when there are fewer than 3 points.",
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "date",
+          "rating",
+          "trend"
+        ],
+        "type": "object"
+      },
+      "TrendsUpset": {
+        "additionalProperties": false,
+        "description": "One upset row; tap opens the Game.",
+        "properties": {
+          "game": {
+            "$ref": "#/components/schemas/GameSummary"
+          },
+          "margin": {
+            "description": "Rating points between the two players, unsigned (the web shows + for giant kills, \u2212 for upset losses).",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "game",
+          "margin"
+        ],
+        "type": "object"
+      },
+      "TrendsUpsets": {
+        "additionalProperties": false,
+        "description": "The upset tracker. Each list empty shows its own explanatory line.",
+        "properties": {
+          "giant_kills": {
+            "description": "Wins over higher-rated opponents, biggest margin first. Both ratings known; Forfeits never count.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsUpset"
+            },
+            "type": "array"
+          },
+          "upset_losses": {
+            "description": "Losses to lower-rated opponents, biggest margin first.",
+            "items": {
+              "$ref": "#/components/schemas/TrendsUpset"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "giant_kills",
+          "upset_losses"
+        ],
+        "type": "object"
+      },
+      "TrendsWeekday": {
+        "additionalProperties": false,
+        "description": "One bar of \"Win rate by day of week\" (weekdays with Games only, Mon to Sun).",
+        "properties": {
+          "day_of_week": {
+            "enum": [
+              "Mon",
+              "Tue",
+              "Wed",
+              "Thu",
+              "Fri",
+              "Sat",
+              "Sun"
+            ],
+            "type": "string"
+          },
+          "games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "win_rate_pct": {
+            "description": "0..100, one decimal. The bar height; the web colors it on a 30..70 scale with a 50% line.",
+            "type": "number"
+          },
+          "wins": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "day_of_week",
+          "games",
+          "wins",
+          "win_rate_pct"
+        ],
+        "type": "object"
+      },
+      "TrendsWinRatePoint": {
+        "additionalProperties": false,
+        "description": "One point of the cumulative win rate (one per day, finished, dated, non-Forfeit Games). The web draws a 50% reference line.",
+        "properties": {
+          "cum_games": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "cum_wins": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "date": {
+            "$ref": "#/components/schemas/IsoDate",
+            "description": "The day (never null here)."
+          },
+          "win_rate_pct": {
+            "description": "Cumulative win rate 0..100 through this day (unrounded).",
+            "type": "number"
+          }
+        },
+        "required": [
+          "date",
+          "win_rate_pct",
+          "cum_wins",
+          "cum_games"
+        ],
+        "type": "object"
+      },
+      "UscfMatchStatus": {
+        "description": "The Game's USCF status, as the web Games table shows it: matched by member ID, matched by name, matched but the sources disagree (see Reconciliation), a Forfeit, or no USCF Game Record.",
+        "enum": [
+          "matched_by_id",
+          "matched_by_name",
+          "conflict",
+          "forfeit",
+          "unmatched"
+        ],
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "The token from POST /api/v1/session. Signed with the server's SECRET_KEY, carries role and username, expires after 7 days.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Versioned JSON API for the native iOS client (ADR 0008). A read surface over the same per-user store the Dash pages read. Every screen route takes the global filters and the Official/Live lens as query parameters, mirroring FILTER_INPUTS one to one. Ratings are whole numbers. Enrichment fields are always present (unmatched, un-analyzed, or empty), never absent.",
+    "title": "Chess Dashboard API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/analysis": {
+      "get": {
+        "description": "The mistake-type distribution, the Accuracy trend and the mistake-type trend (each with the player's rating overlaid), the Phase x Mistake Type matrix, the mistake move-number histogram, and the Games still awaiting analysis. Takes no filter or lens parameters: the web page's callback listens only to Syncs, and every data accessor it calls reads the full, unfiltered store, so this route does the same. Games awaiting analysis are excluded from every aggregate.",
+        "operationId": "getAnalysis",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisPayload"
+                }
+              }
+            },
+            "description": "The Analysis screen."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Analysis screen: the Error Profile across every analysed Game.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/events": {
+      "get": {
+        "description": "Series -> Rated Event, plus the Performance per Series chart and the Rated Events entered but never played. Each Rated Event here is a summary row with its Section placements; its full crosstables come from GET /api/v1/events/{event_id} (the web embeds them in the card; the app pushes a detail screen). Forfeit rule throughout: a Forfeit win counts toward score but never as a game, a win, or a Streak.",
+        "operationId": "getEvents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventsPayload"
+                }
+              }
+            },
+            "description": "The Events screen for this filter state."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Events screen: each Series and the Rated Events inside it.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/events/{event_id}": {
+      "get": {
+        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). Facts derived from Games (counts, score, Sections played, rating change, performance) follow the filters exactly like the web card; the crosstables themselves are USCF member-level facts and are never filtered, only selected by the Sections played.",
+        "operationId": "getEvent",
+        "parameters": [
+          {
+            "description": "The USCF event ID of the Rated Event (UscfEventId on the Game, UscfEvent.event_id, the first half of the data.get_uscf_standings() key). It is the natural key: it is what the web card and its crosstables are keyed by, and it is stable across Syncs. A Series name would be the wrong key (a Series holds many Rated Events).",
+            "in": "path",
+            "name": "event_id",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventPayload"
+                }
+              }
+            },
+            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games and sections."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "One Rated Event: its Sections, placement, rating change, Games, and full crosstables.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/games": {
+      "get": {
+        "description": "The full Games list with each Game's USCF match status. Sorting and search are client-side over this list, as on the web table.",
+        "operationId": "getGames",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GamesPayload"
+                }
+              }
+            },
+            "description": "The Games payload."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "Every Game, filtered",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/games/{game_id}": {
+      "get": {
+        "description": "The Game detail screen. Takes no filter or lens parameters: the web page is a plain layout with no FILTER_INPUTS callback, and it reads the unfiltered store, so ratings here are the typed values from the Chapter headers (never lensed). The Game is looked up by its Game ID (the last path segment of the ChapterURL, as the web's /game/<chapter_id> does).",
+        "operationId": "getGame",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/game_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GamePayload"
+                }
+              }
+            },
+            "description": "The Game."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "One Game in full: board PGNs, Engine view, Lessons, Tags, metadata, USCF Game Record.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/lessons": {
+      "get": {
+        "description": "Every Lesson written on Lichess, newest first, each with its Game and that Game's Tags; Tag counts (canonical taxonomy first, then freeform) that double as the Tag filter; recurring-weakness callouts; and the Coach's Notes feed, kept separate from the user's own Lessons. The Lessons list, Tag counts, and weakness callouts honor the global filters. The `tags` and `opponent` params narrow only the Lessons list, exactly like the web's chip toggles and opponent picker. With review=true the payload also carries the pre-game review queue (the web's ?review=1 overlay), built from the whole archive and ignoring every filter, as on the web. The opponent picker options and the Coach's Notes feed are unfiltered too.",
+        "operationId": "getLessons",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          },
+          {
+            "description": "Tag names without the leading # (repeatable). Keeps only Lessons whose Game carries ALL of them, hand-written or engine-emitted alike. Omitted means no Tag restriction.",
+            "explode": true,
+            "in": "query",
+            "name": "tags",
+            "required": false,
+            "schema": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          {
+            "description": "An opaque opponent ID (schema OpponentId, from GET /api/v1/opponents or lessons_opponents). Keeps only Lessons from Games against that opponent, and in review mode primes the queue with them (the web's ?review=1&opponent=X). An ID that resolves to no opponent simply matches nothing; it is not an error.",
+            "in": "query",
+            "name": "opponent",
+            "required": false,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "description": "Mirrors the web's ?review=1: when true, the payload's review field carries the pre-game review queue; when false or omitted it is null.",
+            "in": "query",
+            "name": "review",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LessonsPayload"
+                }
+              }
+            },
+            "description": "The Lessons screen."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Lessons screen, with optional pre-game review mode",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "description": "Everything a client needs before it draws a screen. Unfiltered: options and bounds describe every Game, and update after a Sync.",
+        "operationId": "getMeta",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaPayload"
+                }
+              }
+            },
+            "description": "The meta payload."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "Who is signed in, filter options, presets, freshness",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/api/v1/openings": {
+      "get": {
+        "description": "Where the repertoire wins and leaks points. The repertoire tree is embedded whole for both colors (the web's As White / As Black toggle is a client-side switch, not a parameter), and every branch carries the Games that reached it, so drilling into a branch needs no second request. Forfeits are excluded from every section (one forced move is not repertoire data).",
+        "operationId": "getOpenings",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpeningsPayload"
+                }
+              }
+            },
+            "description": "The Openings screen for this filter state."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Openings screen: repertoire tree, ECO families, top openings.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/opponents": {
+      "get": {
+        "description": "Who the player faces and how it goes: the searchable opponent list that opens a Scouting Report (GET /api/v1/opponents/{opponent_id}), the W/D/L record against repeat opponents, W/D/L by opponent-rating-difference bucket, and outcome vs opponent rating. Every chart honors the global filters and the lens. Forfeits never count in records, buckets, or the scatter (a no-show win is not a win over an opponent).",
+        "operationId": "getOpponents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpponentsPayload"
+                }
+              }
+            },
+            "description": "The Opponents screen."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Opponents screen",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/opponents/{opponent_id}": {
+      "get": {
+        "description": "The pre-game dossier on one opponent, as the Opponents page renders it once an opponent is picked: their USCF identity with then-vs-now ratings, the player's record against them, every Game against them, the openings they have played against the player (split by the player's color), how those Games ended, and the Lessons written after facing them. Honors the global filters and the lens, like the web dossier. Forfeits are excluded from the record, the Games list, and the openings (a no-show is not an over-the-board result) but still count in terminations and games_count. When record.games is 0 the client shows the web's empty state ('No games vs <opponent> in the current filter'). An opponent_id that resolves to no opponent anywhere in the archive is a 404; one that only falls outside the filters is a 200 with an empty record.",
+        "operationId": "getOpponent",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/opponent_id"
+          },
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpponentPayload"
+                }
+              }
+            },
+            "description": "The Scouting Report."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "summary": "One opponent's Scouting Report",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/overview": {
+      "get": {
+        "description": "KPIs, the USCF profile card (Official and Live Ratings side by side), the current Streak with its fire indicator, last-20 form, Win / Draw / Loss, termination breakdown, the top recurring weakness, and the milestone timeline. Takes the global filters and lens; the USCF card ignores them.",
+        "operationId": "getOverview",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewPayload"
+                }
+              }
+            },
+            "description": "The Overview screen"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Overview screen",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/session": {
+      "post": {
+        "description": "Accepts the same credentials as the web login: the owner password (owner mode), {\"guest\": true} (owner mode only), or username plus password (multi-user mode). Runs the same throttle as the web login, shared with it. An ungated server signs anyone in as the owner. Tokens are stateless: sign-out is the client forgetting its token; rotating SECRET_KEY signs out every phone and browser.",
+        "operationId": "createSession",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionGrant"
+                }
+              }
+            },
+            "description": "Signed in."
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too many wrong passwords from this address; wait a few minutes."
+          }
+        },
+        "security": [],
+        "summary": "Sign in and get a bearer token",
+        "tags": [
+          "session"
+        ]
+      }
+    },
+    "/api/v1/sync": {
+      "post": {
+        "description": "Re-Syncs the caller's designated Studies (and USCF, coach Studies, analysis) and atomically swaps the store, exactly like the web Sync button. No request body. Status mapping of data.refresh(): success -> 200 with status success; already_running -> 200 with status already_running (the web shows a warning toast, not a failure, and the in-flight Sync will still land), with empty lists; demo -> 403 forbidden with the refresh error as the message ('Demo mode is read-only; Sync is disabled.'), because demo mode, like a guest, may not write; error (Lichess unreachable, no Games found, store never initialized, enrichment raised) -> 502 sync_failed with the refresh error as the message, and the current data stays untouched. A guest (auth.can_write() false) gets 403 forbidden before any Sync runs.",
+        "operationId": "runSync",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncPayload"
+                }
+              }
+            },
+            "description": "The Sync completed, or one was already running."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "The Sync failed (error code sync_failed); the server keeps showing the current data."
+          }
+        },
+        "summary": "Run a Sync (owner only) and return what the web toast shows.",
+        "tags": [
+          "screens"
+        ]
+      }
+    },
+    "/api/v1/trends": {
+      "get": {
+        "description": "Activity calendar, the dual-line Official/Live rating chart (typed-rating fallback without USCF), cumulative win rate, games per month, win rate by weekday, game length, results by time control, the fatigue check, and the upset tracker. Takes the global filters and lens; the USCF rating series obey only start/end.",
+        "operationId": "getTrends",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/colors"
+          },
+          {
+            "$ref": "#/components/parameters/outcomes"
+          },
+          {
+            "$ref": "#/components/parameters/terminations"
+          },
+          {
+            "$ref": "#/components/parameters/start"
+          },
+          {
+            "$ref": "#/components/parameters/end"
+          },
+          {
+            "$ref": "#/components/parameters/series"
+          },
+          {
+            "$ref": "#/components/parameters/min_moves"
+          },
+          {
+            "$ref": "#/components/parameters/max_moves"
+          },
+          {
+            "$ref": "#/components/parameters/lens"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendsPayload"
+                }
+              }
+            },
+            "description": "The Trends screen"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          }
+        },
+        "summary": "The Trends screen",
+        "tags": [
+          "screens"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "/"
+    }
+  ]
+}

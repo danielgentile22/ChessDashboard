@@ -200,6 +200,11 @@ def build_app(study_ids: list[str], player_name=None, token=None, cache_path=Non
             if user:
                 data.ensure_synced(user)
 
+    # The JSON API for the iOS client (ADR 0008): same server, same worker,
+    # same gate (cookie or bearer token), same per-request user activation.
+    import api
+    api.install(dash_app.server)
+
     return dash_app, dash_app.server
 
 
