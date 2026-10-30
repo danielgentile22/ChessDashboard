@@ -18,6 +18,8 @@ stats, trends, and lessons with **Plotly Dash** (multi-page). USCF ratings data
 
 - **Pages (UI)**: `pages/CLAUDE.md` (the 10 Dash page modules and the
   filter/callback conventions every page follows).
+- **iOS app**: `ios/CLAUDE.md` (the SwiftUI client of the JSON API, its
+  ChessDashboardKit package, codegen, and the add-a-screen recipe).
 
 Root-level modules (this directory) are mapped under *Module map* below.
 
@@ -106,6 +108,7 @@ tests pass:
 | `api/` | The JSON API blueprint for the iOS client (ADR 0008): `api/http.py` (blueprint, filter parsing, errors, `filtered_games()`), one `api/routes/<screen>.py` per route, `api/contract.py` (bundles `openapi/src/*.json` into `openapi/v1.json`: `python -m api.contract`). |
 | `payloads/` | Pure screen-payload builders, one module per screen (`common` holds the Game summary row, Tags with source, whole ratings, Game ID). Framework-agnostic like the cores. |
 | `openapi/` | The v1 contract: `src/` fragments (one per screen), the bundled `v1.json`, and `fixtures/` (validated responses recorded by the contract tests, read by the iOS tests). |
+| `ios/` | The native iPhone client of the JSON API (ADR 0008): XcodeGen app + `ChessDashboardKit` package. Swift types generated from `openapi/v1.json`, colors from `styles.THEME` (`make ios-codegen`; staleness tests in `tests/test_ios_api_types.py`, `tests/test_theme_swift.py`). See `ios/CLAUDE.md`. |
 | `auth.py` | Login gate. Owner/guest mode (`OWNER_PASSWORD_HASH`): guests read everything, `auth.can_write()` is False for them, and every callback that writes or calls a tokened API checks it. Multi-user mode (`USCF_DASHBOARD_USERS`, ADR 0005): per-request store activation. Ungated when neither is set. Bearer tokens for the API (`token_sign_in`, same throttle, 7-day expiry). |
 | `user_config.py` | Parses `USCF_DASHBOARD_USERS` records; `python -m user_config hash '<pw>'` hashes passwords. |
 | `coach_match_core.py` | Pure coach-review matching: coach Chapters → the user's Games, by the moves played. Coach content is enrichment, never a dependency. |
@@ -129,6 +132,9 @@ API contract: edit `openapi/src/<screen>.json`, then `python -m api.contract` to
 rebundle `openapi/v1.json` (a test fails if it's stale). Contract tests
 (`tests/test_api_*.py`, harness in `tests/api_contract.py`) validate every
 response and re-record `openapi/fixtures/*.json`; commit those changes.
+
+iOS: `make kit-test` (package tests on the Mac), `make ios-test` (simulator),
+`make ios-build`, `make ios-codegen` after a spec or `styles.THEME` change.
 
 `.env` holds the Lichess token and USCF member ID for local runs. CI is
 lint → test → typecheck (`.github/workflows/ci.yml`).

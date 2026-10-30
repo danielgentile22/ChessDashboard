@@ -10,7 +10,14 @@ PYTEST    := $(VENV)/bin/pytest
 RUFF      := $(VENV)/bin/ruff
 STUDY     ?= abcdWXYZ
 
-.PHONY: help venv install install-dev run demo test lint fix typecheck clean docker docker-up
+.PHONY: help venv install install-dev run demo test lint fix typecheck clean docker docker-up \
+	ios-codegen ios-generate ios-build ios-build-release ios-test kit-test
+
+# iOS (ios/). `xcrun simctl list devices available` lists simulator names.
+SIM_NAME  ?= iPhone 17
+SIM       ?= platform=iOS Simulator,name=$(SIM_NAME)
+IOS_PROJ  := ios/ChessDashboard.xcodeproj
+IOS_FLAGS := -project $(IOS_PROJ) -scheme ChessDashboard -derivedDataPath ios/build/DerivedData
 
 help:          ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*##' Makefile | awk 'BEGIN{FS=":.*##"}{printf "  \033[36m%-16s\033[0m %s\n",$$1,$$2}'
@@ -54,3 +61,23 @@ docker:        ## Build the Docker image
 
 docker-up:     ## Run the dashboard in Docker
 	docker compose up --build
+
+ios-codegen:   ## Regenerate the Swift API types (openapi/v1.json) and theme tokens (styles.THEME)
+	$(PYTHON) ios/scripts/gen_api_types.py
+	$(PYTHON) ios/scripts/gen_theme.py
+
+ios-generate:  ## Generate the Xcode project from ios/project.yml (xcodegen)
+	cd ios && xcodegen generate --quiet
+
+ios-build: ios-generate  ## Debug build for a simulator (SIM_NAME=...)
+	set -o pipefail; xcodebuild build $(IOS_FLAGS) -destination '$(SIM)' | tail -5
+
+ios-build-release: ios-generate  ## Release build for any simulator (no signing)
+	set -o pipefail; xcodebuild build $(IOS_FLAGS) -configuration Release \
+		-destination 'generic/platform=iOS Simulator' | tail -5
+
+ios-test: ios-generate  ## The ChessDashboardKit tests on a simulator (SIM_NAME=...)
+	set -o pipefail; xcodebuild test $(IOS_FLAGS) -destination '$(SIM)' | tail -20
+
+kit-test:      ## The ChessDashboardKit tests on the Mac, in seconds (swift test)
+	cd ios/ChessDashboardKit && swift test

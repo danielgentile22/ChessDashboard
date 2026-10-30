@@ -1,0 +1,12 @@
+# XcodeGen output (generated from project.yml) and build products
+*.xcodeproj
+xcuserdata/
+DerivedData/
+.build/
+.swiftpm/
+*.xcresult
+# Personal, uncommitted build overrides (see Config/Local.xcconfig.example)
+Config/Local.xcconfig
+build/
+# Written by xcodegen from project.yml `info:`
+ChessDashboard/Info.plist
