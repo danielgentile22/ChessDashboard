@@ -144,5 +144,7 @@ jobs:
                  -derivedDataPath build/DerivedData
                  -destination "id=${{ steps.sim.outputs.udid }}"
                  CODE_SIGNING_ALLOWED=NO)
-          xcodebuild build-for-testing "${flags[@]}" | tail -20
+          # Keep the full log; on failure show the compiler errors, not just the tail.
+          xcodebuild build-for-testing "${flags[@]}" > build.log 2>&1 \
+            || { grep -E ": error:" build.log | sort -u; tail -20 build.log; exit 1; }
           xcodebuild test-without-building "${flags[@]}" | tail -30
