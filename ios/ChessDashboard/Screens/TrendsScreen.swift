@@ -100,12 +100,19 @@ private struct ActivityCalendar: View {
 					VStack(alignment: .leading, spacing: 4) {
 						Text(selected.accessibilityLabel).font(.caption).foregroundStyle(Theme.muted.color)
 						ForEach(selected.games, id: \.gameId) { game in
-							HStack {
-								Circle().fill(game.outcome.themeColor).frame(width: 8, height: 8)
-								Text("\(game.outcome.rawValue) vs \(game.opponent)")
-									.font(.subheadline)
-									.foregroundStyle(Theme.text.color)
+							NavigationLink(value: GameRoute(gameID: game.gameId)) {
+								HStack {
+									Circle().fill(game.outcome.themeColor).frame(width: 8, height: 8)
+									Text("\(game.outcome.rawValue) vs \(game.opponent)")
+										.font(.subheadline)
+										.foregroundStyle(Theme.text.color)
+									Spacer()
+									Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.dim.color)
+								}
+								.padding(.vertical, 4)
+								.contentShape(Rectangle())
 							}
+							.buttonStyle(.plain)
 						}
 					}
 					.padding(.top, 4)
@@ -542,16 +549,21 @@ private struct UpsetCard: View {
 			} else {
 				VStack(spacing: 0) {
 					ForEach(rows) { row in
-						HStack {
-							VStack(alignment: .leading, spacing: 2) {
-								Text(row.opponent).font(.subheadline.weight(.medium)).foregroundStyle(Theme.text.color)
-								Text("\(row.date), \(row.ratings)").font(.caption.monospacedDigit()).foregroundStyle(Theme.muted.color)
+						NavigationLink(value: GameRoute(gameID: row.gameId)) {
+							HStack {
+								VStack(alignment: .leading, spacing: 2) {
+									Text(row.opponent).font(.subheadline.weight(.medium)).foregroundStyle(Theme.text.color)
+									Text("\(row.date), \(row.ratings)").font(.caption.monospacedDigit()).foregroundStyle(Theme.muted.color)
+								}
+								Spacer()
+								Text(row.margin).font(.headline.monospacedDigit()).foregroundStyle(color)
+								Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.dim.color)
 							}
-							Spacer()
-							Text(row.margin).font(.headline.monospacedDigit()).foregroundStyle(color)
+							.padding(.vertical, 6)
+							.contentShape(Rectangle())
+							.accessibilityElement(children: .combine)
 						}
-						.padding(.vertical, 6)
-						.accessibilityElement(children: .combine)
+						.buttonStyle(.plain)
 					}
 				}
 			}

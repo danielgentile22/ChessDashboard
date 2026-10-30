@@ -344,28 +344,43 @@ private struct MilestoneCard: View {
 			} else {
 				VStack(alignment: .leading, spacing: 0) {
 					ForEach(rows) { row in
-						HStack(alignment: .firstTextBaseline, spacing: 10) {
-							Circle()
-								.fill(dotColor(row.kind))
-								.frame(width: 8, height: 8)
-							VStack(alignment: .leading, spacing: 2) {
-								HStack(spacing: 6) {
-									Text(row.dateText).font(.caption.monospacedDigit()).foregroundStyle(Theme.muted.color)
-									Text(row.badge)
-										.font(.caption2.weight(.bold))
-										.foregroundStyle(row.isUSCF ? Theme.warning.color : Theme.dim.color)
-								}
-								Text(row.description)
-									.font(.subheadline)
-									.foregroundStyle(row.isUSCF ? Theme.warning.color : Theme.text.color)
-							}
+						if let gameId = row.gameId {
+							NavigationLink(value: GameRoute(gameID: gameId)) { line(row) }
+								.buttonStyle(.plain)
+								.accessibilityHint("Opens the Game")
+						} else {
+							line(row)
 						}
-						.padding(.vertical, 6)
-						.accessibilityElement(children: .combine)
 					}
 				}
 			}
 		}
+	}
+
+	private func line(_ row: OverviewModel.MilestoneRow) -> some View {
+		HStack(alignment: .firstTextBaseline, spacing: 10) {
+			Circle()
+				.fill(dotColor(row.kind))
+				.frame(width: 8, height: 8)
+			VStack(alignment: .leading, spacing: 2) {
+				HStack(spacing: 6) {
+					Text(row.dateText).font(.caption.monospacedDigit()).foregroundStyle(Theme.muted.color)
+					Text(row.badge)
+						.font(.caption2.weight(.bold))
+						.foregroundStyle(row.isUSCF ? Theme.warning.color : Theme.dim.color)
+				}
+				Text(row.description)
+					.font(.subheadline)
+					.foregroundStyle(row.isUSCF ? Theme.warning.color : Theme.text.color)
+			}
+			Spacer(minLength: 0)
+			if row.gameId != nil {
+				Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.dim.color)
+			}
+		}
+		.padding(.vertical, 6)
+		.contentShape(Rectangle())
+		.accessibilityElement(children: .combine)
 	}
 
 	private func dotColor(_ kind: API.OverviewMilestoneKind) -> Color {

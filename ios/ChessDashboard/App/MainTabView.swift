@@ -12,22 +12,22 @@ struct MainTabView: View {
 	var body: some View {
 		TabView(selection: $tab) {
 			Tab("Overview", systemImage: "square.grid.2x2", value: .overview) {
-				NavigationStack { OverviewScreen(context: env.context!) }
+				NavigationStack { OverviewScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Trends", systemImage: "chart.xyaxis.line", value: .trends) {
-				NavigationStack { TrendsScreen(context: env.context!) }
+				NavigationStack { TrendsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
-				NavigationStack { PlaceholderScreen(title: "Games", page: .games) }
+				NavigationStack { GamesScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
-				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons) }
+				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons).gameDestination() }
 			}
 			Tab("Opponents", systemImage: "person.2", value: .opponents) {
-				NavigationStack { PlaceholderScreen(title: "Opponents", page: .opponents) }
+				NavigationStack { PlaceholderScreen(title: "Opponents", page: .opponents).gameDestination() }
 			}
 			Tab("More", systemImage: "ellipsis.circle", value: .more) {
-				NavigationStack { MoreView() }
+				NavigationStack { MoreView().gameDestination() }
 			}
 		}
 	}
@@ -42,10 +42,10 @@ struct MoreView: View {
 	var body: some View {
 		List {
 			Section {
-				NavigationLink { PlaceholderScreen(title: "Openings", page: .openings) } label: {
+				NavigationLink { OpeningsScreen(context: env.context!) } label: {
 					Label("Openings", systemImage: "point.3.connected.trianglepath.dotted")
 				}
-				NavigationLink { PlaceholderScreen(title: "Events", page: .events) } label: {
+				NavigationLink { EventsScreen(context: env.context!) } label: {
 					Label("Events", systemImage: "trophy")
 				}
 				NavigationLink { PlaceholderScreen(title: "Analysis", page: .analysis) } label: {

@@ -18,8 +18,8 @@ are generated and gitignored.
 |---|---|
 | `project.yml` | XcodeGen spec: app target `ChessDashboard` (bundle `dev.danielgentile.chessdashboard`, team 58N856BAX8), the scheme whose test action runs the package tests. |
 | `Config/Base.xcconfig` | `CD_BASE_URL` per configuration (Release `https://chess-dashboard.fly.dev/api/v1/`, Debug `http://localhost:8050/api/v1/`), read from Info.plist as `CDBaseURL`. Optional gitignored `Local.xcconfig` overrides it (copy `Local.xcconfig.example`). |
-| `ChessDashboard/` | The app target: views only. `App/` (entry point, root, tab bar, More), `Components/` (screen chrome, filter sheet, Tag chip, freshness, offline banner, `ScreenState`), `Screens/` (sign-in, placeholders). |
-| `ChessDashboardKit/` | Swift package with everything testable. No UIKit; `swift test` runs it on the Mac in seconds. |
+| `ChessDashboard/` | The app target: views only. `App/` (entry point, root, tab bar, More), `Components/` (screen chrome, filter sheet, Tag chip, freshness, offline banner, `ScreenState`, `ChessBoardView`), `Screens/`. |
+| `ChessDashboardKit/` | Swift package with everything testable. No UIKit; `swift test` runs it on the Mac in seconds. One dependency: ChessKit (`exact: "0.17.0"`), for chess rules only. |
 | `scripts/gen_api_types.py` | Swift types from `openapi/v1.json` (checked in as `API/APITypes.generated.swift`). |
 | `scripts/gen_theme.py` | Swift color tokens from `styles.THEME` (checked in as `Theme/ThemeTokens.generated.swift`). |
 
@@ -36,7 +36,8 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 | `Filters/FilterStore.swift` | The app-wide observable filter state, persisted in UserDefaults. |
 | `Cache/ResponseCache.swift` | Last 2xx body per (route + query, server + user) in Caches. Every failure is "no cache". |
 | `Screens/ScreenResource.swift` | `ScreenContext` (what every view model takes) and `ScreenResource` (cached first, then refresh, offline flag). |
-| `Display/` | `RatingFormat` (whole numbers), `TagDisplay` (mine vs engine), `FreshnessSummary`, `WebPage` (open on the web), `ISODates`. |
+| `Board/` | The Game detail board. `PGNTree`: our PGN parser into a flat move tree (variations, pre/post comments, NAGs, FEN starts), every move replayed through ChessKit's `SANParser`/`Board`; navigation (into and out of variations, main line by ply), comment display with `[%...]` commands stripped. `BoardDiagram`: what the board view draws, oriented. ChessKit types never leave the kit. Don't use ChessKit's `PGNParser`/`Game`/`MoveTree`: it rejects a comment before move 1 and returns wrong moves in nested variations. |
+| `Display/` | `RatingFormat` (whole numbers), `TagDisplay` (mine vs engine), `FreshnessSummary`, `WebPage` (open on the web), `ISODates`, `ChartDates` (contract days as chart x values at local noon, nearest point for touch-to-read). |
 | `Theme/` | `ThemeColor` and the generated `Theme`/`ThemeMetrics`. |
 | `AppEnvironment.swift` | Composition root: config, guarded client, session, filters, cache, the shared `meta` resource, `context`, `canSync`. |
 
