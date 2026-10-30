@@ -1,0 +1,569 @@
+{
+  "average_length": {
+    "draw": 3.5,
+    "loss": 3.0,
+    "win": 4.2
+  },
+  "calendar": [
+    {
+      "days": [
+        {
+          "date": "2024-01-06",
+          "draw": 1,
+          "game_list": [
+            {
+              "game_id": "chap0001",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0002",
+              "opponent": "Opponent B",
+              "outcome": "Draw"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 1,
+          "win": 1
+        },
+        {
+          "date": "2024-01-07",
+          "draw": 0,
+          "game_list": [
+            {
+              "game_id": "chap0003",
+              "opponent": "Opponent C",
+              "outcome": "Loss"
+            }
+          ],
+          "games": 1,
+          "loss": 1,
+          "net": -1,
+          "win": 0
+        },
+        {
+          "date": "2024-06-15",
+          "draw": 0,
+          "game_list": [
+            {
+              "game_id": "chap0004",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0005",
+              "opponent": "Opponent D",
+              "outcome": "Win"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 2,
+          "win": 2
+        },
+        {
+          "date": "2024-06-16",
+          "draw": 1,
+          "game_list": [
+            {
+              "game_id": "chap0006",
+              "opponent": "Opponent B",
+              "outcome": "Win"
+            },
+            {
+              "game_id": "chap0007",
+              "opponent": "Opponent A",
+              "outcome": "Draw"
+            }
+          ],
+          "games": 2,
+          "loss": 0,
+          "net": 1,
+          "win": 1
+        }
+      ],
+      "games": 7,
+      "losses": 1,
+      "wins": 4,
+      "year": 2024
+    }
+  ],
+  "game_lengths": [
+    {
+      "moves": 6,
+      "outcome": "Win"
+    },
+    {
+      "moves": 4,
+      "outcome": "Draw"
+    },
+    {
+      "moves": 3,
+      "outcome": "Loss"
+    },
+    {
+      "moves": 4,
+      "outcome": "Win"
+    },
+    {
+      "moves": 4,
+      "outcome": "Win"
+    },
+    {
+      "moves": 3,
+      "outcome": "Win"
+    },
+    {
+      "moves": 3,
+      "outcome": "Draw"
+    }
+  ],
+  "games_count": 7,
+  "games_per_month": [
+    {
+      "games": 3,
+      "win_rate_pct": 33.3,
+      "wins": 1,
+      "year_month": "2024-01"
+    },
+    {
+      "games": 4,
+      "win_rate_pct": 75.0,
+      "wins": 3,
+      "year_month": "2024-06"
+    }
+  ],
+  "rating_chart": {
+    "emphasized": "official",
+    "live": [
+      {
+        "end_date": "2024-01-07",
+        "event_id": "202401070001",
+        "event_name": "TEST OPEN JANUARY",
+        "pre_rating": 1782,
+        "rating": 1800,
+        "section_name": "OPEN"
+      },
+      {
+        "end_date": "2024-06-16",
+        "event_id": "202406160002",
+        "event_name": "SUMMER CUP 2024",
+        "pre_rating": 1800,
+        "rating": 1812,
+        "section_name": "OPEN"
+      },
+      {
+        "end_date": "2025-06-28",
+        "event_id": "202506284842",
+        "event_name": "ACC JUNE 2025",
+        "pre_rating": null,
+        "rating": 695,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-07-25",
+        "event_id": "202507250562",
+        "event_name": "ACC JULY 2025",
+        "pre_rating": 695,
+        "rating": 927,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-08-03",
+        "event_id": "202508036402",
+        "event_name": "FOURTH ANNUAL BELTWAY OPEN",
+        "pre_rating": 927,
+        "rating": 991,
+        "section_name": "UNDER 1400"
+      },
+      {
+        "end_date": "2025-08-17",
+        "event_id": "202508174422",
+        "event_name": "DMV LATE-SUMMER ACTION",
+        "pre_rating": 991,
+        "rating": 1038,
+        "section_name": "UNDER 1500"
+      },
+      {
+        "end_date": "2025-08-29",
+        "event_id": "202508290762",
+        "event_name": "ACC AUGUST 2025",
+        "pre_rating": 1038,
+        "rating": 1015,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-08-31",
+        "event_id": "202508311982",
+        "event_name": "ROCKVILLE ACTION TOURNAMENT",
+        "pre_rating": 1015,
+        "rating": 1015,
+        "section_name": "UNDER 1500"
+      },
+      {
+        "end_date": "2025-09-07",
+        "event_id": "202509076442",
+        "event_name": "DMV FIDE CLASSICAL AND BACK-TO-SCHOOL TOURNAMENT",
+        "pre_rating": 1015,
+        "rating": 1005,
+        "section_name": "UNDER 1400"
+      },
+      {
+        "end_date": "2025-09-26",
+        "event_id": "202509267492",
+        "event_name": "ACC SEPTEMBER 2025",
+        "pre_rating": 1005,
+        "rating": 1033,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-10-05",
+        "event_id": "202510054832",
+        "event_name": "SECOND ANNUAL FEDERAL OPEN",
+        "pre_rating": 1033,
+        "rating": 1133,
+        "section_name": "UNDER 1400"
+      },
+      {
+        "end_date": "2025-10-31",
+        "event_id": "202510310133",
+        "event_name": "ACC OCTOBER 2025",
+        "pre_rating": 1133,
+        "rating": 1155,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-11-02",
+        "event_id": "202511020583",
+        "event_name": "2nd Annual Thankgiving Day Open",
+        "pre_rating": 1155,
+        "rating": 1230,
+        "section_name": "U1600"
+      },
+      {
+        "end_date": "2025-11-21",
+        "event_id": "202511210313",
+        "event_name": "ACC NOVEMBER 2025",
+        "pre_rating": 1230,
+        "rating": 1237,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2025-12-14",
+        "event_id": "202512140213",
+        "event_name": "First Annual Oak Grove Open",
+        "pre_rating": 1237,
+        "rating": 1385,
+        "section_name": "Under 1400"
+      },
+      {
+        "end_date": "2025-12-26",
+        "event_id": "202512260263",
+        "event_name": "ACC DECEMBER 2025",
+        "pre_rating": 1385,
+        "rating": 1419,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2026-01-25",
+        "event_id": "202601250303",
+        "event_name": "Fourth Annual Newcomb Memorial Tournament",
+        "pre_rating": 1419,
+        "rating": 1445,
+        "section_name": "Under 1900"
+      },
+      {
+        "end_date": "2026-01-30",
+        "event_id": "202601300273",
+        "event_name": "ACC January 2026",
+        "pre_rating": 1445,
+        "rating": 1506,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2026-02-27",
+        "event_id": "202602270323",
+        "event_name": "ACC FEBRUARY 2026",
+        "pre_rating": 1506,
+        "rating": 1461,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2026-03-07",
+        "event_id": "202603070993",
+        "event_name": "ACC v Army-Navy CC",
+        "pre_rating": 1461,
+        "rating": 1441,
+        "section_name": "Section1"
+      },
+      {
+        "end_date": "2026-03-27",
+        "event_id": "202603270403",
+        "event_name": "ACC March 2026",
+        "pre_rating": 1441,
+        "rating": 1465,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2026-03-29",
+        "event_id": "202603290543",
+        "event_name": "DMV Chess Second Annual Tournament for All Ages",
+        "pre_rating": 1465,
+        "rating": 1469,
+        "section_name": "Under 1800"
+      },
+      {
+        "end_date": "2026-03-29",
+        "event_id": "202603290543",
+        "event_name": "DMV Chess Second Annual Tournament for All Ages",
+        "pre_rating": 1469,
+        "rating": 1470,
+        "section_name": "Extra games - Classical"
+      },
+      {
+        "end_date": "2026-04-24",
+        "event_id": "202604240323",
+        "event_name": "ACC Aprril 2026",
+        "pre_rating": 1470,
+        "rating": 1544,
+        "section_name": "LADDER"
+      },
+      {
+        "end_date": "2026-05-29",
+        "event_id": "202605290393",
+        "event_name": "ACC MAY 2026",
+        "pre_rating": 1544,
+        "rating": 1571,
+        "section_name": "LADDER"
+      }
+    ],
+    "mode": "uscf",
+    "official": [
+      {
+        "month": "2024-01-01",
+        "rating": 1800
+      },
+      {
+        "month": "2024-06-01",
+        "rating": 1810
+      },
+      {
+        "month": "2025-09-01",
+        "rating": 1038
+      },
+      {
+        "month": "2025-10-01",
+        "rating": 1005
+      },
+      {
+        "month": "2025-11-01",
+        "rating": 1133
+      },
+      {
+        "month": "2025-12-01",
+        "rating": 1230
+      },
+      {
+        "month": "2026-01-01",
+        "rating": 1386
+      },
+      {
+        "month": "2026-02-01",
+        "rating": 1419
+      },
+      {
+        "month": "2026-03-01",
+        "rating": 1506
+      },
+      {
+        "month": "2026-04-01",
+        "rating": 1440
+      },
+      {
+        "month": "2026-05-01",
+        "rating": 1470
+      },
+      {
+        "month": "2026-06-01",
+        "rating": 1545
+      }
+    ],
+    "typed": []
+  },
+  "rounds": [
+    {
+      "draw": 0,
+      "games": 2,
+      "loss": 0,
+      "reliable": false,
+      "round": 1,
+      "score_pct": 100.0,
+      "win": 2,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 1,
+      "games": 2,
+      "loss": 0,
+      "reliable": false,
+      "round": 2,
+      "score_pct": 75.0,
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 0,
+      "games": 2,
+      "loss": 1,
+      "reliable": false,
+      "round": 3,
+      "score_pct": 50.0,
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 1,
+      "games": 1,
+      "loss": 0,
+      "reliable": false,
+      "round": 4,
+      "score_pct": 50.0,
+      "win": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "time_controls": [
+    {
+      "draw": 1,
+      "games": 3,
+      "loss": 1,
+      "minutes": 140.0,
+      "speed": "Classical",
+      "time_control": "40/80, SD30; +30",
+      "win": 1,
+      "win_rate_pct": 33.3
+    },
+    {
+      "draw": 0,
+      "games": 3,
+      "loss": 0,
+      "minutes": 35.0,
+      "speed": "Rapid",
+      "time_control": "30+5",
+      "win": 3,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 1,
+      "games": 1,
+      "loss": 0,
+      "minutes": null,
+      "speed": "Unknown",
+      "time_control": "",
+      "win": 0,
+      "win_rate_pct": 0.0
+    }
+  ],
+  "upsets": {
+    "giant_kills": [
+      {
+        "game": {
+          "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+          "color": "White",
+          "date": "2024-01-06",
+          "eco": "E04",
+          "game_id": "chap0001",
+          "has_lesson": true,
+          "moves": 6,
+          "opening": "Catalan Opening: Open Defense",
+          "opponent": "Opponent A",
+          "opponent_rating": 1920,
+          "outcome": "Win",
+          "player_rating": 1800,
+          "result": "1-0",
+          "round": 1,
+          "series": "Test Open",
+          "tags": [
+            {
+              "name": "strategy",
+              "source": "mine"
+            }
+          ],
+          "termination": "win by resignation",
+          "uscf_status": "matched_by_id"
+        },
+        "margin": 120
+      },
+      {
+        "game": {
+          "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+          "color": "Black",
+          "date": "2024-06-15",
+          "eco": "E60",
+          "game_id": "chap0004",
+          "has_lesson": true,
+          "moves": 4,
+          "opening": "King's Indian Defense",
+          "opponent": "Opponent A",
+          "opponent_rating": 1930,
+          "outcome": "Win",
+          "player_rating": 1810,
+          "result": "0-1",
+          "round": 1,
+          "series": "Summer Cup",
+          "tags": [
+            {
+              "name": "opening",
+              "source": "mine"
+            }
+          ],
+          "termination": "loss by checkmate",
+          "uscf_status": "conflict"
+        },
+        "margin": 120
+      }
+    ],
+    "upset_losses": []
+  },
+  "win_rate": [
+    {
+      "cum_games": 2,
+      "cum_wins": 1,
+      "date": "2024-01-06",
+      "win_rate_pct": 50.0
+    },
+    {
+      "cum_games": 3,
+      "cum_wins": 1,
+      "date": "2024-01-07",
+      "win_rate_pct": 33.33333333333333
+    },
+    {
+      "cum_games": 5,
+      "cum_wins": 3,
+      "date": "2024-06-15",
+      "win_rate_pct": 60.0
+    },
+    {
+      "cum_games": 7,
+      "cum_wins": 4,
+      "date": "2024-06-16",
+      "win_rate_pct": 57.14285714285714
+    }
+  ],
+  "win_rate_by_weekday": [
+    {
+      "day_of_week": "Sat",
+      "games": 4,
+      "win_rate_pct": 75.0,
+      "wins": 3
+    },
+    {
+      "day_of_week": "Sun",
+      "games": 3,
+      "win_rate_pct": 33.3,
+      "wins": 1
+    }
+  ]
+}

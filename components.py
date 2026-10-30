@@ -13,6 +13,7 @@ from __future__ import annotations
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, dcc, html, no_update
 
+from payloads.overview import form_indicator as indicator_state
 from pgn_stats_core import chapter_id
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
 from uscf_core import UscfProfile, UscfRating
@@ -182,21 +183,23 @@ def form_indicator(form: dict) -> list:
     """
     children: list = []
 
-    if form["win_streak"] >= 2:
-        blazing = " blazing" if form["win_streak"] >= 5 else ""
+    # The thresholds live with the API payload so the phone's fire can't drift
+    state = indicator_state(form["win_streak"], form["loss_streak"])
+    if state["kind"] == "fire":
+        blazing = " blazing" if state["blazing"] else ""
         # The fire grows with the streak (capped so it never breaks the header)
-        size = min(15 + form["win_streak"] * 1.5, 28)
+        size = min(15 + state["count"] * 1.5, 28)
         children.append(html.Span(
-            ["🔥", html.Span(str(form["win_streak"]), className="streak-count")],
+            ["🔥", html.Span(str(state["count"]), className="streak-count")],
             className=f"streak-fire{blazing}",
             style={"fontSize": f"{size}px"},
-            title=f"{form['win_streak']}-game win streak",
+            title=f"{state['count']}-game win streak",
         ))
-    elif form["loss_streak"] >= 3:
+    elif state["kind"] == "cold":
         children.append(html.Span(
-            ["🧊", html.Span(str(form["loss_streak"]), className="streak-count")],
+            ["🧊", html.Span(str(state["count"]), className="streak-count")],
             className="streak-cold",
-            title=f"{form['loss_streak']}-game losing streak. It turns around.",
+            title=f"{state['count']}-game losing streak. It turns around.",
         ))
 
     if form["last_5"]:

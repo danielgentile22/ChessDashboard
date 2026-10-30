@@ -1592,6 +1592,11 @@ class TestComputeMilestones:
         ms = compute_milestones(pd.DataFrame())
         assert ms == []
 
+    def test_each_item_points_at_its_game(self, df):
+        urls = set(df["ChapterURL"])
+        for m in compute_milestones(df):
+            assert m["chapter_url"] in urls
+
     def test_each_item_has_required_keys(self, df):
         ms = compute_milestones(df)
         for m in ms:
