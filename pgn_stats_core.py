@@ -1652,25 +1652,34 @@ def tag_counts(df: pd.DataFrame) -> list[dict]:
     Canonical taxonomy Tags come first (in taxonomy order), then freeform
     Tags by descending count — so vocabulary fragmentation stays visible.
 
-    Returns: [{"tag": str, "count": int, "canonical": bool}, ...]
+    Each count splits by who wrote the Tag on that Game: ``engine`` when the
+    Game's TagSources says the engine emitted it, ``mine`` otherwise (so
+    count == mine + engine).
+
+    Returns: [{"tag": str, "count": int, "canonical": bool,
+               "mine": int, "engine": int}, ...]
     """
     if df.empty or "Tags" not in df.columns:
         return []
 
     counts: Counter[str] = Counter()
-    for game_tags in df["Tags"]:
+    engine: Counter[str] = Counter()
+    sources = df["TagSources"] if "TagSources" in df.columns else [None] * len(df)
+    for game_tags, game_sources in zip(df["Tags"], sources):
         counts.update(game_tags)
+        engine.update(t for t in game_tags if (game_sources or {}).get(t) == "engine")
 
-    canonical = [
-        {"tag": t, "count": counts[t], "canonical": True}
-        for t in CANONICAL_TAGS if counts[t] > 0
-    ]
-    freeform_pairs = sorted(
-        ((t, n) for t, n in counts.items() if t not in CANONICAL_TAGS),
-        key=lambda pair: (-pair[1], pair[0]),
+    def _item(tag: str, canonical: bool) -> dict:
+        n = counts[tag]
+        return {"tag": tag, "count": n, "canonical": canonical,
+                "mine": n - engine[tag], "engine": engine[tag]}
+
+    canonical = [_item(t, True) for t in CANONICAL_TAGS if counts[t] > 0]
+    freeform = sorted(
+        (t for t in counts if t not in CANONICAL_TAGS),
+        key=lambda t: (-counts[t], t),
     )
-    freeform = [{"tag": t, "count": n, "canonical": False} for t, n in freeform_pairs]
-    return canonical + freeform
+    return canonical + [_item(t, False) for t in freeform]
 
 
 # ---------------------------------------------------------------------------
