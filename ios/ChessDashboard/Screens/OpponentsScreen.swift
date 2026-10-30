@@ -125,14 +125,14 @@ private struct OutcomeScatter: View {
 
 	private var dots: [Dot] {
 		points.enumerated().compactMap { i, p in
-			guard let date = ISODates.day(p.date), let rating = p.opponentRating else { return nil }
+			guard let date = ChartDates.day(p.date), let rating = p.opponentRating else { return nil }
 			return Dot(id: i, date: date, point: p, rating: rating)
 		}
 	}
 
 	var body: some View {
 		let dots = dots
-		let selected = selectedDate.flatMap { d in dots.min { abs($0.date.timeIntervalSince(d)) < abs($1.date.timeIntervalSince(d)) } }
+		let selected = selectedDate.flatMap { ChartDates.nearest(dots, to: $0, by: \.date) }
 		if dots.isEmpty {
 			Text("No rated opponents in these Games.").foregroundStyle(Theme.muted.color)
 		} else {
@@ -161,6 +161,12 @@ private struct OutcomeScatter: View {
 			}
 			.chartForegroundStyleScale(["Win": Theme.win.color, "Draw": Theme.draw.color, "Loss": Theme.loss.color])
 			.chartYScale(domain: .automatic(includesZero: false))
+			.chartYAxis {
+				AxisMarks { value in
+					AxisGridLine()
+					AxisValueLabel { Text(RatingFormat.whole(value.as(Double.self))) }
+				}
+			}
 			.chartXSelection(value: $selectedDate)
 			.frame(height: 240)
 			.padding(.vertical, 6)
