@@ -65,6 +65,18 @@ public struct SyncReport: Equatable, Sendable {
 	/// When Lichess data was last synced, for "synced X ago".
 	public let syncedAt: Date?
 
+	/// One new Game in the toast: "vs Edwards (Win)", tapping opens it.
+	public struct NewGameLink: Hashable, Sendable {
+		public let route: GameRoute
+		public let label: String
+	}
+
+	public var newGameLinks: [NewGameLink] {
+		newGames.map {
+			NewGameLink(route: GameRoute(gameID: $0.gameId), label: "vs \($0.opponent) (\($0.outcome.rawValue))")
+		}
+	}
+
 	public init(_ payload: API.SyncPayload) {
 		syncedAt = ISODates.timestamp(payload.syncedAt)
 		switch payload.status {
@@ -107,10 +119,9 @@ public struct SyncReport: Equatable, Sendable {
 		}
 	}
 
-	/// "2 new Games: vs Edwards (Win), vs Lopez (Loss)".
+	/// "2 new Games" (the toast lists them as `newGameLinks`).
 	static func describe(_ games: [API.SyncNewGame]) -> String {
 		guard !games.isEmpty else { return "No new Games. Everything is already up to date." }
-		let list = games.map { "vs \($0.opponent) (\($0.outcome.rawValue))" }.joined(separator: ", ")
-		return "\(games.count) new Game\(games.count == 1 ? "" : "s"): \(list)"
+		return "\(games.count) new Game\(games.count == 1 ? "" : "s")"
 	}
 }

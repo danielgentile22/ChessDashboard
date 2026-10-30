@@ -21,8 +21,9 @@ struct SyncButton: View {
 }
 
 /// The Sync outcome, like the web toast and celebration banner: new Games,
-/// personal bests and USCF achievements, or why it failed. Success and
-/// warnings dismiss themselves; a failure stays until dismissed.
+/// personal bests and USCF achievements, or why it failed. Tapping a new
+/// Game opens it. Success and warnings dismiss themselves; a failure stays
+/// until dismissed.
 struct SyncToast: View {
 	let report: SyncReport
 	let dismiss: () -> Void
@@ -36,6 +37,23 @@ struct SyncToast: View {
 			VStack(alignment: .leading, spacing: 4) {
 				Text(report.title).font(.subheadline.weight(.semibold))
 				Text(report.message).font(.footnote)
+				ForEach(report.newGameLinks, id: \.self) { link in
+					// Pushes onto the screen's NavigationStack (every tab root
+					// registers `gameDestination`); the toast goes with it.
+					NavigationLink(value: link.route) {
+						HStack(spacing: 4) {
+							Text(link.label)
+							Image(systemName: "chevron.right").imageScale(.small)
+						}
+						.font(.footnote.weight(.medium))
+						.foregroundStyle(Theme.primary.color)
+						.frame(minHeight: 28)
+						.contentShape(.rect)
+					}
+					.buttonStyle(.plain)
+					.simultaneousGesture(TapGesture().onEnded { dismiss() })
+					.accessibilityHint("Opens the Game")
+				}
 				ForEach(report.celebrations, id: \.self) { line in
 					Label(line, systemImage: "trophy.fill")
 						.font(.footnote.weight(.medium))
@@ -61,7 +79,8 @@ struct SyncToast: View {
 		.background(Theme.card2.color, in: .rect(cornerRadius: 14))
 		.overlay(RoundedRectangle(cornerRadius: 14).stroke(tint.opacity(0.6)))
 		.shadow(color: .black.opacity(0.35), radius: 12, y: 4)
-		.accessibilityElement(children: .combine)
+		// Contain, not combine: each new Game stays its own button.
+		.accessibilityElement(children: report.newGameLinks.isEmpty ? .combine : .contain)
 		.accessibilityAddTraits(.updatesFrequently)
 		.task(id: report) {
 			guard report.style != .failure else { return }

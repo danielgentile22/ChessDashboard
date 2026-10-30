@@ -18,7 +18,9 @@ struct SyncModelTests {
 		let report = try #require(env.sync.report)
 		#expect(report.style == .success)
 		#expect(report.title == "Sync complete")
-		#expect(report.message == "2 new Games: vs Opponent E (Win), vs Opponent A (Draw)")
+		#expect(report.message == "2 new Games")
+		#expect(report.newGameLinks.map(\.label) == ["vs Opponent E (Win)", "vs Opponent A (Draw)"])
+		#expect(report.newGameLinks.map(\.route) == [GameRoute(gameID: "chap0021"), GameRoute(gameID: "chap0022")])
 		#expect(report.celebrations == [
 			"New peak rating: 1815 (was 1810)",
 			"New longest win streak: 4 games in a row (was 3)",
