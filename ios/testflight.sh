@@ -29,9 +29,16 @@ archive=../build/ChessDashboard.xcarchive
 export_dir=../build/ios-export
 keychain=$HOME/Library/Keychains/tvhome-signing.keychain-db
 
+# unlock-keychain has no stdin or file input: without -p it prompts on the terminal, so the
+# password stays on its command line (briefly visible to local `ps`).
 security unlock-keychain -p "$(env_value CHESSDASH_KEYCHAIN_PASSWORD)" "$keychain"
 if ! security list-keychains -d user | grep -q tvhome-signing; then
-  eval "security list-keychains -d user -s $(security list-keychains -d user | xargs) $keychain"
+  # Each line is an indented, quoted path; keep paths with spaces whole.
+  keychains=()
+  while IFS= read -r kc; do
+    keychains+=("$kc")
+  done < <(security list-keychains -d user | sed -n 's/^[[:space:]]*"\(.*\)"[[:space:]]*$/\1/p')
+  security list-keychains -d user -s "${keychains[@]}" "$keychain"
 fi
 
 xcodegen generate -q

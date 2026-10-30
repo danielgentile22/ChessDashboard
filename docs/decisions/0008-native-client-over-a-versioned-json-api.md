@@ -27,6 +27,7 @@ The shape of the API:
 - **The contract is an OpenAPI 3.1 document in the repo** (`openapi/v1.json`, bundled from per-screen fragments in `openapi/src/`). It is the single source of truth: Swift types are generated from it, and a server test fails when a route's real response doesn't validate against it. The contract tests record their validated responses as fixtures (`openapi/fixtures/`) that the iOS tests decode, so a server change that breaks a Swift decoder fails the iOS build.
 - **Versioning.** Additive changes stay in v1. A breaking change ships as v2 alongside v1 until the TestFlight build that uses v2 is out.
 - **Reconciliation stays web-only.** It is a desk task; the app links to it in Safari.
+- **The board replays PGN on the device.** ChessKit (pinned exactly) supplies only the chess rules (SAN to moves, positions); the PGN move tree is an in-house parser in `ChessDashboardKit`, because ChessKit's own PGN parser rejects a comment before move 1 and returns wrong moves in nested variations.
 
 ### Consequences
 

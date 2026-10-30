@@ -26,6 +26,8 @@ def lessons():
     review = _BOOLEANS.get(request.args.get("review", "false").lower())
     if review is None:
         raise ApiError("bad_request", "review must be true or false", 400)
+    # Two reads on purpose: the second is the whole archive under the same lens
+    # (filters cleared), so the lens is still applied only in get_filtered.
     everything = replace(f, colors=[], outcomes=[], terminations=[], start=None, end=None,
                          series=[], min_moves=None, max_moves=None)
     return ok(build_lessons(
