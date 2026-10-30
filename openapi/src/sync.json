@@ -78,7 +78,7 @@
         "properties": {
           "game_id": {"$ref": "#/components/schemas/GameId"},
           "opponent": {"type": "string"},
-          "outcome": {"$ref": "#/components/schemas/Outcome"},
+          "outcome": {"$ref": "#/components/schemas/GameOutcome"},
           "result": {"type": "string", "description": "The PGN Result, e.g. 1-0."},
           "date": {"$ref": "#/components/schemas/IsoDate"}
         }

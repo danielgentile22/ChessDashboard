@@ -1,0 +1,55 @@
+{
+  "accuracy_trend": [],
+  "awaiting_analysis": [
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+      "date": "2024-01-06",
+      "game_id": "chap0001",
+      "name": "Test Player - Opponent A"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0002",
+      "date": "2024-01-06",
+      "game_id": "chap0002",
+      "name": "Opponent B - Test Player"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0003",
+      "date": "2024-01-07",
+      "game_id": "chap0003",
+      "name": "Test Player - Opponent C"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+      "date": "2024-06-15",
+      "game_id": "chap0004",
+      "name": "Opponent A - Test Player"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0005",
+      "date": "2024-06-15",
+      "game_id": "chap0005",
+      "name": "Test Player - Opponent D"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0006",
+      "date": "2024-06-16",
+      "game_id": "chap0006",
+      "name": "Opponent B - Test Player"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0007",
+      "date": "2024-06-16",
+      "game_id": "chap0007",
+      "name": "Test Player - Opponent A"
+    }
+  ],
+  "has_analysis": false,
+  "mistake_move_histogram": [],
+  "mistake_type_distribution": {
+    "positional": 0,
+    "tactical": 0
+  },
+  "mistake_type_trend": [],
+  "phase_type_matrix": []
+}

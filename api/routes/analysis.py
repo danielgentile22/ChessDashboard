@@ -3,14 +3,16 @@ api.routes.analysis
 ===================
 GET /api/v1/analysis: the Analysis screen.
 
-A 501 stub until #115 builds it: read the store (this screen
-takes no filters, per the contract), pass it to a ``payloads.analysis`` builder, ``ok()``.
+Takes no filters, per the contract: like the web page, it reads the full,
+unfiltered store.
 """
 from __future__ import annotations
 
-from api.http import bp, not_implemented
+import data
+from api.http import bp, ok
+from payloads.analysis import build_analysis
 
 
 @bp.get("/analysis")
 def analysis():
-    return not_implemented("Analysis")
+    return ok(build_analysis(data.get_df()))

@@ -68,6 +68,7 @@ __all__ = [
     "UscfEvent",
     "UscfGameRecord",
     "UscfProfile",
+    "USCF_RATING_SYSTEM_LABELS",
     "UscfRating",
     "achievement_milestones",
     "apply_rating_lens",
@@ -88,11 +89,28 @@ __all__ = [
     "reconcile",
     "series_summary",
     "unplayed_events",
+    "uscf_member_url",
 ]
 
 # Warn this many days before the membership expires — enough time to renew
 # before the next monthly tournament sneaks up.
 _EXPIRATION_WARNING_DAYS = 90
+
+# Display names for USCF rating-system codes.
+USCF_RATING_SYSTEM_LABELS = {
+    "R": "Regular",
+    "D": "Dual (Regular + Quick)",
+    "Q": "Quick",
+    "B": "Blitz",
+    "OR": "Online Regular",
+    "OQ": "Online Quick",
+    "OB": "Online Blitz",
+}
+
+
+def uscf_member_url(member_id: str) -> str:
+    """The USCF ratings-site page for a member ('' if no ID)."""
+    return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
 
 
 # ---------------------------------------------------------------------------

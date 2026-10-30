@@ -1,0 +1,78 @@
+{
+  "board": {
+    "coach": null,
+    "engine": null,
+    "game": "[Event \"Test Open\"]\n[Date \"2024.01.06\"]\n[Round \"1\"]\n[White \"Test Player\"]\n[Black \"Opponent A\"]\n[Result \"1-0\"]\n\n1. d4 Nf6 2. c4 e6 3. g3 d5 4. Bg2 dxc4 5. Nf3 Be7 6. O-O O-O 1-0",
+    "my_analysis": null
+  },
+  "engine": {
+    "ai_summary": "",
+    "critical_moment": null,
+    "judged_moves": [],
+    "state": "awaiting_analysis",
+    "win_probability": []
+  },
+  "forfeit": false,
+  "game": {
+    "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+    "color": "White",
+    "date": "2024-01-06",
+    "eco": "E04",
+    "game_id": "chap0001",
+    "has_lesson": true,
+    "moves": 6,
+    "opening": "Catalan Opening: Open Defense",
+    "opponent": "Opponent A",
+    "opponent_rating": 1920,
+    "outcome": "Win",
+    "player_rating": 1800,
+    "result": "1-0",
+    "round": 1,
+    "series": "Test Open",
+    "tags": [
+      {
+        "name": "strategy",
+        "source": "mine"
+      }
+    ],
+    "termination": "win by resignation",
+    "uscf_status": "matched_by_id"
+  },
+  "lessons": [
+    "Keep the tension in the center instead of releasing it early. #strategy"
+  ],
+  "metadata": {
+    "color": "White",
+    "date": "2024-01-06",
+    "eco": "E04",
+    "moves": 6,
+    "opening": "Catalan Opening: Open Defense",
+    "opponent_rating": 1920,
+    "player_rating": 1800,
+    "result": "1-0",
+    "round": "1",
+    "series": "Test Open",
+    "study_name": "Test Study",
+    "termination": "win by resignation"
+  },
+  "player_color": "White",
+  "tags": [
+    {
+      "name": "strategy",
+      "source": "mine"
+    }
+  ],
+  "uscf_record": {
+    "color_conflict": false,
+    "matched_by": "id",
+    "opponent_id": "10000001",
+    "opponent_name": "OPPONENT A",
+    "opponent_url": "https://ratings.uschess.org/members/10000001",
+    "rated_event_id": "202401070001",
+    "rated_event_name": "TEST OPEN JANUARY",
+    "rating_system": "R",
+    "rating_system_label": "Regular",
+    "section": "OPEN",
+    "uscf_color": "White"
+  }
+}

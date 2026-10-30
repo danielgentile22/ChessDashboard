@@ -40,6 +40,7 @@ import ai_summary
 from analysis_cache import AnalysisCache
 from analysis_trends import (
     accuracy_trend,
+    awaiting_analysis,
     mistake_move_histogram,
     mistake_type_trend,
     phase_type_matrix,
@@ -184,7 +185,8 @@ class RefreshOutcome:
     """What a refresh() attempt produced — feeds the Sync toast in the UI."""
 
     status: str  # "success" | "error" | "already_running"
-    # newly appeared Games: [{"Opponent": ..., "Outcome": ..., "Result": ..., "Date": ...}]
+    # newly appeared Games: [{"Opponent", "Outcome", "Result", "Date", "Date_dt",
+    # "ChapterURL"}]
     new_games: list[dict] = field(default_factory=list)
     error: str = ""
     failures: list[tuple[str, str]] = field(default_factory=list)
@@ -506,7 +508,8 @@ def refresh() -> RefreshOutcome:
             )
 
         new_df = detect_new_games(result.df, previous_urls)
-        new_games = new_df[["Opponent", "Outcome", "Result", "Date"]].to_dict("records")
+        new_games = new_df[["Opponent", "Outcome", "Result", "Date", "Date_dt",
+                            "ChapterURL"]].to_dict("records")
 
         # Build the whole next state off-store, then swap it in exactly once
         # (ADR 0006).  Enrichment (USCF/analysis/coach) failing raises here,
@@ -676,11 +679,7 @@ def get_awaiting_analysis() -> pd.DataFrame:
 
     Returns a copy so callers never mutate the store.
     """
-    df = _current().df
-    if df.empty or "Analyzed" not in df.columns:
-        return df.copy()
-    awaiting = df[(~df["Analyzed"].astype(bool)) & (df["ChapterURL"] != "")]
-    return awaiting.copy()
+    return awaiting_analysis(_current().df)
 
 
 def get_mistake_type_distribution() -> dict[str, int]:
