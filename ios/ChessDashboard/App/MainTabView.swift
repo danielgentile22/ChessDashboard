@@ -12,22 +12,22 @@ struct MainTabView: View {
 	var body: some View {
 		TabView(selection: $tab) {
 			Tab("Overview", systemImage: "square.grid.2x2", value: .overview) {
-				NavigationStack { PlaceholderScreen(title: "Overview", page: .overview) }
+				NavigationStack { PlaceholderScreen(title: "Overview", page: .overview).gameDestination() }
 			}
 			Tab("Trends", systemImage: "chart.xyaxis.line", value: .trends) {
-				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends) }
+				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends).gameDestination() }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
-				NavigationStack { PlaceholderScreen(title: "Games", page: .games) }
+				NavigationStack { GamesScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
-				NavigationStack { LessonsScreen(context: env.context!) }
+				NavigationStack { LessonsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Opponents", systemImage: "person.2", value: .opponents) {
-				NavigationStack { OpponentsScreen(context: env.context!) }
+				NavigationStack { OpponentsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("More", systemImage: "ellipsis.circle", value: .more) {
-				NavigationStack { MoreView() }
+				NavigationStack { MoreView().gameDestination() }
 			}
 		}
 	}
@@ -42,10 +42,10 @@ struct MoreView: View {
 	var body: some View {
 		List {
 			Section {
-				NavigationLink { PlaceholderScreen(title: "Openings", page: .openings) } label: {
+				NavigationLink { OpeningsScreen(context: env.context!) } label: {
 					Label("Openings", systemImage: "point.3.connected.trianglepath.dotted")
 				}
-				NavigationLink { PlaceholderScreen(title: "Events", page: .events) } label: {
+				NavigationLink { EventsScreen(context: env.context!) } label: {
 					Label("Events", systemImage: "trophy")
 				}
 				NavigationLink { AnalysisScreen(context: env.context!) } label: {

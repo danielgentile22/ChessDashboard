@@ -33,7 +33,6 @@ struct OpponentsScreen: View {
 		}
 		.searchable(text: $model.searchText, prompt: "Search opponents")
 		.screenChrome(title: "Opponents", page: .opponents, resource: model.resource)
-		.gameDestination()
 		.task(id: env.filters.state) { await model.load() }
 		.refreshable { await model.load() }
 	}
@@ -91,7 +90,11 @@ struct OpponentsScreen: View {
 
 	private var strengthSection: some View {
 		Section {
-			StrengthChart(buckets: model.ratingBuckets)
+			WDLBarChart(
+				bars: model.ratingBuckets.map {
+					.init(id: $0.bucket.rawValue, label: $0.bucket.rawValue, win: $0.win, draw: $0.draw, loss: $0.loss)
+				},
+				summary: "Wins, draws and losses by opponent rating difference")
 		} header: {
 			Text("By opponent rating difference")
 		} footer: {
@@ -105,43 +108,6 @@ struct OpponentsScreen: View {
 		} header: {
 			Text("Outcome vs opponent rating")
 		}
-	}
-}
-
-/// W/D/L per rating-difference bucket, stacked, with a touch readout.
-private struct StrengthChart: View {
-	let buckets: [API.OpponentsRatingBucket]
-	@State private var selected: String?
-
-	var body: some View {
-		Chart {
-			ForEach(buckets, id: \.bucket) { b in
-				ForEach(Self.parts(b), id: \.0) { part, count in
-					BarMark(x: .value("Games", count), y: .value("Rating difference", b.bucket.rawValue))
-						.foregroundStyle(by: .value("Result", part))
-						.accessibilityLabel(b.bucket.rawValue)
-						.accessibilityValue("\(count) \(part == "Win" ? "wins" : part == "Draw" ? "draws" : "losses")")
-				}
-			}
-			if let selected, let b = buckets.first(where: { $0.bucket.rawValue == selected }) {
-				RuleMark(y: .value("Rating difference", selected))
-					.foregroundStyle(Theme.dim.color)
-					.annotation(position: .overlay, alignment: .trailing) {
-						Text("\(b.win)W \(b.draw)D \(b.loss)L")
-							.font(.caption.monospacedDigit().weight(.semibold))
-							.padding(.horizontal, 6).padding(.vertical, 2)
-							.background(RoundedRectangle(cornerRadius: 4).fill(Theme.card2.color))
-					}
-			}
-		}
-		.chartForegroundStyleScale(["Win": Theme.win.color, "Draw": Theme.draw.color, "Loss": Theme.loss.color])
-		.chartYSelection(value: $selected)
-		.frame(height: CGFloat(max(buckets.count, 2)) * 44)
-		.padding(.vertical, 6)
-	}
-
-	static func parts(_ b: API.OpponentsRatingBucket) -> [(String, Int)] {
-		[("Win", b.win), ("Draw", b.draw), ("Loss", b.loss)].filter { $0.1 > 0 }
 	}
 }
 

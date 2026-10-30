@@ -10,7 +10,7 @@ struct GameSummaryLine: View {
 
 	var body: some View {
 		HStack(alignment: .firstTextBaseline, spacing: 8) {
-			OutcomeMark(outcome: game.outcome)
+			OutcomeBadge(outcome: game.outcome)
 			VStack(alignment: .leading, spacing: 2) {
 				if showOpponent {
 					Text("vs \(game.opponent) (\(RatingFormat.whole(game.opponentRating)))")
@@ -27,39 +27,6 @@ struct GameSummaryLine: View {
 	private var details: String {
 		[game.date ?? "", game.color == .unknown ? "" : game.color.rawValue, game.series]
 			.filter { !$0.isEmpty }.joined(separator: " · ")
-	}
-}
-
-/// W, D, or L in the result's color.
-struct OutcomeMark: View {
-	let outcome: API.GameOutcome
-
-	var body: some View {
-		Text(letter)
-			.font(.caption.weight(.bold).monospaced())
-			.foregroundStyle(color)
-			.frame(minWidth: 20)
-			.padding(.vertical, 2)
-			.background(RoundedRectangle(cornerRadius: 4).fill(color.opacity(0.15)))
-			.accessibilityLabel(outcome.rawValue)
-	}
-
-	private var letter: String {
-		switch outcome {
-		case .win: "W"
-		case .draw: "D"
-		case .loss: "L"
-		case .unknown: "?"
-		}
-	}
-
-	private var color: Color {
-		switch outcome {
-		case .win: Theme.win.color
-		case .draw: Theme.draw.color
-		case .loss: Theme.loss.color
-		case .unknown: Theme.muted.color
-		}
 	}
 }
 

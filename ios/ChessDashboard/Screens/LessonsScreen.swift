@@ -33,7 +33,6 @@ struct LessonsScreen: View {
 			}
 		}
 		.screenChrome(title: "Lessons", page: .lessons, resource: model.resource)
-		.gameDestination()
 		.task(id: Query(filters: env.filters.state, tags: model.selectedTags, opponent: model.opponentID)) {
 			await model.load()
 		}
@@ -95,7 +94,7 @@ struct LessonsScreen: View {
 			if counts.isEmpty {
 				Text("No Tags in these Games yet").foregroundStyle(Theme.muted.color)
 			} else {
-				FlowLayout(spacing: 6) {
+				FlowRow {
 					ForEach(counts, id: \.name) { count in
 						TagCountChip(count: count, selected: model.isSelected(count.name)) {
 							model.toggle(tag: count.name)

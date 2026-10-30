@@ -62,7 +62,6 @@ struct AnalysisScreen: View {
 			}
 		}
 		.screenChrome(title: "Analysis", page: .analysis, resource: model.resource, filtered: false)
-		.gameDestination()
 		.task { await model.load() }
 		.refreshable { await model.load() }
 	}
