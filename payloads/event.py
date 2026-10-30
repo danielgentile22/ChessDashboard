@@ -3,9 +3,9 @@ payloads.event
 ==============
 One Rated Event: the web's Rated Event card plus its crosstables, keyed by
 USCF event ID.  If its Games sit under more than one Series, this view
-combines them.  Facts derived from Games follow the filters; the crosstables
-are member-level USCF facts, never filtered, only selected by the Sections
-played.
+combines them.  The Games list and its counts follow the filters; the
+Sections, their crosstables, and the rating change are USCF facts about the
+whole Rated Event, so they come from every Game of it, never filtered.
 """
 from __future__ import annotations
 
@@ -71,25 +71,29 @@ def build_event(
 ) -> dict | None:
     """The Rated Event payload over the filtered, lens-applied Games, or None
     when no Game in the UNFILTERED *all_games* belongs to *event_id* (an
-    unknown ID, or an event entered but never played)."""
+    unknown ID, or an event entered but never played).
+
+    Only the Games list and its counts follow the filters: the Sections,
+    crosstables, round links, and rating change come from *all_games*."""
     played = all_games[all_games["UscfEventId"] == event_id] if not all_games.empty else all_games
     if played.empty:
         return None
 
     games = df[df["UscfEventId"] == event_id] if not df.empty else df
     event = rated_event_summary(event_id, games, live_series, member_events)
-    if not event["name"]:  # USCF's events list lacks it: the Games know its name
-        event["name"] = str(played.iloc[0]["UscfEventName"])
+    whole = rated_event_summary(event_id, played, live_series, member_events)
+    event.update(name=event["name"] or str(played.iloc[0]["UscfEventName"]),
+                 pre=whole["pre"], post=whole["post"])
 
     series = sorted(set(games["Event"]) - {""}) if not games.empty else []
-    series_unmatched = (
-        df[(df["UscfEventId"] == "") & df["Event"].isin(series)].to_dict("records")
-        if series else []
-    )
-    urls_by_round = round_chapter_urls(event["rows"], series_unmatched)
+    played_series = set(played["Event"]) - {""}
+    series_unmatched = all_games[
+        (all_games["UscfEventId"] == "") & all_games["Event"].isin(played_series)
+    ].to_dict("records")
+    urls_by_round = round_chapter_urls(whole["rows"], series_unmatched)
 
     sections = []
-    for name in event["sections"]:
+    for name in whole["sections"]:
         table = standings.get((event_id, name), [])
         sections.append({
             **section_placement(event_id, name, standings, member_id),

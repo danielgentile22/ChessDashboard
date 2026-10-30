@@ -54,9 +54,21 @@ def test_filters_hiding_every_game_still_answer_200(api):
     event_id = next(e for e in data.get_df()["UscfEventId"] if e)
     body = api.get(f"/api/v1/events/{event_id}", query_string={"start": "2099-01-01"})
     assert body["games_count"] == 0
-    assert body["games"] == [] and body["sections"] == [] and body["series"] == []
+    assert body["games"] == [] and body["series"] == []
     assert body["name"]  # the Rated Event still has its official name
-    assert body["rating_change"] is None
+    assert body["sections"]  # Sections played are a fact of the whole Rated Event
+
+
+def test_sections_crosstables_and_rating_change_ignore_the_filters(api_real):
+    """Only the Games list follows the filters; a filter that hides every Game
+    of the Rated Event leaves its Sections, crosstables, and rating change."""
+    path = f"/api/v1/events/{ACC_MAY_2026}"
+    whole = api_real.get(path)
+    hidden = api_real.get(path, query_string={"start": "2099-01-01"})
+    assert hidden["games_count"] == 0 and hidden["games"] == []
+    assert whole["rating_change"] is not None
+    for key in ("sections", "pre_rating", "post_rating", "rating_change"):
+        assert hidden[key] == whole[key], key
 
 
 def test_without_uscf_no_event_exists(api_lichess_only):

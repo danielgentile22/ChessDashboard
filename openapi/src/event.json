@@ -5,7 +5,7 @@
         "operationId": "getEvent",
         "tags": ["screens"],
         "summary": "One Rated Event: its Sections, placement, rating change, Games, and full crosstables.",
-        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). Facts derived from Games (counts, score, Sections played, rating change, performance) follow the filters exactly like the web card; the crosstables themselves are USCF member-level facts and are never filtered, only selected by the Sections played.",
+        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). The Games list and the facts counted from it (counts, score, performance) follow the filters; the Sections played, their crosstables, and the rating change are facts about the whole Rated Event and are never filtered.",
         "parameters": [
           {
             "name": "event_id", "in": "path", "required": true,
@@ -24,7 +24,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games and sections.",
+            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games; sections and the rating change still describe the whole Rated Event.",
             "content": {"application/json": {"schema": {"$ref": "#/components/schemas/EventPayload"}}}
           },
           "400": {"$ref": "#/components/responses/BadRequest"},
@@ -39,7 +39,7 @@
       "EventPayload": {
         "type": "object",
         "additionalProperties": false,
-        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
+        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series (counts) and over all its Games (Sections, rating change) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
         "required": ["games_count", "event_id", "name", "series", "start", "end", "player_count", "game_count", "forfeit_count", "win", "draw", "loss", "score", "pre_rating", "post_rating", "rating_change", "performance_rating", "games", "sections"],
         "properties": {
           "games_count": {"type": "integer", "minimum": 0, "description": "This Rated Event's Games after filters, Forfeits included (the same rows as games)."},
@@ -61,7 +61,7 @@
           "score": {"type": "number", "minimum": 0, "description": "Tournament points: wins + 0.5 x draws + Forfeit wins. The web reads 'Score <score> . <game_count> games + <forfeit_count> forfeit wins'."},
           "pre_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or unknown."},
           "post_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking out (after the last played Section), whole number; null when unknown."},
-          "rating_change": {"type": ["integer", "null"], "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens."},
+          "rating_change": {"type": ["integer", "null"], "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens, and never filtered."},
           "performance_rating": {"$ref": "#/components/schemas/Rating", "description": "Performance rating over this Rated Event's filtered Games (Forfeits and unrated opponents excluded); null when none qualify."},
           "games": {
             "type": "array",
@@ -70,7 +70,7 @@
           },
           "sections": {
             "type": "array",
-            "description": "The Sections the player's filtered Games were played in, sorted by name.",
+            "description": "The Sections the player played in this Rated Event (from all its Games, never filtered), sorted by name.",
             "items": {"$ref": "#/components/schemas/EventSection"}
           }
         }
@@ -137,7 +137,7 @@
           "opponent_name": {"type": "string", "description": "Empty for byes and unpaired rounds."},
           "game_id": {
             "anyOf": [{"$ref": "#/components/schemas/GameId"}, {"type": "null"}],
-            "description": "Set only on the player's own row (is_player), when a filtered Game has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
+            "description": "Set only on the player's own row (is_player), when a Game (filtered or not) has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
           }
         }
       }

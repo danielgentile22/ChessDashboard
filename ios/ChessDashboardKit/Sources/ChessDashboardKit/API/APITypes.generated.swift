@@ -6,7 +6,7 @@ import Foundation
 /// Every request and response type in the v1 contract.
 public enum API {
 	/// SHA-256 of the openapi/v1.json these types were generated from.
-	public static let specDigest = "cc4e576e395d5172fb3670b970d45f31b6f72fe3340a7dc217a9c0c45c904aaf"
+	public static let specDigest = "a8aa561278d7226f0990574f79bc8742dd027f5445c2941198c4575665c36123"
 
 	/// The 200 response type of every operation, by operationId.
 	public static let responseTypes: [String: any (Decodable & Sendable).Type] = [
@@ -246,7 +246,7 @@ extension API {
 	public struct EventCrosstableRound: Codable, Sendable, Hashable {
 		/// White, Black, or Unknown (byes and forfeits have no color), as USCF sends it.
 		public var color: String
-		/// Set only on the player's own row (is_player), when a filtered Game has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round.
+		/// Set only on the player's own row (is_player), when a Game (filtered or not) has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round.
 		public var gameId: GameId?
 		/// Empty for byes and unpaired rounds.
 		public var opponentMemberId: String
@@ -341,7 +341,7 @@ extension API {
 		}
 	}
 
-	/// One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.
+	/// One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series (counts) and over all its Games (Sections, rating change) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.
 	public struct EventPayload: Codable, Sendable, Hashable {
 		public var draw: Int
 		public var end: IsoDate?
@@ -365,11 +365,11 @@ extension API {
 		public var postRating: Rating?
 		/// Live Rating walking in (before the first played Section), whole number; null when unrated or unknown.
 		public var preRating: Rating?
-		/// round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens.
+		/// round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens, and never filtered.
 		public var ratingChange: Int?
 		/// Tournament points: wins + 0.5 x draws + Forfeit wins. The web reads 'Score <score> . <game_count> games + <forfeit_count> forfeit wins'.
 		public var score: Double
-		/// The Sections the player's filtered Games were played in, sorted by name.
+		/// The Sections the player played in this Rated Event (from all its Games, never filtered), sorted by name.
 		public var sections: [EventSection]
 		/// The Series (PGN Event headers) this Rated Event's Games sit under, usually exactly one.
 		public var series: [String]

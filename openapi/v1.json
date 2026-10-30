@@ -440,7 +440,7 @@
                 "type": "null"
               }
             ],
-            "description": "Set only on the player's own row (is_player), when a filtered Game has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
+            "description": "Set only on the player's own row (is_player), when a Game (filtered or not) has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
           },
           "opponent_member_id": {
             "description": "Empty for byes and unpaired rounds.",
@@ -559,7 +559,7 @@
       },
       "EventPayload": {
         "additionalProperties": false,
-        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
+        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series (counts) and over all its Games (Sections, rating change) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
         "properties": {
           "draw": {
             "minimum": 0,
@@ -623,7 +623,7 @@
             "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or unknown."
           },
           "rating_change": {
-            "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens.",
+            "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens, and never filtered.",
             "type": [
               "integer",
               "null"
@@ -635,7 +635,7 @@
             "type": "number"
           },
           "sections": {
-            "description": "The Sections the player's filtered Games were played in, sorted by name.",
+            "description": "The Sections the player played in this Rated Event (from all its Games, never filtered), sorted by name.",
             "items": {
               "$ref": "#/components/schemas/EventSection"
             },
@@ -4549,7 +4549,7 @@
     },
     "/api/v1/events/{event_id}": {
       "get": {
-        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). Facts derived from Games (counts, score, Sections played, rating change, performance) follow the filters exactly like the web card; the crosstables themselves are USCF member-level facts and are never filtered, only selected by the Sections played.",
+        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). The Games list and the facts counted from it (counts, score, performance) follow the filters; the Sections played, their crosstables, and the rating change are facts about the whole Rated Event and are never filtered.",
         "operationId": "getEvent",
         "parameters": [
           {
@@ -4599,7 +4599,7 @@
                 }
               }
             },
-            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games and sections."
+            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games; sections and the rating change still describe the whole Rated Event."
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
