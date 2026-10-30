@@ -57,6 +57,7 @@ import logging
 import math
 import re
 from collections import Counter
+from collections.abc import Mapping
 
 import chess.pgn
 import pandas as pd
@@ -272,6 +273,15 @@ CANONICAL_TAGS = [
     "opening", "tactics", "calculation", "endgame",
     "time-trouble", "blunder", "strategy",
 ]
+
+# The TagSources value marking a Tag the engine emitted, not Daniel.
+ENGINE_TAG_SOURCE = "engine"
+
+
+def is_engine_tag(tag: str, sources: Mapping[str, str] | None) -> bool:
+    """Whether a Game's TagSources map says the engine emitted *tag*; a Tag
+    missing from it is hand-written."""
+    return (sources or {}).get(tag) == ENGINE_TAG_SOURCE
 
 
 def _all_comments(game) -> list[str]:
@@ -1667,7 +1677,7 @@ def tag_counts(df: pd.DataFrame) -> list[dict]:
     sources = df["TagSources"] if "TagSources" in df.columns else [None] * len(df)
     for game_tags, game_sources in zip(df["Tags"], sources):
         counts.update(game_tags)
-        engine.update(t for t in game_tags if (game_sources or {}).get(t) == "engine")
+        engine.update(t for t in game_tags if is_engine_tag(t, game_sources))
 
     def _item(tag: str, canonical: bool) -> dict:
         n = counts[tag]

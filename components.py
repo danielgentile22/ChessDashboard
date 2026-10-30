@@ -15,7 +15,7 @@ from dash import Input, Output, State, callback, dcc, html, no_update
 
 from payloads.common import uscf_status
 from payloads.overview import form_indicator as indicator_state
-from pgn_stats_core import chapter_id
+from pgn_stats_core import chapter_id, is_engine_tag
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
 from uscf_core import (  # noqa: F401  (labels and member URL re-exported for pages)
     USCF_RATING_SYSTEM_LABELS,
@@ -220,10 +220,6 @@ def form_indicator(form: dict) -> list:
     return children
 
 
-# The source value that marks a Tag as the engine's, not Daniel's.
-ENGINE_TAG_SOURCE = "engine"
-
-
 def tag_chips(tags, sources=None, *, base_class: str = "tag-chip") -> list:
     """A Game's Tags as chips, marking the engine-emitted ones.
 
@@ -232,10 +228,9 @@ def tag_chips(tags, sources=None, *, base_class: str = "tag-chip") -> list:
     ``tag-chip-engine`` class and a small ⚙ marker so Daniel can always tell the
     computer's Tags from the ones he wrote himself — wherever Tags render.
     """
-    sources = sources or {}
     chips = []
     for tag in tags:
-        engine = sources.get(tag) == ENGINE_TAG_SOURCE
+        engine = is_engine_tag(tag, sources)
         children = [f"#{tag}"]
         if engine:
             children.append(html.Span("⚙", className="tag-chip-engine-mark"))

@@ -18,7 +18,7 @@ from typing import Any
 
 import pandas as pd
 
-from pgn_stats_core import chapter_id
+from pgn_stats_core import chapter_id, is_engine_tag
 
 MINE = "mine"
 ENGINE = "engine"
@@ -66,10 +66,9 @@ optional_int = whole_rating
 
 def tags(names: Iterable[str], sources: Mapping[str, str] | None) -> list[dict]:
     """A Game's Tags with who wrote each: ``mine`` unless the Game's
-    ``TagSources`` map says the engine emitted it (the same rule as
-    ``components.tag_chips``)."""
-    sources = sources or {}
-    return [{"name": name, "source": ENGINE if sources.get(name) == ENGINE else MINE}
+    ``TagSources`` map says the engine emitted it (the same rule
+    ``components.tag_chips`` uses)."""
+    return [{"name": name, "source": ENGINE if is_engine_tag(name, sources) else MINE}
             for name in names]
 
 

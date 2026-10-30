@@ -21,6 +21,7 @@ import pandas as pd
 from payloads.common import ENGINE, MINE, game_id, whole_rating
 from pgn_stats_core import (
     compute_milestones,
+    is_engine_tag,
     kpi_stats,
     recurring_weaknesses,
     streaks,
@@ -165,7 +166,7 @@ def _top_weakness(df: pd.DataFrame) -> dict | None:
     top = callouts[0]
     behind = df[df["ChapterURL"].isin(top["chapter_urls"])]
     engine_only = not behind.empty and all(
-        (sources or {}).get(top["tag"]) == ENGINE for sources in behind["TagSources"])
+        is_engine_tag(top["tag"], sources) for sources in behind["TagSources"])
     return {
         "tag": {"name": top["tag"], "source": ENGINE if engine_only else MINE},
         "loss_count": top["loss_count"],
