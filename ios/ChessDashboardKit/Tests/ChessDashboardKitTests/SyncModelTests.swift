@@ -57,6 +57,29 @@ struct SyncModelTests {
 		}
 	}
 
+	@Test("an old session's late 401 never clears the next session's Sync")
+	func late401AfterReSignIn() async throws {
+		let fixtures = FixtureAPIClient(directory: Repo.fixtures)
+		let box = EnvironmentBox()
+		nonisolated(unsafe) var syncs = 0
+		let api = ClosureAPI { request throws(APIError) in
+			guard request.operationId == "runSync" else { return try await fixtures.data(for: request) }
+			syncs += 1
+			guard syncs == 1 else { return try await fixtures.data(for: request) }
+			// While the first Sync is in flight: sign out, back in, Sync again.
+			await box.env.session.signOut()
+			try await box.env.session.signIn(password: "pw")
+			await box.env.runSync()
+			throw .unauthenticated
+		}
+		let old = Session(token: "old-token", role: .owner, username: nil, canWrite: true, expiresAt: .distantFuture)
+		box.env = makeEnvironment(session: old, api: api)
+		await box.env.refreshMeta()
+		await box.env.runSync()
+		#expect(box.env.session.session?.token == "fixture-token")
+		#expect(box.env.sync.report?.title == "Sync complete")
+	}
+
 	@Test("a successful Sync bumps the revision and re-fetches meta")
 	func refreshesAfterSync() async {
 		let api = FixtureAPIClient(directory: Repo.fixtures)

@@ -40,12 +40,11 @@ public final class SyncModel {
 				revision += 1
 				await environment.refreshMeta()
 			}
-		} catch .unauthenticated {
-			// SessionGuard has already routed back to sign-in.
-			phase = .idle
 		} catch {
+			// Signed out meanwhile: this answer belongs to an ended session.
 			guard context.isCurrent() else { return }
-			phase = .finished(SyncReport(failure: error))
+			// A 401: SessionGuard has already routed back to sign-in.
+			phase = error == .unauthenticated ? .idle : .finished(SyncReport(failure: error))
 		}
 	}
 
