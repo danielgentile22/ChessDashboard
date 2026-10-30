@@ -105,6 +105,12 @@ struct SyncModelTests {
 		api.fail("runSync", with: .offline)
 		await env.runSync()
 		#expect(env.sync.report?.message == APIError.offline.message)
+
+		// A timeout may still finish on the server: a warning, worded differently.
+		api.fail("runSync", with: .timedOut)
+		await env.runSync()
+		#expect(env.sync.report?.style == .warning)
+		#expect(env.sync.report?.title == "Sync is taking a while")
 		env.sync.dismiss()
 		#expect(env.sync.phase == .idle)
 	}

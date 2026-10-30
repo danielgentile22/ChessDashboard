@@ -8,7 +8,8 @@ import Foundation
 ///    `.unauthenticated` like a 401 does. `SessionGuard` (wrapped around
 ///    every client by `AppEnvironment`) turns that into "back to sign-in".
 ///    A 401 from sign-in itself is just wrong credentials;
-///  - other non-2xx bodies become typed `APIError`s, URLError becomes `.offline`.
+///  - other non-2xx bodies become typed `APIError`s; a request that times
+///    out becomes `.timedOut`, any other URLError `.offline`.
 public struct LiveAPIClient: DashboardAPI {
 	/// Ends in `/api/v1/`.
 	public let baseURL: URL
@@ -33,7 +34,7 @@ public struct LiveAPIClient: DashboardAPI {
 			throw .badRequest("Bad path \(request.path)")
 		}
 		if !request.query.isEmpty { url.append(queryItems: request.query) }
-		var http = URLRequest(url: url)
+		var http = URLRequest(url: url, timeoutInterval: Self.timeout(for: request))
 		http.httpMethod = request.method.rawValue
 		http.setValue("application/json", forHTTPHeaderField: "Accept")
 		if let body = request.body {
@@ -51,6 +52,8 @@ public struct LiveAPIClient: DashboardAPI {
 		let response: URLResponse
 		do {
 			(data, response) = try await session.data(for: http)
+		} catch let error as URLError where error.code == .timedOut {
+			throw .timedOut
 		} catch {
 			throw .offline
 		}
@@ -61,6 +64,13 @@ public struct LiveAPIClient: DashboardAPI {
 			throw APIError.from(status: status, body: data, authenticated: request.authenticated)
 		}
 		return data
+	}
+
+	/// Seconds to wait for an answer. A Sync runs inside the request on the
+	/// server, for up to gunicorn's 120 s worker timeout, so the app waits
+	/// longer than that; everything else keeps URLSession's 60 s default.
+	static func timeout(for request: APIRequest) -> TimeInterval {
+		request.operationId == "runSync" ? 150 : 60
 	}
 }
 

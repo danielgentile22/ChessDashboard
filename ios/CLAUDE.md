@@ -31,7 +31,7 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 |---|---|
 | `API/APITypes.generated.swift` | `API.*` (every schema, namespaced so `API.Color` never meets SwiftUI's `Color`), `Endpoints.*` (one factory per operation), `API.responseTypes`, `API.specDigest`. |
 | `API/DashboardAPI.swift` | **The seam.** `protocol DashboardAPI { data(for: APIRequest) }` plus `send(_:)`, the one decode path, and `APIError`. |
-| `API/LiveAPIClient.swift` | The only HTTP: URLSession, bearer token from the `CredentialStore`, error mapping. `SessionGuard` turns any `.unauthenticated` into "back to sign-in". |
+| `API/LiveAPIClient.swift` | The only HTTP: URLSession, bearer token from the `CredentialStore`, error mapping (a timeout is `.timedOut`, not `.offline`; Sync waits 150 s, past gunicorn's 120 s). `SessionGuard` turns any `.unauthenticated` into "back to sign-in". |
 | `API/FixtureAPIClient.swift` | Answers from `openapi/fixtures/*.json` for tests and previews; can fail any operation (offline, 401, 403). |
 | `Session/` | `Session`, `CredentialStore` (Keychain, in-memory), `SessionStore` (sign-in, guest, sign-out, expiry, and `isMultiUserServer`, remembered from the server's answers since nothing tells the mode before sign-in). |
 | `Filters/FilterState.swift` | The filter state plus lens, its canonical form, presets, summary, and `queryItems`: **the only filter-to-query encoder.** |

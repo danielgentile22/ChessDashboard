@@ -16,8 +16,11 @@ public enum APIError: Error, Sendable, Hashable {
 	case badRequest(String)
 	/// Any other non-2xx, with the contract's code when the body carried one.
 	case server(status: Int, code: String?, message: String)
-	/// No connection, timeout, DNS: the network never answered.
+	/// No connection, DNS, a dropped connection: the server couldn't be reached.
 	case offline
+	/// The server was reached but didn't answer in time (a long Sync, a
+	/// busy server). Not offline: the work may still finish on the server.
+	case timedOut
 	/// A 2xx body the generated types could not decode: the app is older than
 	/// the server's contract.
 	case malformedResponse(String)
@@ -31,6 +34,7 @@ public enum APIError: Error, Sendable, Hashable {
 		case .forbidden(let m), .notFound(let m), .badRequest(let m): m
 		case .server: "Something went wrong on the server. Try again in a minute."
 		case .offline: "Can't reach the server. Check the connection and try again."
+		case .timedOut: "The server took too long to answer. Try again in a minute."
 		case .malformedResponse: "The server sent something this version of the app can't read. Update the app."
 		}
 	}
