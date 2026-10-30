@@ -762,6 +762,20 @@ class TestTagCounts:
     def test_empty_data(self):
         assert tag_counts(pd.DataFrame()) == []
 
+    def test_each_count_splits_by_who_wrote_the_tag(self):
+        df = pd.DataFrame({
+            "Tags": [["tactics", "blunder"], ["tactics"]],
+            "TagSources": [{"tactics": "engine", "blunder": "mine"}, {"tactics": "mine"}],
+        })
+        assert tag_counts(df) == [
+            {"tag": "tactics", "count": 2, "canonical": True, "mine": 1, "engine": 1},
+            {"tag": "blunder", "count": 1, "canonical": True, "mine": 1, "engine": 0},
+        ]
+
+    def test_without_tag_sources_every_tag_is_mine(self):
+        result = tag_counts(pd.DataFrame({"Tags": [["tactics"]]}))
+        assert result[0]["mine"] == 1 and result[0]["engine"] == 0
+
 
 # ---------------------------------------------------------------------------
 # Timeline

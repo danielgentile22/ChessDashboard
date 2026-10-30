@@ -108,11 +108,6 @@ USCF_RATING_SYSTEM_LABELS = {
 }
 
 
-def uscf_member_url(member_id: str) -> str:
-    """The USCF ratings-site page for a member ('' if no ID)."""
-    return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
-
-
 # ---------------------------------------------------------------------------
 # Typed records
 # ---------------------------------------------------------------------------
@@ -144,6 +139,11 @@ class UscfProfile:
     def rating(self, system: str) -> UscfRating | None:
         """The entry for one rating system ('R', 'Q', 'OR', …), or None if absent."""
         return next((r for r in self.ratings if r.system == system), None)
+
+
+def uscf_member_url(member_id: str) -> str:
+    """The USCF ratings-site page for a member ('' if no ID)."""
+    return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
 
 
 # ---------------------------------------------------------------------------
