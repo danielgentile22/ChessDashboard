@@ -120,7 +120,7 @@ struct GameDetailModelTests {
 		let api = FixtureAPIClient(directory: Repo.fixtures)
 		var payload = try decode(API.GamePayload.self, from: Repo.fixture("getGame"))
 		payload.uscfRecord = nil
-		payload.metadata.round = "?"
+		payload.metadata.round = nil
 		payload.metadata.termination = ""
 		payload.metadata.color = .unknown
 		payload.playerColor = .unknown

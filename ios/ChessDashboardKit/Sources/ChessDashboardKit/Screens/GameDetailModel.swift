@@ -176,7 +176,7 @@ public final class GameDetailModel {
 		let rows: [(String, String)] = [
 			("Date", Self.dayText(m.date)),
 			("Series", m.series),
-			("Round", m.round),
+			("Round", m.round.map(String.init) ?? ""),
 			("You played", m.color == .unknown ? "" : m.color.rawValue),
 			("Result", m.result),
 			("Termination", m.termination),

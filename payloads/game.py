@@ -149,7 +149,7 @@ def _metadata(game: Mapping) -> dict:
     return {
         "date": iso_date(game["Date_dt"]),
         "series": _text(game.get("Event")),
-        "round": _text(game.get("Round")),
+        "round": optional_int(game.get("RoundNum")),
         "color": game["Color"],
         "result": _text(game.get("Result")),
         "termination": _text(game.get("Termination")),

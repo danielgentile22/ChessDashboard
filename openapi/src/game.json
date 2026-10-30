@@ -185,7 +185,7 @@
         "properties": {
           "date": {"$ref": "#/components/schemas/IsoDate"},
           "series": {"type": "string", "description": "The Series (PGN Event header), labelled 'Event' on the web; \"\" when unset."},
-          "round": {"type": "string", "description": "The Round header exactly as typed (e.g. '3' or '3.1'); \"\" when unset or '?'."},
+          "round": {"type": ["integer", "null"], "minimum": 1, "description": "The hand-typed Round header's round number (RoundNum, so '3.1' is 3), the same value as GameSummary.round; null when unset or '?'."},
           "color": {"$ref": "#/components/schemas/GameColor"},
           "result": {"type": "string", "description": "The PGN Result, e.g. 1-0."},
           "termination": {"type": "string"},

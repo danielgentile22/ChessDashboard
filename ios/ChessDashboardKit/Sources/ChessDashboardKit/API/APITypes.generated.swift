@@ -6,7 +6,7 @@ import Foundation
 /// Every request and response type in the v1 contract.
 public enum API {
 	/// SHA-256 of the openapi/v1.json these types were generated from.
-	public static let specDigest = "43734885df6c3232f1cffb21a33f36bdba80a45bdb5a439367811682daa3a7b4"
+	public static let specDigest = "b2789e912cc957cc03f77b6e2b16792d1cf26857306a53144c7c7c2b20ebfc86"
 
 	/// The 200 response type of every operation, by operationId.
 	public static let responseTypes: [String: any (Decodable & Sendable).Type] = [
@@ -861,15 +861,15 @@ extension API {
 		public var playerRating: Rating?
 		/// The PGN Result, e.g. 1-0.
 		public var result: String
-		/// The Round header exactly as typed (e.g. '3' or '3.1'); "" when unset or '?'.
-		public var round: String
+		/// The hand-typed Round header's round number (RoundNum, so '3.1' is 3), the same value as GameSummary.round; null when unset or '?'.
+		public var round: Int?
 		/// The Series (PGN Event header), labelled 'Event' on the web; "" when unset.
 		public var series: String
 		/// The Study holding this Chapter.
 		public var studyName: String
 		public var termination: String
 
-		public init(color: GameColor, date: IsoDate? = nil, eco: String, moves: Int? = nil, opening: String, opponentRating: Rating? = nil, playerRating: Rating? = nil, result: String, round: String, series: String, studyName: String, termination: String) {
+		public init(color: GameColor, date: IsoDate? = nil, eco: String, moves: Int? = nil, opening: String, opponentRating: Rating? = nil, playerRating: Rating? = nil, result: String, round: Int? = nil, series: String, studyName: String, termination: String) {
 			self.color = color
 			self.date = date
 			self.eco = eco

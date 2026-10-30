@@ -1321,8 +1321,12 @@
             "type": "string"
           },
           "round": {
-            "description": "The Round header exactly as typed (e.g. '3' or '3.1'); \"\" when unset or '?'.",
-            "type": "string"
+            "description": "The hand-typed Round header's round number (RoundNum, so '3.1' is 3), the same value as GameSummary.round; null when unset or '?'.",
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "series": {
             "description": "The Series (PGN Event header), labelled 'Event' on the web; \"\" when unset.",

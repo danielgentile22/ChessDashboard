@@ -50,7 +50,7 @@
     "opponent_rating": 1920,
     "player_rating": 1800,
     "result": "1-0",
-    "round": "1",
+    "round": 1,
     "series": "Test Open",
     "study_name": "Test Study",
     "termination": "win by resignation"

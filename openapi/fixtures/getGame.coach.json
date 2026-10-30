@@ -43,7 +43,7 @@
     "opponent_rating": 1097,
     "player_rating": 1200,
     "result": "1-0",
-    "round": "1",
+    "round": 1,
     "series": "ACC Friday Ladder",
     "study_name": "USCF OTB Games",
     "termination": "loss by resignation"
