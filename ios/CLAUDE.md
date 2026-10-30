@@ -22,6 +22,8 @@ are generated and gitignored.
 | `ChessDashboardKit/` | Swift package with everything testable. No UIKit; `swift test` runs it on the Mac in seconds. One dependency: ChessKit (`exact: "0.17.0"`), for chess rules only. |
 | `scripts/gen_api_types.py` | Swift types from `openapi/v1.json` (checked in as `API/APITypes.generated.swift`). |
 | `scripts/gen_theme.py` | Swift color tokens from `styles.THEME` (checked in as `Theme/ThemeTokens.generated.swift`). |
+| `scripts/make_app_icon.swift` | Draws `ChessDashboard/Assets.xcassets/AppIcon.appiconset/AppIcon.png` (CoreGraphics, opaque 1024 px). |
+| `testflight.sh`, `ExportOptions.plist` | Archive, sign (manual: the distribution certificate in `tvhome-signing.keychain-db`, profile "Chess Dashboard App Store"), export, and upload to TestFlight; `--no-upload` stops at the `.ipa`. Reads the repo-root `.env` (`ENV_FILE` overrides, e.g. from a worktree). |
 
 Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 
@@ -35,11 +37,12 @@ Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
 | `Filters/FilterState.swift` | The filter state plus lens, its canonical form, presets, summary, and `queryItems`: **the only filter-to-query encoder.** |
 | `Filters/FilterStore.swift` | The app-wide observable filter state, persisted in UserDefaults. |
 | `Cache/ResponseCache.swift` | Last 2xx body per (route + query, server + user) in Caches. Every failure is "no cache". |
-| `Screens/ScreenResource.swift` | `ScreenContext` (what every view model takes) and `ScreenResource` (cached first, then refresh, offline flag). |
+| `Screens/ScreenResource.swift` | `ScreenContext` (what every view model takes) and `ScreenResource` (cached first, then refresh, offline flag, `reload` after a Sync). |
+| `Screens/SyncModel.swift` | The owner's Sync: `POST sync`, the toast as `SyncReport` (worded like the web's), `revision` bumped on success so every `screenChrome` reloads its resource, then meta re-fetched. |
 | `Board/` | The Game detail board. `PGNTree`: our PGN parser into a flat move tree (variations, pre/post comments, NAGs, FEN starts), every move replayed through ChessKit's `SANParser`/`Board`; navigation (into and out of variations, main line by ply), comment display with `[%...]` commands stripped. `BoardDiagram`: what the board view draws, oriented. ChessKit types never leave the kit. Don't use ChessKit's `PGNParser`/`Game`/`MoveTree`: it rejects a comment before move 1 and returns wrong moves in nested variations. |
 | `Display/` | `RatingFormat` (whole numbers), `TagDisplay` (mine vs engine), `FreshnessSummary`, `WebPage` (open on the web), `ISODates`, `ChartDates` (contract days as chart x values at local noon, nearest point for touch-to-read). |
 | `Theme/` | `ThemeColor` and the generated `Theme`/`ThemeMetrics`. |
-| `AppEnvironment.swift` | Composition root: config, guarded client, session, filters, cache, the shared `meta` resource, `context`, `canSync`. |
+| `AppEnvironment.swift` | Composition root: config, guarded client, session, filters, cache, the shared `meta` resource, `context`, `canSync`, `syncUnavailableReason`, `sync`. |
 
 ## Invariants
 
@@ -132,4 +135,6 @@ make ios-build-release   # Release build, generic simulator, no signing
 make ios-codegen         # regenerate API types + theme after a spec/THEME change
 ```
 
-Signing, archive, and TestFlight are #121.
+Signing and TestFlight: `make ios-testflight` (see the README's iOS section).
+CI runs `swift test` and the simulator tests in a macOS job when `ios/**` or
+`openapi/**` change.

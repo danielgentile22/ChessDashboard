@@ -56,6 +56,17 @@ public final class ScreenResource<Value: Decodable & Sendable> {
 			isOffline = false
 			error = nil
 		}
+		await fetch(request, in: context)
+	}
+
+	/// Re-fetches whatever was last loaded (after a Sync); a no-op before the
+	/// first load.
+	public func reload(in context: ScreenContext) async {
+		guard let current else { return }
+		await fetch(current, in: context)
+	}
+
+	private func fetch(_ request: APIRequest, in context: ScreenContext) async {
 		isLoading = true
 		let result: Result<(Value, Data), APIError>
 		do {

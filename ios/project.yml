@@ -4,6 +4,7 @@
 #   make ios-build      # Debug build for a simulator
 #   make ios-test       # the ChessDashboardKit tests, on a simulator
 #   make kit-test       # the same tests on the Mac, in seconds (swift test)
+#   make ios-testflight # archive, sign and upload a TestFlight build (testflight.sh)
 name: ChessDashboard
 
 options:
@@ -48,6 +49,8 @@ targets:
         PRODUCT_NAME: ChessDashboard
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
+        # Drawn by scripts/make_app_icon.swift.
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: ChessDashboard/Info.plist
       properties:

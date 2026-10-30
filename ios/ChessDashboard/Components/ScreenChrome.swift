@@ -4,9 +4,12 @@ import SwiftUI
 extension View {
 	/// The chrome every screen has: its title, the Official/Live lens toggle
 	/// and the filter sheet in the toolbar, "Open on the web", the active
-	/// filter summary, and the offline indicator for `resource`.
+	/// filter summary, the offline indicator for `resource`, and Sync (the
+	/// owner's toolbar action; `resource` re-fetches after each Sync).
 	func screenChrome<Value: Decodable & Sendable>(title: String, page: WebPage, resource: ScreenResource<Value>) -> some View {
-		modifier(ScreenChrome(title: title, page: page, isOffline: resource.isOffline, cachedAt: resource.cachedAt))
+		modifier(ScreenChrome(
+			title: title, page: page, isOffline: resource.isOffline, cachedAt: resource.cachedAt,
+			reload: { await resource.reload(in: $0) }))
 	}
 }
 
@@ -15,6 +18,7 @@ private struct ScreenChrome: ViewModifier {
 	let page: WebPage
 	let isOffline: Bool
 	let cachedAt: Date?
+	let reload: @MainActor (ScreenContext) async -> Void
 
 	@Environment(AppEnvironment.self) private var env
 	@Environment(\.openURL) private var openURL
@@ -35,6 +39,7 @@ private struct ScreenChrome: ViewModifier {
 					LensToggle(lens: $filters.state.lens)
 				}
 				ToolbarItemGroup(placement: .topBarTrailing) {
+					if env.canSync { SyncButton() }
 					Button {
 						showingFilters = true
 					} label: {
@@ -49,6 +54,14 @@ private struct ScreenChrome: ViewModifier {
 						} label: {
 							Label("Open on the Web", systemImage: "safari")
 						}
+						if let reason = env.syncUnavailableReason {
+							Section(reason) {
+								Button {} label: {
+									Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+								}
+								.disabled(true)
+							}
+						}
 					} label: {
 						Label("More Actions", systemImage: "ellipsis.circle")
 					}
@@ -56,6 +69,18 @@ private struct ScreenChrome: ViewModifier {
 			}
 			.sheet(isPresented: $showingFilters) {
 				FilterSheet()
+			}
+			.overlay(alignment: .bottom) {
+				if let report = env.sync.report {
+					SyncToast(report: report) { env.sync.dismiss() }
+						.padding()
+						.transition(.move(edge: .bottom).combined(with: .opacity))
+				}
+			}
+			.animation(.snappy, value: env.sync.report)
+			.onChange(of: env.sync.revision) {
+				guard let context = env.context else { return }
+				Task { await reload(context) }
 			}
 	}
 }

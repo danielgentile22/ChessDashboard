@@ -26,6 +26,8 @@ public final class AppEnvironment {
 	/// `GET /api/v1/meta`: filter options and presets for the filter sheet,
 	/// per-source freshness, the role. Loaded on sign-in and every refresh.
 	public let meta = ScreenResource<API.MetaPayload>()
+	/// The owner's Sync action and its last outcome (the toast).
+	public let sync = SyncModel()
 
 	@ObservationIgnored public let api: any DashboardAPI
 	@ObservationIgnored public let cache: ResponseCache
@@ -75,6 +77,17 @@ public final class AppEnvironment {
 	public var canSync: Bool {
 		guard let s = session.session, s.canWrite else { return false }
 		return meta.value?.demoMode != true
+	}
+
+	/// Why Sync isn't offered, for the disabled action; nil when it is.
+	public var syncUnavailableReason: String? {
+		if canSync { return nil }
+		if meta.value?.demoMode == true { return "Demo mode is read-only; Sync is disabled." }
+		return "Guests can't Sync. Sign in as the owner to refresh the data."
+	}
+
+	public func runSync() async {
+		await sync.run(in: self)
 	}
 
 	public func refreshMeta() async {

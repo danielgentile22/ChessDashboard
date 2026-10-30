@@ -11,7 +11,7 @@ RUFF      := $(VENV)/bin/ruff
 STUDY     ?= abcdWXYZ
 
 .PHONY: help venv install install-dev run demo test lint fix typecheck clean docker docker-up \
-	ios-codegen ios-generate ios-build ios-build-release ios-test kit-test
+	ios-codegen ios-generate ios-build ios-build-release ios-test kit-test ios-testflight
 
 # iOS (ios/). `xcrun simctl list devices available` lists simulator names.
 SIM_NAME  ?= iPhone 17
@@ -81,3 +81,6 @@ ios-test: ios-generate  ## The ChessDashboardKit tests on a simulator (SIM_NAME=
 
 kit-test:      ## The ChessDashboardKit tests on the Mac, in seconds (swift test)
 	cd ios/ChessDashboardKit && swift test
+
+ios-testflight:  ## Archive, sign and upload a TestFlight build (ios/testflight.sh; reads .env)
+	ios/testflight.sh
