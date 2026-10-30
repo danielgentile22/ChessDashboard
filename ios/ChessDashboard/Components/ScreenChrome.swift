@@ -4,7 +4,9 @@ import SwiftUI
 extension View {
 	/// The chrome every screen has: its title, the Official/Live lens toggle
 	/// and the filter sheet in the toolbar, "Open on the web", the active
-	/// filter summary, the offline indicator for `resource`, and Sync (the
+	/// filter summary, the offline indicator for `resource`, per-source
+	/// freshness (a menu item, plus a warning bar when a source is stale or
+	/// unavailable), and Sync (the
 	/// owner's toolbar action; `resource` re-fetches after each Sync). A
 	/// screen whose route takes no filters (Analysis, like its web page)
 	/// passes `filtered: false` and gets no filter or lens controls.
@@ -28,14 +30,19 @@ private struct ScreenChrome: ViewModifier {
 	@Environment(AppEnvironment.self) private var env
 	@Environment(\.openURL) private var openURL
 	@State private var showingFilters = false
+	@State private var showingFreshness = false
 
 	func body(content: Content) -> some View {
 		@Bindable var filters = env.filters
+		let freshness = env.meta.value.map { FreshnessSummary($0.freshness) }
 		content
 			.navigationTitle(title)
 			.safeAreaInset(edge: .top, spacing: 0) {
 				VStack(spacing: 0) {
 					if isOffline { OfflineBanner(cachedAt: cachedAt) }
+					if let warning = freshness?.lines.first(where: \.isWarning) {
+						FreshnessWarningBar(line: warning) { showingFreshness = true }
+					}
 					if filtered {
 						ActiveFilterBar(state: env.filters.state) { showingFilters = true }
 					}
@@ -65,6 +72,13 @@ private struct ScreenChrome: ViewModifier {
 						} label: {
 							Label("Open on the Web", systemImage: "safari")
 						}
+						if env.meta.value != nil {
+							Button {
+								showingFreshness = true
+							} label: {
+								Label("Data Freshness", systemImage: "clock")
+							}
+						}
 						if let reason = env.syncUnavailableReason {
 							Section(reason) {
 								Button {} label: {
@@ -80,6 +94,9 @@ private struct ScreenChrome: ViewModifier {
 			}
 			.sheet(isPresented: $showingFilters) {
 				FilterSheet()
+			}
+			.sheet(isPresented: $showingFreshness) {
+				FreshnessSheet()
 			}
 			.overlay(alignment: .bottom) {
 				if let report = env.sync.report {
@@ -131,11 +148,70 @@ struct ActiveFilterBar: View {
 			.foregroundStyle(state.isFiltered ? Theme.primary.color : Theme.muted.color)
 			.padding(.horizontal)
 			.padding(.vertical, 6)
-			.background(.bar)
+			// Not into the safe area: there it would paint over the large title.
+			.background(.bar, ignoresSafeAreaEdges: [])
 		}
 		.buttonStyle(.plain)
 		.accessibilityLabel("Filters: \(state.summary)")
 		.accessibilityHint("Opens the filters")
+	}
+}
+
+/// When Lichess and USCF were last synced, from any screen's More Actions
+/// menu or its freshness warning.
+private struct FreshnessSheet: View {
+	@Environment(AppEnvironment.self) private var env
+	@Environment(\.dismiss) private var dismiss
+
+	var body: some View {
+		NavigationStack {
+			List {
+				if let meta = env.meta.value {
+					Section {
+						FreshnessView(freshness: meta.freshness)
+					} footer: {
+						Text("Every number on this phone comes from the server's last Sync.")
+					}
+				}
+			}
+			.navigationTitle("Data Freshness")
+			.navigationBarTitleDisplayMode(.inline)
+			.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
+					Button("Done") { dismiss() }
+				}
+			}
+			.refreshable { await env.refreshMeta() }
+		}
+		.presentationDetents([.medium, .large])
+	}
+}
+
+/// A source that fell back to its cache or is unavailable (like "USCF
+/// unavailable since"), on every screen as the web header shows it. Tap for
+/// the full freshness.
+struct FreshnessWarningBar: View {
+	let line: FreshnessSummary.Line
+	let open: () -> Void
+
+	var body: some View {
+		Button(action: open) {
+			HStack(spacing: 6) {
+				Image(systemName: "exclamationmark.triangle")
+				Text(line.text).lineLimit(2)
+				Spacer(minLength: 0)
+				Image(systemName: "info.circle")
+			}
+			.font(.footnote.weight(.medium))
+			.foregroundStyle(Theme.warning.color)
+			.padding(.horizontal)
+			.padding(.vertical, 6)
+			.frame(maxWidth: .infinity)
+			.background(Theme.warningWash.color, ignoresSafeAreaEdges: [])
+		}
+		.buttonStyle(.plain)
+		.accessibilityElement(children: .combine)
+		.accessibilityHint("Shows when each source was last synced")
 	}
 }
 
@@ -159,7 +235,7 @@ struct OfflineBanner: View {
 		.padding(.horizontal)
 		.padding(.vertical, 6)
 		.frame(maxWidth: .infinity)
-		.background(Theme.warningWash.color)
+		.background(Theme.warningWash.color, ignoresSafeAreaEdges: [])
 		.accessibilityElement(children: .combine)
 	}
 }

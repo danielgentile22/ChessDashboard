@@ -131,7 +131,7 @@ private struct RatedEventCard: View {
 		[event.sections.map(\.name).joined(separator: " · "),
 		 event.playerCount.map { "\($0) players" } ?? "",
 		 EventText.scoreLine(score: event.score, games: event.gameCount, forfeits: event.forfeitCount),
-		 event.performanceRating.map { "Performance \($0)" } ?? ""]
+		 event.performanceRating.map { "Performance \(RatingFormat.whole($0))" } ?? ""]
 			.filter { !$0.isEmpty }.joined(separator: " · ")
 	}
 

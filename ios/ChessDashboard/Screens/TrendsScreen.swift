@@ -250,11 +250,11 @@ private struct RatingChartCard: View {
 
 	private func summary(_ chart: TrendsModel.RatingChart) -> String {
 		if chart.mode == .uscf {
-			let official = chart.official.last.map { "Official Rating \($0.rating)" }
-			let live = chart.live.last.map { "Live Rating \($0.rating)" }
+			let official = chart.official.last.map { "Official Rating \(RatingFormat.whole($0.rating))" }
+			let live = chart.live.last.map { "Live Rating \(RatingFormat.whole($0.rating))" }
 			return [official, live].compactMap { $0 }.joined(separator: ", ")
 		}
-		return chart.typed.last.map { "Latest rating \($0.rating)" } ?? ""
+		return chart.typed.last.map { "Latest rating \(RatingFormat.whole($0.rating))" } ?? ""
 	}
 }
 
@@ -291,7 +291,7 @@ private struct WinRateCard: View {
 				.chartYScale(domain: 0...100)
 				.chartYAxis { AxisMarks(values: [0, 25, 50, 75, 100]) { v in
 					AxisGridLine()
-					AxisValueLabel { Text("\(v.as(Int.self) ?? 0)%") }
+					AxisValueLabel { Text(PercentFormat.whole(v.as(Double.self) ?? 0)) }
 				} }
 				.chartXSelection(value: $selectedDate)
 				.frame(height: 200)
@@ -353,7 +353,7 @@ private struct WeekdayCard: View {
 						BarMark(x: .value("Day", d.day.rawValue), y: .value("Win rate", d.pct))
 							.foregroundStyle(d.pct >= 50 ? Theme.win.color : Theme.loss.color)
 							.annotation(position: .top) {
-								Text("\(Int(d.pct.rounded()))%").font(.caption2.monospacedDigit()).foregroundStyle(Theme.muted.color)
+								Text(PercentFormat.whole(d.pct)).font(.caption2.monospacedDigit()).foregroundStyle(Theme.muted.color)
 							}
 							.accessibilityLabel(d.day.rawValue)
 							.accessibilityValue("\(d.wins) wins in \(d.games) Games")
@@ -500,12 +500,12 @@ private struct RoundCard: View {
 							.foregroundStyle(Theme.primary.color.opacity(r.reliable ? 1 : 0.35))
 							.annotation(position: .top) {
 								if rounds.count <= 8 {
-									Text("\(Int(r.scorePct.rounded()))%").font(.caption2.monospacedDigit()).foregroundStyle(Theme.muted.color)
+									Text(PercentFormat.whole(r.scorePct)).font(.caption2.monospacedDigit()).foregroundStyle(Theme.muted.color)
 								}
 							}
 							.accessibilityLabel(r.label)
 							.accessibilityValue(
-								"Score \(Int(r.scorePct.rounded())) percent over \(r.games) Games"
+								"Score \(PercentFormat.spoken(r.scorePct)) over \(RecordText.games(r.games))"
 									+ (r.reliable ? "" : ", too few to conclude"))
 					}
 				}

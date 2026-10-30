@@ -31,7 +31,7 @@ struct GamesScreen: View {
 					}
 				}
 			}
-			.searchable(text: $model.searchText, prompt: "Opponent, opening, ECO, Series, or #Tag")
+			.searchable(text: $model.searchText, prompt: "Opponent, opening, opening code, Series, or #Tag")
 		}
 		.toolbar {
 			ToolbarItem(placement: .topBarTrailing) {

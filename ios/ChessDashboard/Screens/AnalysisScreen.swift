@@ -139,22 +139,12 @@ private struct MistakeDonut: View {
 			Circle().fill(color).frame(width: 10, height: 10)
 			VStack(alignment: .leading, spacing: 0) {
 				Text(name).font(.subheadline)
-				Text(total > 0 ? "\(count) (\(Int((Double(count) / Double(total) * 100).rounded()))%)" : "\(count)")
+				Text(total > 0 ? "\(count) (\(PercentFormat.share(count, of: total)))" : "\(count)")
 					.font(.caption.monospacedDigit())
 					.foregroundStyle(Theme.muted.color)
 			}
 		}
 	}
-}
-
-/// A point on a date axis, with the nearest-to-touch lookup the charts share.
-private protocol Dated {
-	var day: Date { get }
-}
-
-private func nearest<T: Dated>(_ items: [T], to date: Date?) -> T? {
-	guard let date else { return nil }
-	return items.min { abs($0.day.timeIntervalSince(date)) < abs($1.day.timeIntervalSince(date)) }
 }
 
 /// The rating overlay's trailing axis, labelled in rating points.
@@ -171,17 +161,20 @@ private func ratingAxis(_ overlay: RatingOverlay) -> some AxisContent {
 private struct AccuracyChart: View {
 	let points: [API.AnalysisAccuracyPoint]
 	@State private var selectedDate: Date?
+	/// The last point read: the chart's selection clears when the finger lifts.
+	@State private var pinnedID: String?
 
-	struct Point: Dated, Identifiable {
+	struct Point: Identifiable {
 		let id: String
 		let day: Date
 		let source: API.AnalysisAccuracyPoint
 	}
 
 	var body: some View {
-		let items = points.compactMap { p in ISODates.day(p.date).map { Point(id: p.gameId, day: $0, source: p) } }
+		let items = points.compactMap { p in ChartDates.day(p.date).map { Point(id: p.gameId, day: $0, source: p) } }
 		let overlay = RatingOverlay(ratings: items.compactMap(\.source.rating), onto: 0...100)
-		let selected = nearest(items, to: selectedDate)
+		let touched = selectedDate.flatMap { ChartDates.nearest(items, to: $0, by: \.day) }
+		let selected = touched ?? items.first { $0.id == pinnedID }
 		VStack(alignment: .leading, spacing: 8) {
 			Chart {
 				ForEach(items) { item in
@@ -190,7 +183,7 @@ private struct AccuracyChart: View {
 					PointMark(x: .value("Date", item.day), y: .value("Accuracy", item.source.accuracy))
 						.foregroundStyle(tacticalColor)
 						.accessibilityLabel("\(item.source.opponent), \(item.source.date ?? "")")
-						.accessibilityValue("Accuracy \(item.source.accuracy.formatted(.number.precision(.fractionLength(0...1)))) percent")
+						.accessibilityValue("Accuracy \(PercentFormat.spoken(item.source.accuracy))")
 					if let overlay, let rating = item.source.rating {
 						LineMark(x: .value("Date", item.day), y: .value("Rating", overlay.plotted(rating)), series: .value("Series", "Rating"))
 							.foregroundStyle(Theme.text.color.opacity(0.6))
@@ -208,12 +201,13 @@ private struct AccuracyChart: View {
 				if let overlay { ratingAxis(overlay) }
 			}
 			.chartXSelection(value: $selectedDate)
+			.onChange(of: touched?.id) { _, id in if let id { pinnedID = id } }
 			.frame(height: 220)
 			if let selected {
 				NavigationLink(value: GameRoute(gameID: selected.id)) {
 					VStack(alignment: .leading, spacing: 2) {
 						Text("vs \(selected.source.opponent) · \(selected.source.date ?? "")").font(.subheadline)
-						Text("Accuracy \(selected.source.accuracy.formatted(.number.precision(.fractionLength(0...1))))%"
+						Text("Accuracy \(PercentFormat.upToOneDecimal(selected.source.accuracy))"
 							+ (selected.source.rating.map { " · rating \(RatingFormat.whole($0))" } ?? ""))
 							.font(.caption.monospacedDigit())
 							.foregroundStyle(Theme.muted.color)
@@ -228,59 +222,64 @@ private struct AccuracyChart: View {
 private struct MistakeTrendChart: View {
 	let points: [API.AnalysisMistakeTypePoint]
 	@State private var selectedDate: Date?
+	/// The last point read: the chart's selection clears when the finger lifts.
+	@State private var pinnedID: String?
 
-	struct Point: Dated, Identifiable {
+	struct Point: Identifiable {
 		let id: String
 		let day: Date
 		let source: API.AnalysisMistakeTypePoint
 	}
 
 	var body: some View {
-		let items = points.compactMap { p in ISODates.day(p.date).map { Point(id: p.gameId, day: $0, source: p) } }
+		let items = points.compactMap { p in ChartDates.day(p.date).map { Point(id: p.gameId, day: $0, source: p) } }
 		let top = Double(max(items.map { max($0.source.tactical, $0.source.positional) }.max() ?? 0, 1))
 		let overlay = RatingOverlay(ratings: items.compactMap(\.source.rating), onto: 0...top)
-		let selected = nearest(items, to: selectedDate)
-		Chart {
-			ForEach(items) { item in
-				ForEach(MistakeKind.allCases, id: \.self) { kind in
-					let count = kind == .tactical ? item.source.tactical : item.source.positional
-					LineMark(x: .value("Date", item.day), y: .value("Mistakes", count), series: .value("Kind", kind.rawValue))
-						.foregroundStyle(by: .value("Kind", kind.rawValue))
-					PointMark(x: .value("Date", item.day), y: .value("Mistakes", count))
-						.foregroundStyle(by: .value("Kind", kind.rawValue))
-						.accessibilityLabel("\(item.source.opponent), \(item.source.date ?? "")")
-						.accessibilityValue("\(count) \(kind.rawValue.lowercased())")
-				}
-				if let overlay, let rating = item.source.rating {
-					LineMark(x: .value("Date", item.day), y: .value("Mistakes", overlay.plotted(rating)), series: .value("Kind", "Rating"))
-						.foregroundStyle(Theme.text.color.opacity(0.6))
-						.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
-						.accessibilityHidden(true)
-				}
-			}
-			if let selected {
-				RuleMark(x: .value("Date", selected.day))
-					.foregroundStyle(Theme.dim.color)
-					.annotation(position: .top, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
-						VStack(alignment: .leading, spacing: 0) {
-							Text("vs \(selected.source.opponent)")
-							Text("\(selected.source.tactical) tactical, \(selected.source.positional) positional")
-								.foregroundStyle(Theme.muted.color)
-						}
-						.font(.caption)
-						.padding(6)
-						.background(RoundedRectangle(cornerRadius: 6).fill(Theme.card2.color))
+		let touched = selectedDate.flatMap { ChartDates.nearest(items, to: $0, by: \.day) }
+		let selected = touched ?? items.first { $0.id == pinnedID }
+		VStack(alignment: .leading, spacing: 8) {
+			Chart {
+				ForEach(items) { item in
+					ForEach(MistakeKind.allCases, id: \.self) { kind in
+						let count = kind == .tactical ? item.source.tactical : item.source.positional
+						LineMark(x: .value("Date", item.day), y: .value("Mistakes", count), series: .value("Kind", kind.rawValue))
+							.foregroundStyle(by: .value("Kind", kind.rawValue))
+						PointMark(x: .value("Date", item.day), y: .value("Mistakes", count))
+							.foregroundStyle(by: .value("Kind", kind.rawValue))
+							.accessibilityLabel("\(item.source.opponent), \(item.source.date ?? "")")
+							.accessibilityValue("\(count) \(kind.rawValue.lowercased())")
 					}
+					if let overlay, let rating = item.source.rating {
+						LineMark(x: .value("Date", item.day), y: .value("Mistakes", overlay.plotted(rating)), series: .value("Kind", "Rating"))
+							.foregroundStyle(Theme.text.color.opacity(0.6))
+							.lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
+							.accessibilityHidden(true)
+					}
+				}
+				if let selected {
+					RuleMark(x: .value("Date", selected.day)).foregroundStyle(Theme.dim.color)
+				}
+			}
+			.chartForegroundStyleScale(kindScale)
+			.chartYScale(domain: 0...top)
+			.chartYAxis {
+				AxisMarks(position: .leading)
+				if let overlay { ratingAxis(overlay) }
+			}
+			.chartXSelection(value: $selectedDate)
+			.onChange(of: touched?.id) { _, id in if let id { pinnedID = id } }
+			.frame(height: 220)
+			if let selected {
+				NavigationLink(value: GameRoute(gameID: selected.id)) {
+					VStack(alignment: .leading, spacing: 2) {
+						Text("vs \(selected.source.opponent) · \(selected.source.date ?? "")").font(.subheadline)
+						Text("\(selected.source.tactical) tactical, \(selected.source.positional) positional")
+							.font(.caption.monospacedDigit())
+							.foregroundStyle(Theme.muted.color)
+					}
+				}
 			}
 		}
-		.chartForegroundStyleScale(kindScale)
-		.chartYScale(domain: 0...top)
-		.chartYAxis {
-			AxisMarks(position: .leading)
-			if let overlay { ratingAxis(overlay) }
-		}
-		.chartXSelection(value: $selectedDate)
-		.frame(height: 220)
 		.padding(.vertical, 6)
 	}
 }
@@ -329,7 +328,7 @@ private struct MoveHistogram: View {
 	@State private var selectedMove: Int?
 
 	var body: some View {
-		let selected = selectedMove.flatMap { m in buckets.min { abs($0.moveNumber - m) < abs($1.moveNumber - m) } }
+		let selected = selectedMove.flatMap { m in ChartSelection.nearest(buckets, to: Double(m)) { Double($0.moveNumber) } }
 		Chart {
 			ForEach(buckets, id: \.moveNumber) { b in
 				BarMark(x: .value("Move", b.moveNumber), y: .value("Mistakes", b.count), width: .ratio(0.8))

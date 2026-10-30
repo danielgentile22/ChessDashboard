@@ -8,6 +8,7 @@ struct LessonsScreen: View {
 	@Environment(AppEnvironment.self) private var env
 	@State private var model: LessonsModel
 	@State private var reviewing = false
+	@State private var weaknessGame: GameRoute?
 	private let context: ScreenContext
 
 	init(context: ScreenContext) {
@@ -37,6 +38,9 @@ struct LessonsScreen: View {
 			await model.load()
 		}
 		.refreshable { await model.load() }
+		.navigationDestination(item: $weaknessGame) { route in
+			GameDetailScreen(gameID: route.gameID, context: context)
+		}
 		.fullScreenCover(isPresented: $reviewing) {
 			ReviewScreen(opponentID: model.opponentID, context: context)
 		}
@@ -68,24 +72,54 @@ struct LessonsScreen: View {
 	private func weaknessSection(_ weaknesses: [API.LessonsWeakness]) -> some View {
 		Section {
 			ForEach(weaknesses, id: \.tag) { w in
-				Button {
-					if !model.isSelected(w.tag) { model.toggle(tag: w.tag) }
-				} label: {
-					HStack(alignment: .top, spacing: 10) {
-						Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Theme.loss.color)
-						VStack(alignment: .leading, spacing: 2) {
-							Text(w.stat).font(.subheadline.weight(.semibold))
-							Text(w.window).font(.caption).foregroundStyle(Theme.muted.color)
+				VStack(alignment: .leading, spacing: 8) {
+					Button {
+						if !model.isSelected(w.tag) { model.toggle(tag: w.tag) }
+					} label: {
+						HStack(alignment: .top, spacing: 10) {
+							Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Theme.loss.color)
+							VStack(alignment: .leading, spacing: 2) {
+								Text(w.stat).font(.subheadline.weight(.semibold))
+								Text(w.window).font(.caption).foregroundStyle(Theme.muted.color)
+							}
+							Spacer(minLength: 0)
 						}
+						.contentShape(.rect)
 					}
+					.buttonStyle(.plain)
+					.accessibilityHint("Shows the Lessons tagged \(w.tag)")
+					if !w.games.isEmpty { weaknessGames(w) }
 				}
-				.buttonStyle(.plain)
 				.listRowBackground(Theme.lossWash2.color)
-				.accessibilityHint("Shows the Lessons tagged \(w.tag)")
 			}
 		} header: {
 			Text("Recurring weaknesses")
 		}
+	}
+
+	/// The Games behind a weakness, numbered like the web's callout.
+	private func weaknessGames(_ w: API.LessonsWeakness) -> some View {
+		FlowRow {
+			ForEach(Array(w.games.enumerated()), id: \.element.gameId) { index, game in
+				// A Button, not a NavigationLink: in a List row a link grows a
+				// disclosure chevron per chip.
+				Button { weaknessGame = GameRoute(gameID: game.gameId) } label: {
+					HStack(spacing: 2) {
+						Text("Game \(index + 1)")
+						Image(systemName: "chevron.right").imageScale(.small)
+					}
+					.font(.caption.weight(.medium))
+					.foregroundStyle(Theme.text.color)
+					.padding(.horizontal, 10)
+					.padding(.vertical, 5)
+					.background(Capsule().fill(Theme.lossWash3.color))
+				}
+				.buttonStyle(.plain)
+				.accessibilityLabel("Game \(index + 1) of \(w.games.count) behind #\(w.tag)")
+				.accessibilityHint("Opens the Game")
+			}
+		}
+		.padding(.leading, 30)
 	}
 
 	private var tagSection: some View {
@@ -179,14 +213,19 @@ private struct TagCountChip: View {
 			.font(.caption.weight(.medium))
 			.padding(.horizontal, 10)
 			.padding(.vertical, 5)
-			.foregroundStyle(selected ? Theme.text.color : Theme.primary.color)
+			.foregroundStyle(Theme.text.color)
+			// Neutral fills, so the strip never borrows TagChip's looks (a
+			// blue wash means a hand-written Tag, an outline an engine one).
 			.background {
 				if selected {
 					Capsule().fill(Theme.primary.color)
-				} else if count.canonical {
-					Capsule().fill(Theme.primaryWash.color)
 				} else {
-					Capsule().strokeBorder(Theme.primaryLine.color, style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
+					Capsule().fill(Theme.card2.color)
+				}
+			}
+			.overlay {
+				if !selected && !count.canonical {
+					Capsule().strokeBorder(Theme.dim.color, style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
 				}
 			}
 		}

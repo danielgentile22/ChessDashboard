@@ -293,8 +293,12 @@ private struct EvalChart: View {
 	@State private var selectedMove: Double?
 
 	private var selected: API.GameWinProbabilityPoint? {
-		guard let selectedMove else { return nil }
-		return points.min { abs(Double($0.ply) / 2 - selectedMove) < abs(Double($1.ply) / 2 - selectedMove) }
+		selectedMove.flatMap(nearest)
+	}
+
+	/// The point at the move nearest to `move` (the x axis counts moves, so a ply is half a move).
+	private func nearest(_ move: Double) -> API.GameWinProbabilityPoint? {
+		ChartSelection.nearest(points, to: move) { Double($0.ply) / 2 }
 	}
 
 	var body: some View {
@@ -313,7 +317,7 @@ private struct EvalChart: View {
 					.foregroundStyle(Theme.primary.color)
 					.annotation(position: .top, overflowResolution: .init(x: .fit, y: .disabled)) {
 						if let point = selected ?? points.first(where: { $0.ply == ply }) {
-							Text("\(GameDetailModel.moveLabel(ply: point.ply, moveNumber: point.moveNumber, san: point.san))  \(Int(point.whiteWinPct.rounded()))%")
+							Text("\(GameDetailModel.moveLabel(ply: point.ply, moveNumber: point.moveNumber, san: point.san))  \(PercentFormat.whole(point.whiteWinPct))")
 								.font(.caption.monospacedDigit())
 								.padding(4)
 								.background(Theme.card2.color, in: RoundedRectangle(cornerRadius: 4))
@@ -327,7 +331,7 @@ private struct EvalChart: View {
 		.chartXAxisLabel("Move")
 		.chartXSelection(value: $selectedMove)
 		.onChange(of: selectedMove) { old, new in
-			if new == nil, let old, let point = points.min(by: { abs(Double($0.ply) / 2 - old) < abs(Double($1.ply) / 2 - old) }) {
+			if new == nil, let old, let point = nearest(old) {
 				jump(point.ply)
 			}
 		}
@@ -339,7 +343,7 @@ private struct EvalChart: View {
 
 	private var accessibilitySummary: String {
 		guard let last = points.last else { return "" }
-		return "After \(GameDetailModel.moveLabel(ply: last.ply, moveNumber: last.moveNumber, san: last.san)), White \(Int(last.whiteWinPct.rounded())) percent"
+		return "After \(GameDetailModel.moveLabel(ply: last.ply, moveNumber: last.moveNumber, san: last.san)), White \(PercentFormat.spoken(last.whiteWinPct))"
 	}
 }
 

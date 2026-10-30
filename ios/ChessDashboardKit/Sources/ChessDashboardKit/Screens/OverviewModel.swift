@@ -53,7 +53,7 @@ public final class OverviewModel {
 			KPI(title: "Current Rating", value: RatingFormat.whole(k.rating), tone: .neutral, isText: false),
 			KPI(title: "Peak Rating", value: RatingFormat.whole(k.peakRating), tone: .neutral, isText: false),
 			KPI(
-				title: "Performance Rating", value: k.performanceRating.map(String.init) ?? "None",
+				title: "Performance Rating", value: k.performanceRating.map { RatingFormat.whole($0) } ?? "None",
 				tone: .neutral, isText: false),
 			KPI(title: "Longest Win Streak", value: String(k.longestWinStreak), tone: .neutral, isText: false),
 			KPI(title: "Unique Opponents", value: String(k.uniqueOpponents), tone: .neutral, isText: false),

@@ -2,7 +2,7 @@ import ChessDashboardKit
 import SwiftUI
 
 /// Where the repertoire wins and leaks points: the repertoire tree per color
-/// (tap a branch to drill down), Win rate by ECO family, and Top openings.
+/// (tap a branch to drill down), Win rate by opening family, and Top openings.
 struct OpeningsScreen: View {
 	@Environment(AppEnvironment.self) private var env
 	@State private var model: OpeningsModel
@@ -28,18 +28,18 @@ struct OpeningsScreen: View {
 					Text("Repertoire")
 				} footer: {
 					if let tree = model.tree, !RepertoireDisplay.isEmpty(tree) {
-						Text("\(tree.gameCount) Games · \(score(tree.scorePct)) overall score. Branches scoring below that across \(tree.minGames)+ Games are flagged.")
+						Text("\(tree.gameCount) Games · \(PercentFormat.whole(tree.scorePct)) overall score. Branches scoring below that across \(tree.minGames)+ Games are flagged.")
 					}
 				}
-				Section("Win rate by ECO family") {
+				Section("Win rate by opening family") {
 					if payload.ecoFamilies.isEmpty {
-						Text("No ECO data").foregroundStyle(Theme.muted.color)
+						Text("No opening families in this filter").foregroundStyle(Theme.muted.color)
 					} else {
 						WDLBarChart(
 							bars: payload.ecoFamilies.map {
 								.init(id: $0.ecoFamily, label: $0.familyName, win: $0.win, draw: $0.draw, loss: $0.loss)
 							},
-							summary: "Win rate by ECO family")
+							summary: "Win rate by opening family")
 					}
 				}
 				Section("Top openings") {
@@ -60,8 +60,6 @@ struct OpeningsScreen: View {
 		.refreshable { await model.load() }
 	}
 }
-
-private func score(_ pct: Double) -> String { "\(Int(pct.rounded()))%" }
 
 /// The rows for some repertoire moves: a branch with several Games pushes
 /// its drill-down; a single-Game leaf links straight to the Game.
@@ -119,7 +117,7 @@ private struct RepertoireNodeRow: View {
 		case .at: "at"
 		case .below: "below"
 		}
-		return "\(RepertoireDisplay.moveLabel(node)). \(node.gameCount) Games, \(node.win) wins, \(node.draw) draws, \(node.loss) losses. Score \(score(node.scorePct)), \(mark) your \(score(baseline)) baseline."
+		return "\(RepertoireDisplay.moveLabel(node)). \(RecordText.games(node.gameCount)), \(RecordText.record(win: node.win, draw: node.draw, loss: node.loss)). Score \(PercentFormat.whole(node.scorePct)), \(mark) your \(PercentFormat.whole(baseline)) baseline."
 			+ (node.underperforming ? " Leaking points." : "")
 	}
 }
@@ -136,7 +134,7 @@ private struct ScoreMark: View {
 		}
 		HStack(spacing: 2) {
 			Image(systemName: symbol).imageScale(.small)
-			Text(score(node.scorePct)).monospacedDigit()
+			Text(PercentFormat.whole(node.scorePct)).monospacedDigit()
 		}
 		.font(.subheadline.weight(.semibold))
 		.foregroundStyle(tint)
@@ -212,18 +210,18 @@ private struct TopOpeningRow: View {
 				Text(opening.eco).font(.subheadline.weight(.semibold).monospaced())
 				Text(opening.opening.isEmpty ? "Unnamed opening" : opening.opening).lineLimit(2)
 				Spacer()
-				Text("\(Int(opening.winRatePct.rounded()))%")
+				Text(PercentFormat.whole(opening.winRatePct))
 					.font(.subheadline.weight(.semibold)).monospacedDigit()
 			}
 			HStack {
-				Text("\(opening.gameCount) Games · \(opening.win)W \(opening.draw)D \(opening.loss)L")
+				Text(RecordText.recordWithGames(win: opening.win, draw: opening.draw, loss: opening.loss))
 					.font(.footnote).foregroundStyle(Theme.muted.color)
 				Spacer()
 			}
 			WDLStrip(win: opening.win, draw: opening.draw, loss: opening.loss)
 		}
 		.accessibilityElement(children: .ignore)
-		.accessibilityLabel("\(opening.eco) \(opening.opening). \(opening.gameCount) Games, \(opening.win) wins, \(opening.draw) draws, \(opening.loss) losses, win rate \(Int(opening.winRatePct.rounded())) percent.")
+		.accessibilityLabel("\(opening.eco) \(opening.opening). \(opening.gameCount) Games, \(RecordText.record(win: opening.win, draw: opening.draw, loss: opening.loss)), win rate \(PercentFormat.spoken(opening.winRatePct)).")
 	}
 }
 

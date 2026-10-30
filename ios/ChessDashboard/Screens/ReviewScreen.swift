@@ -6,6 +6,8 @@ import SwiftUI
 /// the cached copy when the club Wi-Fi is down.
 struct ReviewScreen: View {
 	@Environment(\.dismiss) private var dismiss
+	@Environment(\.openURL) private var openURL
+	@Environment(AppEnvironment.self) private var env
 	@State private var model: ReviewModel
 
 	init(opponentID: String?, context: ScreenContext) {
@@ -34,6 +36,13 @@ struct ReviewScreen: View {
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
 					Button("Done") { dismiss() }
+				}
+				ToolbarItem(placement: .topBarLeading) {
+					Button {
+						openURL(env.config.webURL(.lessonsReview(opponent: model.opponentID)))
+					} label: {
+						Label("Open on the Web", systemImage: "safari")
+					}
 				}
 				if let opponent = model.opponent {
 					ToolbarItem(placement: .principal) {

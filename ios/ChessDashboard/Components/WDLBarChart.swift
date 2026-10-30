@@ -52,7 +52,7 @@ struct WDLBarChart: View {
 			if let label = selected, let bar = bars.first(where: { $0.label == label }) {
 				VStack(alignment: .trailing, spacing: 2) {
 					Text(bar.label).font(.caption.weight(.semibold))
-					Text("\(bar.win)W \(bar.draw)D \(bar.loss)L · \(bar.total) games")
+					Text(RecordText.recordWithGames(win: bar.win, draw: bar.draw, loss: bar.loss))
 						.font(.caption).monospacedDigit()
 				}
 				.padding(8)
