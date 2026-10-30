@@ -6,7 +6,7 @@ import Foundation
 /// Every request and response type in the v1 contract.
 public enum API {
 	/// SHA-256 of the openapi/v1.json these types were generated from.
-	public static let specDigest = "b2789e912cc957cc03f77b6e2b16792d1cf26857306a53144c7c7c2b20ebfc86"
+	public static let specDigest = "6c80fe94031192686a70aefed20d335d7e65d9f7c98d514879b76fbbfc03ec12"
 
 	/// The 200 response type of every operation, by operationId.
 	public static let responseTypes: [String: any (Decodable & Sendable).Type] = [
@@ -212,7 +212,6 @@ extension API {
 		case forbidden = "forbidden"
 		case notFound = "not_found"
 		case syncFailed = "sync_failed"
-		case notImplemented = "not_implemented"
 	}
 
 	public struct ErrorResponseError: Codable, Sendable, Hashable {

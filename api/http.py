@@ -2,8 +2,7 @@
 api.http
 ========
 The blueprint every API route registers on, and the only request-handling
-helpers routes need: filter parsing, the filtered Games, JSON errors, and the
-501 stub for a screen that isn't built yet.
+helpers routes need: filter parsing, the filtered Games, and JSON errors.
 
 Routes hold no logic beyond parsing, auth, and serialization (ADR 0008):
 parse the query string here, call :func:`filtered_games` once (so the lens is
@@ -46,11 +45,6 @@ def error(code: str, message: str, status: int) -> tuple[Response, int]:
 def ok(payload: dict) -> Response:
     """A 200 JSON response."""
     return jsonify(payload)
-
-
-def not_implemented(screen: str) -> tuple[Response, int]:
-    """The 501 a screen route answers until its ticket builds it."""
-    return error("not_implemented", f"The {screen} screen isn't served yet.", 501)
 
 
 @bp.errorhandler(ApiError)

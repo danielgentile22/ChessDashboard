@@ -402,8 +402,7 @@
                   "throttled",
                   "forbidden",
                   "not_found",
-                  "sync_failed",
-                  "not_implemented"
+                  "sync_failed"
                 ],
                 "type": "string"
               },

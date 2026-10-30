@@ -9,8 +9,8 @@ The API contract itself (ADR 0008), plus the routes this foundation serves
   silently go missing and a new field can't ship undocumented.
 * Every operation in the document has a Flask route, and every route is in
   the document.
-* Screen routes still on their 501 stub answer with the contract's error
-  body.
+* Every route answers JSON, and an error status carries the contract's
+  error body.
 
 Each screen's own contract test lives in ``test_api_<screen>.py``.
 """
@@ -134,14 +134,13 @@ def _stub_paths():
 @pytest.mark.parametrize("method,path", list(_stub_paths()))
 def test_every_route_answers_json_matching_the_error_shape_or_its_schema(
         api, method, path):
-    """A stubbed screen answers 501 with the error body; a built one answers
-    something the document declares.  Either way: JSON, never Dash's HTML."""
+    """Every route answers JSON, never Dash's HTML; an error status carries
+    the error body."""
     resp = api.client.open(path, method=method.upper(), json={})
     body = resp.get_json(silent=True)
     assert body is not None, f"{method} {path} returned non-JSON"
-    if resp.status_code == 501:
+    if resp.status_code >= 400:
         validate(body, {"$ref": "#/components/schemas/Error"})
-        assert body["error"]["code"] == "not_implemented"
 
 
 class TestSession:
