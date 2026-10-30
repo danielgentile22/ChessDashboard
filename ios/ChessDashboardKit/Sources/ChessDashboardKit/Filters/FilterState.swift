@@ -15,8 +15,11 @@ public struct FilterState: Codable, Sendable, Hashable {
 	public var outcomes: Set<API.Outcome> = []
 	/// Empty means every termination.
 	public var terminations: Set<String> = []
-	/// First day kept, `YYYY-MM-DD`. Any date bound drops undated Games, as on the web.
-	public var start: String?
+	/// A day picked in the sheet (or a preset's fixed day).
+	private var fixedStart: String?
+	/// A start that moves with the calendar ("This year"): resolved to a day
+	/// only when a request is built, so the preset stays right on Jan 1.
+	public private(set) var relativeStart: RelativeStart?
 	/// Last day kept, `YYYY-MM-DD`.
 	public var end: String?
 	/// Empty means every Series.
@@ -32,6 +35,36 @@ public struct FilterState: Codable, Sendable, Hashable {
 	/// No filters, Official lens.
 	public static let all = FilterState()
 
+	public enum RelativeStart: String, Codable, Sendable, Hashable {
+		/// January 1 of the current year.
+		case thisYear = "this_year"
+	}
+
+	/// First day kept, `YYYY-MM-DD`, as of today. Any date bound drops
+	/// undated Games, as on the web. Setting a day replaces a relative start.
+	public var start: String? {
+		get { start(on: .now) }
+		set {
+			fixedStart = newValue
+			relativeStart = nil
+		}
+	}
+
+	/// The first day kept as of `today`, in the device's calendar.
+	public func start(on today: Date, calendar: Calendar = .current) -> String? {
+		switch relativeStart {
+		case .thisYear?: String(format: "%04d-01-01", calendar.component(.year, from: today))
+		case nil: fixedStart
+		}
+	}
+
+	// Stored state as persisted. The key names predate `relativeStart`
+	// (`fixedStart` is still "start"), so filters saved by an older build decode.
+	private enum CodingKeys: String, CodingKey {
+		case colors, outcomes, terminations, end, series, minMoves, maxMoves, lens, relativeStart
+		case fixedStart = "start"
+	}
+
 	/// True when any filter (not the lens) restricts the Games.
 	public var isFiltered: Bool {
 		var bare = self
@@ -44,7 +77,11 @@ public struct FilterState: Codable, Sendable, Hashable {
 	/// The query parameters every filtered route takes, in a fixed order.
 	/// This is the only place a filter state becomes a request, mirroring
 	/// `filters.get_filtered()` being the only place the server applies one.
-	public var queryItems: [URLQueryItem] {
+	/// A relative start is resolved here, against today.
+	public var queryItems: [URLQueryItem] { queryItems(on: .now) }
+
+	public func queryItems(on today: Date, calendar: Calendar = .current) -> [URLQueryItem] {
+		let start = start(on: today, calendar: calendar)
 		var items: [URLQueryItem] = []
 		func add(_ name: String, _ values: [String]) {
 			items += values.map { URLQueryItem(name: name, value: $0) }
@@ -65,22 +102,29 @@ public struct FilterState: Codable, Sendable, Hashable {
 
 	/// A server preset (from meta) as a filter state, keeping `lens`. Move
 	/// bounds equal to the archive's bounds are dropped, so a later Sync that
-	/// adds a longer Game doesn't leave it filtered out.
-	public init(preset: API.MetaFilterState, options: API.MetaFilterOptions?, lens: API.Lens) {
-		colors = Self.canonical(Set(preset.colors))
-		outcomes = Self.canonical(Set(preset.outcomes))
-		terminations = Set(preset.terminations)
-		start = preset.start
-		end = preset.end
-		series = Set(preset.series)
-		minMoves = preset.minMoves == options?.minMoves ? nil : preset.minMoves
-		maxMoves = preset.maxMoves == options?.maxMoves ? nil : preset.maxMoves
+	/// adds a longer Game doesn't leave it filtered out. "This year" keeps
+	/// its identity rather than the day meta resolved, so it rolls over on
+	/// Jan 1 without a new meta.
+	public init(preset: API.MetaPreset, options: API.MetaFilterOptions?, lens: API.Lens) {
+		let filters = preset.filters
+		colors = Self.canonical(Set(filters.colors))
+		outcomes = Self.canonical(Set(filters.outcomes))
+		terminations = Set(filters.terminations)
+		if preset.id == .thisYear {
+			relativeStart = .thisYear
+		} else {
+			fixedStart = filters.start
+		}
+		end = filters.end
+		series = Set(filters.series)
+		minMoves = filters.minMoves == options?.minMoves ? nil : filters.minMoves
+		maxMoves = filters.maxMoves == options?.maxMoves ? nil : filters.maxMoves
 		self.lens = lens
 	}
 
 	/// Whether this state is exactly that preset (the sheet marks it).
 	public func matches(_ preset: API.MetaPreset, options: API.MetaFilterOptions?) -> Bool {
-		self == FilterState(preset: preset.filters, options: options, lens: lens)
+		self == FilterState(preset: preset, options: options, lens: lens)
 	}
 
 	// MARK: Editing
@@ -136,11 +180,15 @@ extension FilterState {
 			parts.append(API.Outcome.allCases.filter(outcomes.contains).compactMap { names[$0] }
 				.joined(separator: ", "))
 		}
-		switch (start, end) {
-		case let (s?, e?): parts.append("\(s) to \(e)")
-		case let (s?, nil): parts.append("From \(s)")
-		case let (nil, e?): parts.append("Until \(e)")
-		case (nil, nil): break
+		if relativeStart == .thisYear {
+			parts.append(end.map { "This year, until \($0)" } ?? "This year")
+		} else {
+			switch (start, end) {
+			case let (s?, e?): parts.append("\(s) to \(e)")
+			case let (s?, nil): parts.append("From \(s)")
+			case let (nil, e?): parts.append("Until \(e)")
+			case (nil, nil): break
+			}
 		}
 		if !series.isEmpty {
 			parts.append(series.count == 1 ? series.first! : "\(series.count) Series")

@@ -37,7 +37,7 @@ public final class FilterStore {
 	}
 
 	public func apply(_ preset: API.MetaPreset, options: API.MetaFilterOptions?) {
-		state = FilterState(preset: preset.filters, options: options, lens: state.lens)
+		state = FilterState(preset: preset, options: options, lens: state.lens)
 	}
 
 	/// Back to "all" with the Official lens (sign-out: the next person starts clean).
