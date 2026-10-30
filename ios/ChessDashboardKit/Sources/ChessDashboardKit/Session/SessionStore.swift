@@ -7,8 +7,9 @@ import Observation
 /// One server, three ways in, all through `POST /api/v1/session`: the owner
 /// password, "Continue as guest" (owner-mode servers only; a multi-user server
 /// answers 403), or a username plus password (multi-user servers). There is
-/// no unauthenticated way to ask a server which mode it runs, so the sign-in
-/// screen offers all three and shows the server's answer.
+/// no unauthenticated way to ask a server which mode it runs, so the store
+/// remembers what the server last showed (`isMultiUserServer`): until then the
+/// sign-in screen offers all three and shows the server's answer.
 @MainActor @Observable
 public final class SessionStore {
 	public enum State: Equatable, Sendable {
@@ -17,25 +18,46 @@ public final class SessionStore {
 		case signedIn(Session)
 	}
 
+	/// Why a session ended.
+	public enum EndReason: Sendable {
+		/// The person tapped Sign out.
+		case signedOut
+		/// The token expired or the server answered 401.
+		case expired
+	}
+
 	public private(set) var state: State
+	/// The server has shown it runs multi-user accounts (a sign-in came back
+	/// with a username, or guest sign-in was refused), so "Continue as guest"
+	/// can't work there. Remembered across launches; an owner-password
+	/// sign-in clears it.
+	public private(set) var isMultiUserServer: Bool {
+		didSet { defaults.set(isMultiUserServer, forKey: Self.multiUserKey) }
+	}
 
 	@ObservationIgnored private let credentials: any CredentialStore
 	@ObservationIgnored private let api: any DashboardAPI
+	@ObservationIgnored private let defaults: any KeyValueStore
 	@ObservationIgnored private let now: @Sendable () -> Date
-	/// Runs on every sign-out, manual or automatic (the environment wipes the
-	/// response cache and the filters).
-	@ObservationIgnored public var onSignOut: @MainActor () -> Void = {}
+	/// Runs on every sign-out, manual or automatic. The environment forgets
+	/// the shown meta either way and wipes the cache and filters only on an
+	/// explicit sign-out.
+	@ObservationIgnored public var onSignOut: @MainActor (EndReason) -> Void = { _ in }
 
 	public static let expiredNotice = "Your session ended. Sign in again to keep going."
+	static let multiUserKey = "server.multiUser"
 
 	/// `api` is used only for sign-in (an unauthenticated request).
 	public init(
 		credentials: any CredentialStore, api: any DashboardAPI,
+		defaults: any KeyValueStore = InMemoryKeyValueStore(),
 		now: @escaping @Sendable () -> Date = { .now }
 	) {
 		self.credentials = credentials
 		self.api = api
+		self.defaults = defaults
 		self.now = now
+		isMultiUserServer = defaults.bool(forKey: Self.multiUserKey)
 		if let stored = credentials.load() {
 			if stored.isExpired(at: now()) {
 				credentials.clear()
@@ -60,19 +82,26 @@ public final class SessionStore {
 
 	/// Read-only access, like the web's guest login.
 	public func continueAsGuest() async throws(APIError) {
-		try await grant(API.SessionRequest(guest: true))
+		do {
+			try await grant(API.SessionRequest(guest: true))
+		} catch .forbidden(let message) {
+			isMultiUserServer = true  // only a multi-user server refuses guests
+			throw .forbidden(message)
+		}
 	}
 
 	public func signOut() {
-		end(notice: nil)
+		end(.signedOut)
 	}
 
 	/// The server (or the clock) says the session is over: back to sign-in
 	/// with an explanation. Idempotent, so several failing requests at once
-	/// sign out once.
-	public func sessionEnded() {
-		guard session != nil else { return }
-		end(notice: Self.expiredNotice)
+	/// sign out once. With `token`, only the session that made the failing
+	/// request ends: a late 401 for an earlier session never signs out the
+	/// one that replaced it.
+	public func sessionEnded(token: String? = nil) {
+		guard let session, token == nil || token == session.token else { return }
+		end(.expired)
 	}
 
 	/// Call when the app comes to the foreground: a session that expired
@@ -86,11 +115,13 @@ public final class SessionStore {
 		let session = try Session(grant: grant)
 		credentials.save(session)
 		state = .signedIn(session)
+		// A guest grant says nothing new (an ungated server grants it as owner).
+		if body.guest != true { isMultiUserServer = session.username != nil }
 	}
 
-	private func end(notice: String?) {
+	private func end(_ reason: EndReason) {
 		credentials.clear()
-		state = .signedOut(notice: notice)
-		onSignOut()
+		state = .signedOut(notice: reason == .expired ? Self.expiredNotice : nil)
+		onSignOut(reason)
 	}
 }

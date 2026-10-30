@@ -51,13 +51,22 @@ public final class AppEnvironment {
 		// The guard needs the session store and the store needs the guarded
 		// client (to sign in), so the guard reaches the store through a box.
 		let box = SessionBox()
-		let guarded = SessionGuard(api) { await box.store?.sessionEnded() }
+		let guarded = SessionGuard(api, credentials: credentials) { token in
+			await box.store?.sessionEnded(token: token)
+		}
 		self.config = config
 		self.api = guarded
 		self.cache = cache
 		self.filters = FilterStore(defaults: defaults)
-		self.session = SessionStore(credentials: credentials, api: guarded, now: now)
-		session.onSignOut = { [cache, filters] in
+		self.session = SessionStore(credentials: credentials, api: guarded, defaults: defaults, now: now)
+		// Every sign-out forgets the shown meta, so the next person never sees
+		// it. Only an explicit sign-out wipes the cache and filters: after an
+		// expiry the same person usually signs back in, and their offline
+		// Scouting Report and review should still be there (the cache is keyed
+		// by user, so nobody else can read it).
+		session.onSignOut = { [cache, filters, meta] reason in
+			meta.reset()
+			guard reason == .signedOut else { return }
 			cache.wipe()
 			filters.clear()
 		}
@@ -69,7 +78,8 @@ public final class AppEnvironment {
 		guard let s = session.session else { return nil }
 		return ScreenContext(
 			api: api, filters: filters, cache: cache,
-			cacheScope: "\(config.baseURL.absoluteString) \(s.cacheScope)")
+			cacheScope: "\(config.baseURL.absoluteString) \(s.cacheScope)",
+			isCurrent: { [session] in session.session?.token == s.token })
 	}
 
 	/// Whether Sync may be offered: an owner (not a guest) on a server that

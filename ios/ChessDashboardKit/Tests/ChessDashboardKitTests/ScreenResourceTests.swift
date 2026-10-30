@@ -101,6 +101,38 @@ struct ScreenResourceTests {
 		#expect(r.value == nil)
 	}
 
+	@Test("two fetches of one request: only the newer writes, and loading lasts until it lands")
+	func overlappingFetches() async throws {
+		let api = GatedAPI()
+		let ctx = ScreenContext(
+			api: api, filters: FilterStore(defaults: InMemoryKeyValueStore()), cache: .temporary(),
+			cacheScope: "owner")
+		let r = ScreenResource<API.MetaPayload>()
+
+		// The older fetch lands first: dropped, still loading.
+		let first = Task { await r.load(Endpoints.getMeta(), in: ctx) }
+		await api.waitForRequests(1)
+		let second = Task { await r.reload(in: ctx) }
+		await api.waitForRequests(2)
+		api.release(0, with: try metaFixture(player: "Older"))
+		await first.value
+		#expect(r.value == nil && r.isLoading)
+		api.release(1, with: try metaFixture(player: "Newer"))
+		await second.value
+		#expect(r.value?.player == "Newer" && !r.isLoading)
+
+		// The older fetch lands last: it never overwrites the newer answer.
+		let third = Task { await r.reload(in: ctx) }
+		await api.waitForRequests(3)
+		let fourth = Task { await r.reload(in: ctx) }
+		await api.waitForRequests(4)
+		api.release(3, with: try metaFixture(player: "Newest"))
+		await fourth.value
+		api.release(2, with: try metaFixture(player: "Stale"))
+		await third.value
+		#expect(r.value?.player == "Newest" && !r.isLoading)
+	}
+
 	@Test("the lichess-only meta variant renders through the fixture client")
 	func variants() async {
 		let api = FixtureAPIClient(directory: Repo.fixtures)

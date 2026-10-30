@@ -67,10 +67,15 @@ struct SignInView: View {
 						}
 					}
 					.disabled(busy || password.isEmpty || (usesUsername && username.isEmpty))
-					Button("Continue as Guest") { Task { await guest() } }
-						.disabled(busy)
+					// A multi-user server refuses guests; the store remembers once it has shown that.
+					if !env.session.isMultiUserServer {
+						Button("Continue as Guest") { Task { await guest() } }
+							.disabled(busy)
+					}
 				} footer: {
-					Text("Guests can read everything but can't Sync.")
+					if !env.session.isMultiUserServer {
+						Text("Guests can read everything but can't Sync.")
+					}
 				}
 			}
 			.scrollDismissesKeyboard(.interactively)

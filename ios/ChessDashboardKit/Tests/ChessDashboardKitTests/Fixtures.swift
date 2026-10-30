@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 @testable import ChessDashboardKit
 
 /// The repository's shared contract files, read in place. The server's
@@ -37,7 +38,7 @@ extension Session {
 /// A signed-in environment over the recorded fixtures, with a throwaway cache.
 @MainActor
 func makeEnvironment(
-	session: Session? = .owner(), api: FixtureAPIClient = FixtureAPIClient(directory: Repo.fixtures),
+	session: Session? = .owner(), api: any DashboardAPI = FixtureAPIClient(directory: Repo.fixtures),
 	defaults: InMemoryKeyValueStore = InMemoryKeyValueStore(), cache: ResponseCache = .temporary()
 ) -> AppEnvironment {
 	AppEnvironment(
@@ -50,4 +51,42 @@ extension ResponseCache {
 		ResponseCache(directory: FileManager.default.temporaryDirectory
 			.appending(path: "cd-cache-\(UUID().uuidString)"))
 	}
+}
+
+/// A client a test answers inline, so it can act (sign out, sign in) while
+/// a request is in flight.
+struct ClosureAPI: DashboardAPI {
+	let handler: @Sendable (APIRequest) async throws(APIError) -> Data
+	func data(for request: APIRequest) async throws(APIError) -> Data { try await handler(request) }
+}
+
+/// Holds every request until the test releases it, in any order.
+final class GatedAPI: DashboardAPI {
+	private let pending = Mutex<[CheckedContinuation<Data, Never>]>([])
+
+	func data(for request: APIRequest) async throws(APIError) -> Data {
+		await withCheckedContinuation { c in pending.withLock { $0.append(c) } }
+	}
+
+	func waitForRequests(_ count: Int) async {
+		while pending.withLock({ $0.count }) < count { await Task.yield() }
+	}
+
+	/// Answer the `index`th request (0 is the first sent).
+	func release(_ index: Int, with data: Data) {
+		pending.withLock { $0[index] }.resume(returning: data)
+	}
+}
+
+/// The recorded meta with another player name, to tell two answers apart.
+func metaFixture(player: String) throws -> Data {
+	var json = try JSONSerialization.jsonObject(with: Repo.fixture("getMeta")) as! [String: Any]
+	json["player"] = player
+	return try JSONSerialization.data(withJSONObject: json)
+}
+
+/// Lets a `@Sendable` test client reach an environment built after it.
+@MainActor
+final class EnvironmentBox {
+	var env: AppEnvironment!
 }

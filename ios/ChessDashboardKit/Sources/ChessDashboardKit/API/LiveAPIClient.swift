@@ -67,20 +67,31 @@ public struct LiveAPIClient: DashboardAPI {
 /// Wraps any client so an `.unauthenticated` answer (401, expired, signed
 /// out elsewhere) ends the session, whichever client produced it. That keeps
 /// "expired session routes to sign-in" on one path, live and fixture alike.
+///
+/// It ends only the session whose token made the request: the token is read
+/// before the request goes out and handed to `onUnauthenticated`, so a late
+/// 401 for a session that has since been replaced is ignored.
 public struct SessionGuard: DashboardAPI {
 	public let base: any DashboardAPI
-	private let onUnauthenticated: @Sendable () async -> Void
+	private let credentials: any CredentialStore
+	private let onUnauthenticated: @Sendable (_ token: String?) async -> Void
 
-	public init(_ base: any DashboardAPI, onUnauthenticated: @escaping @Sendable () async -> Void) {
+	public init(
+		_ base: any DashboardAPI, credentials: any CredentialStore,
+		onUnauthenticated: @escaping @Sendable (_ token: String?) async -> Void
+	) {
 		self.base = base
+		self.credentials = credentials
 		self.onUnauthenticated = onUnauthenticated
 	}
 
 	public func data(for request: APIRequest) async throws(APIError) -> Data {
+		let token = credentials.load()?.token
 		do {
 			return try await base.data(for: request)
 		} catch .unauthenticated {
-			await onUnauthenticated()
+			// nil (no stored session when it went out) ends whatever is signed in.
+			await onUnauthenticated(token)
 			throw .unauthenticated
 		}
 	}

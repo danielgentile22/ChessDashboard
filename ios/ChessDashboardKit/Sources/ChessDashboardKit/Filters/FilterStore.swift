@@ -1,10 +1,11 @@
 import Foundation
 import Observation
 
-/// Small persisted values (the filter state). `UserDefaults` in the app, a
-/// dictionary in tests.
+/// Small persisted values (the filter state, the server's sign-in mode).
+/// `UserDefaults` in the app, a dictionary in tests.
 public protocol KeyValueStore: AnyObject {
 	func data(forKey key: String) -> Data?
+	func bool(forKey key: String) -> Bool
 	func set(_ value: Any?, forKey key: String)
 }
 
@@ -14,6 +15,7 @@ public final class InMemoryKeyValueStore: KeyValueStore {
 	private var values: [String: Any] = [:]
 	public init() {}
 	public func data(forKey key: String) -> Data? { values[key] as? Data }
+	public func bool(forKey key: String) -> Bool { values[key] as? Bool ?? false }
 	public func set(_ value: Any?, forKey key: String) { values[key] = value }
 }
 

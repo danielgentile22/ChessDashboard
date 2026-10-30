@@ -12,12 +12,20 @@ public struct ScreenContext {
 	public let cache: ResponseCache
 	/// Whose cache this is (server plus user); see `Session.cacheScope`.
 	public let cacheScope: String
+	/// False once the session this context was built for has ended: an
+	/// answer that arrives after that is dropped, never shown or cached (the
+	/// cache may have been wiped meanwhile).
+	public let isCurrent: @MainActor () -> Bool
 
-	public init(api: any DashboardAPI, filters: FilterStore, cache: ResponseCache, cacheScope: String) {
+	public init(
+		api: any DashboardAPI, filters: FilterStore, cache: ResponseCache, cacheScope: String,
+		isCurrent: @escaping @MainActor () -> Bool = { true }
+	) {
 		self.api = api
 		self.filters = filters
 		self.cache = cache
 		self.cacheScope = cacheScope
+		self.isCurrent = isCurrent
 	}
 }
 
@@ -29,7 +37,10 @@ public struct ScreenContext {
 /// - Any other failure keeps whatever is shown and sets `error`.
 /// - Switching to a different request (new filters) shows that request's
 ///   cached copy, or nothing, never the previous filters' numbers. A late
-///   answer for a request the screen has moved on from is dropped.
+///   answer for a request the screen has moved on from is dropped, and so is
+///   an older fetch of the same request once a newer one started.
+/// - An answer that arrives after its session ended is dropped (`reset` on
+///   sign-out, `ScreenContext.isCurrent`).
 @MainActor @Observable
 public final class ScreenResource<Value: Decodable & Sendable> {
 	public private(set) var value: Value?
@@ -43,8 +54,22 @@ public final class ScreenResource<Value: Decodable & Sendable> {
 	public private(set) var error: APIError?
 
 	@ObservationIgnored private var current: APIRequest?
+	/// Bumped by every fetch; only the latest one may write its answer.
+	@ObservationIgnored private var generation = 0
 
 	public init() {}
+
+	/// Forget what is shown and drop any fetch in flight (sign-out: the next
+	/// person never sees this one's data).
+	public func reset() {
+		current = nil
+		generation += 1
+		value = nil
+		cachedAt = nil
+		isLoading = false
+		isOffline = false
+		error = nil
+	}
 
 	public func load(_ endpoint: Endpoint<Value>, in context: ScreenContext) async {
 		let request = endpoint.request
@@ -67,6 +92,8 @@ public final class ScreenResource<Value: Decodable & Sendable> {
 	}
 
 	private func fetch(_ request: APIRequest, in context: ScreenContext) async {
+		generation += 1
+		let mine = generation
 		isLoading = true
 		let result: Result<(Value, Data), APIError>
 		do {
@@ -75,8 +102,9 @@ public final class ScreenResource<Value: Decodable & Sendable> {
 		} catch {
 			result = .failure(error)
 		}
-		guard request == current else { return }
+		guard request == current, mine == generation else { return }
 		isLoading = false
+		guard context.isCurrent() else { return }
 		switch result {
 		case .success(let (fresh, data)):
 			context.cache.write(data, for: request, scope: context.cacheScope)
