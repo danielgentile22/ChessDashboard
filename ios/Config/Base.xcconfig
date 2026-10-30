@@ -1,0 +1,10 @@
+// Shared build settings. Personal, uncommitted overrides (a LAN server
+// address for a device) go in Local.xcconfig; copy Local.xcconfig.example.
+// `$()` keeps xcconfig from reading `//` as a comment.
+
+// The server the app talks to, read from Info.plist as CDBaseURL. Debug is a
+// local `python app.py` (port 8050), which the simulator reaches as-is.
+CD_BASE_URL = https:/$()/chess-dashboard.fly.dev/api/v1/
+CD_BASE_URL[config=Debug] = http:/$()/localhost:8050/api/v1/
+
+#include? "Local.xcconfig"

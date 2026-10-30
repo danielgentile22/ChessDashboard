@@ -1,0 +1,197 @@
+{
+  "paths": {
+    "/api/v1/lessons": {
+      "get": {
+        "operationId": "getLessons",
+        "tags": ["screens"],
+        "summary": "The Lessons screen, with optional pre-game review mode",
+        "description": "Every Lesson written on Lichess, newest first, each with its Game and that Game's Tags; Tag counts (canonical taxonomy first, then freeform) that double as the Tag filter; recurring-weakness callouts; and the Coach's Notes feed, kept separate from the user's own Lessons. The Lessons list, Tag counts, and weakness callouts honor the global filters. The `tags` and `opponent` params narrow only the Lessons list, exactly like the web's chip toggles and opponent picker. With review=true the payload also carries the pre-game review queue (the web's ?review=1 overlay), built from the whole archive and ignoring every filter, as on the web. The opponent picker options and the Coach's Notes feed are unfiltered too.",
+        "parameters": [
+          {"$ref": "#/components/parameters/colors"},
+          {"$ref": "#/components/parameters/outcomes"},
+          {"$ref": "#/components/parameters/terminations"},
+          {"$ref": "#/components/parameters/start"},
+          {"$ref": "#/components/parameters/end"},
+          {"$ref": "#/components/parameters/series"},
+          {"$ref": "#/components/parameters/min_moves"},
+          {"$ref": "#/components/parameters/max_moves"},
+          {"$ref": "#/components/parameters/lens"},
+          {
+            "name": "tags", "in": "query", "required": false, "explode": true,
+            "description": "Tag names without the leading # (repeatable). Keeps only Lessons whose Game carries ALL of them, hand-written or engine-emitted alike. Omitted means no Tag restriction.",
+            "schema": {"type": "array", "items": {"type": "string", "minLength": 1}}
+          },
+          {
+            "name": "opponent", "in": "query", "required": false,
+            "description": "An opaque opponent ID (schema OpponentId, from GET /api/v1/opponents or lessons_opponents). Keeps only Lessons from Games against that opponent, and in review mode primes the queue with them (the web's ?review=1&opponent=X). An ID that resolves to no opponent simply matches nothing; it is not an error.",
+            "schema": {"type": "string", "minLength": 1}
+          },
+          {
+            "name": "review", "in": "query", "required": false,
+            "description": "Mirrors the web's ?review=1: when true, the payload's review field carries the pre-game review queue; when false or omitted it is null.",
+            "schema": {"type": "boolean", "default": false}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Lessons screen.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/LessonsPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LessonsPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The Lessons screen. An empty lessons list shows the web's convention explainer (write a Chapter comment starting with 'Lesson:'; add #hashtags; the canonical taxonomy chips). Source: pages/lessons.py update_lessons_page -> pgn_stats_core.lessons_table + _tag_strip -> pgn_stats_core.tag_counts (CANONICAL_TAGS); update_weakness_callouts -> pgn_stats_core.recurring_weaknesses; layout + update_lesson_opponent_options -> components.opponent_options(with_lessons_only=True); _review_overlay -> pgn_stats_core.review_queue(data.get_df()); _coach_notes_feed -> data.get_coach_notes.",
+        "required": ["games_count", "lessons", "tag_counts", "recurring_weaknesses",
+                     "lessons_opponents", "review", "coach_notes"],
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0, "description": "Games after the global filters (before tags/opponent narrow the list)."},
+          "lessons": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsLesson"},
+            "description": "Every Lesson after the global filters, tags, and opponent, newest first (undated last). The web's count label is this array's length."
+          },
+          "tag_counts": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsTagCount"},
+            "description": "Every Tag on the filtered Games (not narrowed by tags/opponent): canonical taxonomy Tags first in taxonomy order (only those with a count), then freeform Tags by descending count, ties by name. Each chip toggles that Tag in the `tags` param. Empty shows 'No Tags in your archive yet'."
+          },
+          "recurring_weaknesses": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsWeakness"},
+            "description": "Tags that keep showing up in recent losses, most severe first. Empty below threshold (the web then renders nothing: silence over noise)."
+          },
+          "lessons_opponents": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsOpponent"},
+            "description": "The opponent picker: every named opponent the player has at least one Lesson against, across the whole archive, sorted by name."
+          },
+          "review": {
+            "oneOf": [{"$ref": "#/components/schemas/LessonsReview"}, {"type": "null"}],
+            "description": "The pre-game review queue when review=true, else null."
+          },
+          "coach_notes": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsCoachNote"},
+            "description": "The Coach's Notes feed: the coach's prose on Games a Coach Study chapter matched, newest Game first, move order within a Game. Unfiltered. Empty when there is no coach content; the web then omits the feed entirely. Render it visually distinct from the user's Lessons: these are never the user's own takeaways."
+          }
+        }
+      },
+      "LessonsLesson": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Lesson card. A Game with two Lessons gives two cards. The card's Tags are its Game's Tags (game.tags, with sources so engine-emitted Tags render with the muted marker).",
+        "required": ["text", "game"],
+        "properties": {
+          "text": {"type": "string", "description": "The Lesson text, 'Lesson:' prefix stripped."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      },
+      "LessonsTagCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Tag chip with its count. Not a Tag object: one Tag name aggregates both sources here, so the split is carried as counts. Each Game gives a Tag exactly one source (hand-written wins when Daniel also typed a Tag the engine emits), so count == mine_count + engine_count.",
+        "required": ["name", "canonical", "count", "mine_count", "engine_count"],
+        "properties": {
+          "name": {"type": "string", "description": "The Tag without its leading #."},
+          "canonical": {"type": "boolean", "description": "True for the seven taxonomy Tags; false for a freeform Tag (the web styles those differently so fragmentation stays visible)."},
+          "count": {"type": "integer", "minimum": 1, "description": "Filtered Games carrying this Tag."},
+          "mine_count": {"type": "integer", "minimum": 0, "description": "Of those, Games where the Tag is hand-written (source mine)."},
+          "engine_count": {"type": "integer", "minimum": 0, "description": "Of those, Games where the Tag is engine-emitted (source engine). Always 0 for calculation, time-trouble, and freeform Tags."}
+        }
+      },
+      "LessonsWeakness": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One recurring-weakness callout: a Tag on at least 3 of the last 10 Losses that also shows up in losses more than in wins and draws over the same span. Forfeits never count.",
+        "required": ["tag", "loss_count", "window_losses", "stat", "window", "severity", "games"],
+        "properties": {
+          "tag": {"type": "string", "description": "The Tag without its leading #."},
+          "loss_count": {"type": "integer", "minimum": 1, "description": "How many of the windowed Losses carry the Tag."},
+          "window_losses": {"type": "integer", "minimum": 1, "description": "How many Losses the window holds (at most 10)."},
+          "stat": {"type": "string", "description": "The headline, verbatim, e.g. '#time-trouble appears in 6 of your last 8 losses'."},
+          "window": {"type": "string", "description": "The months the window spans, e.g. 'Mar – Jun 2024' or 'Jun 2024'; empty when those Games are undated."},
+          "severity": {"type": "number", "minimum": 0, "maximum": 1, "description": "Ranking score 0..1 (share of windowed Losses times loss association), rounded to 3 decimals. The web uses it only to order callouts."},
+          "games": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsWeaknessGame"},
+            "description": "The Losses behind the callout, in date order (any without a ChapterURL left out); the web links each as 'Game N'."
+          }
+        }
+      },
+      "LessonsWeaknessGame": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["game_id"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"}
+        }
+      },
+      "LessonsOpponent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["opponent_id", "opponent"],
+        "properties": {
+          "opponent_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque opponent ID (schema OpponentId); pass it as the `opponent` param."
+          },
+          "opponent": {"type": "string"}
+        }
+      },
+      "LessonsReview": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Pre-game review mode: a card-by-card walk through the most relevant Lessons, built from the whole archive (filters ignored). The client steps through cards and ends on the web's send-off ('That's everything. Now go play.'). Empty cards shows 'Nothing to review yet'.",
+        "required": ["opponent_id", "opponent", "cards"],
+        "properties": {
+          "opponent_id": {
+            "type": ["string", "null"],
+            "description": "The opponent the queue is primed with (schema OpponentId), or null when none was given or the ID resolved to no opponent."
+          },
+          "opponent": {"type": ["string", "null"], "description": "That opponent's name, for the 'vs <opponent>' subtitle; null alongside opponent_id."},
+          "cards": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LessonsReviewCard"},
+            "description": "Most relevant first: recurring-weakness Lessons, then Lessons against the primed opponent, then everything else; newest first within each group."
+          }
+        }
+      },
+      "LessonsReviewCard": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One review card: why it is in the queue, the Lesson, and its Game (opponent, outcome, date, and Tags with sources all come from game).",
+        "required": ["reason_kind", "reason", "text", "game"],
+        "properties": {
+          "reason_kind": {
+            "type": "string",
+            "enum": ["recurring_weakness", "facing_opponent", "recent"],
+            "description": "The queue group (review_queue priority 0, 1, 2). The web highlights recurring_weakness."
+          },
+          "reason": {"type": "string", "description": "The reason line, verbatim: 'Recurring weakness: #tactics #endgame', 'You're facing <opponent>', or 'Recent lesson'."},
+          "text": {"type": "string", "description": "The Lesson text, 'Lesson:' prefix stripped."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      },
+      "LessonsCoachNote": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Coach's Note: the coach's prose, where in the Game it was written, and the Game.",
+        "required": ["text", "move_number", "game"],
+        "properties": {
+          "text": {"type": "string"},
+          "move_number": {"type": "integer", "minimum": 0, "description": "The 1-based full move the comment sits on; 0 for a chapter-level comment (the web shows 'before the game')."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      }
+    }
+  }
+}

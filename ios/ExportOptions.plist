@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>destination</key>
+	<string>export</string>
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>dev.danielgentile.chessdashboard</key>
+		<string>Chess Dashboard App Store</string>
+	</dict>
+	<key>signingCertificate</key>
+	<string>AA3BECD13D7CA3824D87E580A16558F25C33B59A</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>teamID</key>
+	<string>58N856BAX8</string>
+</dict>
+</plist>

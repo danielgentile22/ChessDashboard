@@ -23,6 +23,7 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.6.0",
     "pandas-stubs>=2.0.0",
+    "jsonschema>=4.18.0",
 ]
 
 [project.scripts]
@@ -52,7 +53,7 @@ files = [
     "pgn_stats_core.py", "lichess_client.py", "uscf_client.py", "uscf_core.py",
     "engine_analysis_core.py", "analysis_trends.py", "coach_match_core.py",
     "ai_summary.py", "analysis_cache.py", "sync.py", "data.py", "config.py",
-    "auth.py", "user_config.py",
+    "auth.py", "user_config.py", "payloads", "api",
 ]
 
 # Coverage source lives here so `make test` and CI share one list and one gate.
@@ -62,6 +63,7 @@ source = [
     "engine_analysis_core", "analysis_trends", "coach_match_core",
     "ai_summary", "analysis_cache", "sync", "data", "config",
     "auth", "user_config", "shell", "filters", "components", "pages",
+    "api", "payloads",
 ]
 
 [tool.coverage.report]

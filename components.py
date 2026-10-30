@@ -13,9 +13,16 @@ from __future__ import annotations
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, dcc, html, no_update
 
-from pgn_stats_core import chapter_id
+from payloads.common import uscf_status
+from payloads.overview import form_indicator as indicator_state
+from pgn_stats_core import chapter_id, is_engine_tag
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
-from uscf_core import UscfProfile, UscfRating
+from uscf_core import (  # noqa: F401  (labels and member URL re-exported for pages)
+    USCF_RATING_SYSTEM_LABELS,
+    UscfProfile,
+    UscfRating,
+    uscf_member_url,
+)
 
 # ---------------------------------------------------------------------------
 # Dark DataTable styles (shared by every table in the app)
@@ -182,21 +189,23 @@ def form_indicator(form: dict) -> list:
     """
     children: list = []
 
-    if form["win_streak"] >= 2:
-        blazing = " blazing" if form["win_streak"] >= 5 else ""
+    # The thresholds live with the API payload so the phone's fire can't drift
+    state = indicator_state(form["win_streak"], form["loss_streak"])
+    if state["kind"] == "fire":
+        blazing = " blazing" if state["blazing"] else ""
         # The fire grows with the streak (capped so it never breaks the header)
-        size = min(15 + form["win_streak"] * 1.5, 28)
+        size = min(15 + state["count"] * 1.5, 28)
         children.append(html.Span(
-            ["🔥", html.Span(str(form["win_streak"]), className="streak-count")],
+            ["🔥", html.Span(str(state["count"]), className="streak-count")],
             className=f"streak-fire{blazing}",
             style={"fontSize": f"{size}px"},
-            title=f"{form['win_streak']}-game win streak",
+            title=f"{state['count']}-game win streak",
         ))
-    elif form["loss_streak"] >= 3:
+    elif state["kind"] == "cold":
         children.append(html.Span(
-            ["🧊", html.Span(str(form["loss_streak"]), className="streak-count")],
+            ["🧊", html.Span(str(state["count"]), className="streak-count")],
             className="streak-cold",
-            title=f"{form['loss_streak']}-game losing streak. It turns around.",
+            title=f"{state['count']}-game losing streak. It turns around.",
         ))
 
     if form["last_5"]:
@@ -211,10 +220,6 @@ def form_indicator(form: dict) -> list:
     return children
 
 
-# The source value that marks a Tag as the engine's, not Daniel's.
-ENGINE_TAG_SOURCE = "engine"
-
-
 def tag_chips(tags, sources=None, *, base_class: str = "tag-chip") -> list:
     """A Game's Tags as chips, marking the engine-emitted ones.
 
@@ -223,10 +228,9 @@ def tag_chips(tags, sources=None, *, base_class: str = "tag-chip") -> list:
     ``tag-chip-engine`` class and a small ⚙ marker so Daniel can always tell the
     computer's Tags from the ones he wrote himself — wherever Tags render.
     """
-    sources = sources or {}
     chips = []
     for tag in tags:
-        engine = sources.get(tag) == ENGINE_TAG_SOURCE
+        engine = is_engine_tag(tag, sources)
         children = [f"#{tag}"]
         if engine:
             children.append(html.Span("⚙", className="tag-chip-engine-mark"))
@@ -316,20 +320,15 @@ def lichess_link(chapter_url: str) -> str:
     return f"[Open ↗]({chapter_url})" if chapter_url else ""
 
 
-def uscf_member_url(member_id: str) -> str:
-    """The USCF ratings-site page for a member ('' if no ID)."""
-    return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
 
-
-# Display names for USCF rating-system codes.
-USCF_RATING_SYSTEM_LABELS = {
-    "R": "Regular",
-    "D": "Dual (Regular + Quick)",
-    "Q": "Quick",
-    "B": "Blitz",
-    "OR": "Online Regular",
-    "OQ": "Online Quick",
-    "OB": "Online Blitz",
+# One glyph per payloads.common.uscf_status value: the API and the web table
+# share that precedence, so they can't disagree about a Game.
+_USCF_STATUS_LABELS = {
+    "forfeit": "Forfeit",
+    "conflict": "⚠",
+    "matched_by_id": "✓",
+    "matched_by_name": "≈",
+    "unmatched": "",
 }
 
 
@@ -340,11 +339,7 @@ def uscf_status_label(matched_by: str, forfeit: bool, conflict: bool = False) ->
     ⚠ matched but the sources disagree (see Reconciliation) ·
     "Forfeit" for no-shows · blank for no USCF Game Record.
     """
-    if forfeit:
-        return "Forfeit"
-    if conflict:
-        return "⚠"
-    return {"id": "✓", "name": "≈"}.get(matched_by, "")
+    return _USCF_STATUS_LABELS[uscf_status(matched_by, forfeit, conflict)]
 
 
 def game_detail_path(chapter_url: str) -> str:

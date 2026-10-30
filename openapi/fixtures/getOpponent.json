@@ -1,0 +1,223 @@
+{
+  "games": [
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+      "color": "White",
+      "date": "2024-01-06",
+      "eco": "E04",
+      "game_id": "chap0001",
+      "has_lesson": true,
+      "moves": 6,
+      "opening": "Catalan Opening: Open Defense",
+      "opponent": "Opponent A",
+      "opponent_rating": 1920,
+      "outcome": "Win",
+      "player_rating": 1800,
+      "result": "1-0",
+      "round": 1,
+      "series": "Test Open",
+      "tags": [
+        {
+          "name": "strategy",
+          "source": "mine"
+        }
+      ],
+      "termination": "win by resignation",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+      "color": "Black",
+      "date": "2024-06-15",
+      "eco": "E60",
+      "game_id": "chap0004",
+      "has_lesson": true,
+      "moves": 4,
+      "opening": "King's Indian Defense",
+      "opponent": "Opponent A",
+      "opponent_rating": 1930,
+      "outcome": "Win",
+      "player_rating": 1810,
+      "result": "0-1",
+      "round": 1,
+      "series": "Summer Cup",
+      "tags": [
+        {
+          "name": "opening",
+          "source": "mine"
+        }
+      ],
+      "termination": "loss by checkmate",
+      "uscf_status": "conflict"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0007",
+      "color": "White",
+      "date": "2024-06-16",
+      "eco": "E04",
+      "game_id": "chap0007",
+      "has_lesson": false,
+      "moves": 3,
+      "opening": "Catalan Opening",
+      "opponent": "Opponent A",
+      "opponent_rating": 1925,
+      "outcome": "Draw",
+      "player_rating": 1810,
+      "result": "1/2-1/2",
+      "round": 4,
+      "series": "Summer Cup",
+      "tags": [],
+      "termination": "Normal",
+      "uscf_status": "matched_by_name"
+    }
+  ],
+  "games_count": 3,
+  "lessons": [
+    {
+      "game": {
+        "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+        "color": "Black",
+        "date": "2024-06-15",
+        "eco": "E60",
+        "game_id": "chap0004",
+        "has_lesson": true,
+        "moves": 4,
+        "opening": "King's Indian Defense",
+        "opponent": "Opponent A",
+        "opponent_rating": 1930,
+        "outcome": "Win",
+        "player_rating": 1810,
+        "result": "0-1",
+        "round": 1,
+        "series": "Summer Cup",
+        "tags": [
+          {
+            "name": "opening",
+            "source": "mine"
+          }
+        ],
+        "termination": "loss by checkmate",
+        "uscf_status": "conflict"
+      },
+      "text": "Don't grab pawns while behind in development."
+    },
+    {
+      "game": {
+        "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+        "color": "Black",
+        "date": "2024-06-15",
+        "eco": "E60",
+        "game_id": "chap0004",
+        "has_lesson": true,
+        "moves": 4,
+        "opening": "King's Indian Defense",
+        "opponent": "Opponent A",
+        "opponent_rating": 1930,
+        "outcome": "Win",
+        "player_rating": 1810,
+        "result": "0-1",
+        "round": 1,
+        "series": "Summer Cup",
+        "tags": [
+          {
+            "name": "opening",
+            "source": "mine"
+          }
+        ],
+        "termination": "loss by checkmate",
+        "uscf_status": "conflict"
+      },
+      "text": "Castle before starting an attack. #opening"
+    },
+    {
+      "game": {
+        "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+        "color": "White",
+        "date": "2024-01-06",
+        "eco": "E04",
+        "game_id": "chap0001",
+        "has_lesson": true,
+        "moves": 6,
+        "opening": "Catalan Opening: Open Defense",
+        "opponent": "Opponent A",
+        "opponent_rating": 1920,
+        "outcome": "Win",
+        "player_rating": 1800,
+        "result": "1-0",
+        "round": 1,
+        "series": "Test Open",
+        "tags": [
+          {
+            "name": "strategy",
+            "source": "mine"
+          }
+        ],
+        "termination": "win by resignation",
+        "uscf_status": "matched_by_id"
+      },
+      "text": "Keep the tension in the center instead of releasing it early. #strategy"
+    }
+  ],
+  "openings_as_black": [
+    {
+      "draw": 0,
+      "eco": "E60",
+      "games": 1,
+      "loss": 0,
+      "opening": "King's Indian Defense",
+      "win": 1
+    }
+  ],
+  "openings_as_white": [
+    {
+      "draw": 1,
+      "eco": "E04",
+      "games": 1,
+      "loss": 0,
+      "opening": "Catalan Opening",
+      "win": 0
+    },
+    {
+      "draw": 0,
+      "eco": "E04",
+      "games": 1,
+      "loss": 0,
+      "opening": "Catalan Opening: Open Defense",
+      "win": 1
+    }
+  ],
+  "opponent": "Opponent A",
+  "opponent_id": "uscf-10000001",
+  "rating_gap": 115,
+  "record": {
+    "draw": 1,
+    "games": 3,
+    "loss": 0,
+    "score": "2.5/3",
+    "score_points": 2.5,
+    "win": 2
+  },
+  "terminations": [
+    {
+      "games": 1,
+      "termination": "win by resignation"
+    },
+    {
+      "games": 1,
+      "termination": "loss by checkmate"
+    },
+    {
+      "games": 1,
+      "termination": "Normal"
+    }
+  ],
+  "their_rating": 1925,
+  "uscf_identity": {
+    "member_id": "10000001",
+    "name": "OPPONENT A",
+    "official_rating": null,
+    "profile_url": "https://ratings.uschess.org/members/10000001",
+    "rating_change": null,
+    "rating_when_last_played": 1925
+  }
+}

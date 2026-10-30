@@ -9,7 +9,7 @@ stats, trends, and lessons with **Plotly Dash** (multi-page). USCF ratings data
 1. `GLOSSARY.md`: the domain glossary (Game, Study, Sync, Series vs Rated Event,
    Official vs Live Rating, Forfeit, Reconciliation, Lesson, Tag…). Use these
    exact words; they have precise, non-interchangeable meanings.
-2. `docs/decisions/000{1..7}-*.md`: the seven load-bearing decisions (below).
+2. `docs/decisions/000{1..8}-*.md`: the eight load-bearing decisions (below).
 3. `README.md`: exhaustive feature tour, CLI flags, env vars, deployment.
 
 ## Intent Layer
@@ -18,6 +18,8 @@ stats, trends, and lessons with **Plotly Dash** (multi-page). USCF ratings data
 
 - **Pages (UI)**: `pages/CLAUDE.md` (the 10 Dash page modules and the
   filter/callback conventions every page follows).
+- **iOS app**: `ios/CLAUDE.md` (the SwiftUI client of the JSON API, its
+  ChessDashboardKit package, codegen, and the add-a-screen recipe).
 
 Root-level modules (this directory) are mapped under *Module map* below.
 
@@ -75,6 +77,13 @@ tests pass:
   DataFrame and returns a DataFrame/dict, with zero Dash imports. Keep it importable
   from a notebook. The same separation mirrors into USCF: `uscf_client` (HTTP) vs
   `uscf_core` (pure interpretation).
+- **The JSON API is a read surface, like a page** (ADR 0008). `api` routes parse
+  the query string, call `filters.get_filtered()` once, hand the Games to a pure
+  `payloads` builder, and serialize. They never fetch, mutate the store, or
+  compute stats inline. `openapi/v1.json` is the contract: every response must
+  validate against it (contract tests), ratings are whole numbers, every Tag
+  carries its source, and enrichment fields are always present. The gate
+  accepts a session cookie or a bearer token; `auth.can_write()` covers both.
 - **The Official/Live lens is a lens, not a filter.** It changes what "your
   rating" *means* (which rating series powers every rating-derived number); it
   never hides Games. It's applied in exactly one place (`filters.get_filtered()`)
@@ -96,7 +105,11 @@ tests pass:
 | `analysis_trends.py` | Pure Analysis-page aggregates over the error profile (ADR 0004), mirroring the Phase-4 analytics: accuracy trend, mistake-type trend (both rating-overlaid), phase × type matrix, mistake move-number histogram. DataFrame-in → data-out; awaiting-analysis Games excluded. |
 | `ai_summary.py` | The AI-summary boundary (ADR 0004), the *only* Anthropic HTTP. `build_prompt` (facts only) + `summarize` (no-op without a key, degrades silently, cache-aware). |
 | `analysis_cache.py` | Disposable `analysis_cache.json`: AI Summaries keyed by Game identity + facts fingerprint, so an unchanged Game isn't re-billed. USCF-cache lifecycle (never a source of truth). |
-| `auth.py` | Login gate. Owner/guest mode (`OWNER_PASSWORD_HASH`): guests read everything, `auth.can_write()` is False for them, and every callback that writes or calls a tokened API checks it. Multi-user mode (`USCF_DASHBOARD_USERS`, ADR 0005): per-request store activation. Ungated when neither is set. |
+| `api/` | The JSON API blueprint for the iOS client (ADR 0008): `api/http.py` (blueprint, filter parsing, errors, `filtered_games()`), one `api/routes/<screen>.py` per route, `api/contract.py` (bundles `openapi/src/*.json` into `openapi/v1.json`: `python -m api.contract`). |
+| `payloads/` | Pure screen-payload builders, one module per screen (`common` holds the Game summary row, Tags with source, whole ratings, Game ID). Framework-agnostic like the cores. |
+| `openapi/` | The v1 contract: `src/` fragments (one per screen), the bundled `v1.json`, and `fixtures/` (validated responses recorded by the contract tests, read by the iOS tests). |
+| `ios/` | The native iPhone client of the JSON API (ADR 0008): XcodeGen app + `ChessDashboardKit` package. Swift types generated from `openapi/v1.json`, colors from `styles.THEME` (`make ios-codegen`; staleness tests in `tests/test_ios_api_types.py`, `tests/test_theme_swift.py`). See `ios/CLAUDE.md`. |
+| `auth.py` | Login gate. Owner/guest mode (`OWNER_PASSWORD_HASH`): guests read everything, `auth.can_write()` is False for them, and every callback that writes or calls a tokened API checks it. Multi-user mode (`USCF_DASHBOARD_USERS`, ADR 0005): per-request store activation. Ungated when neither is set. Bearer tokens for the API (`token_sign_in`, same throttle, 7-day expiry). |
 | `user_config.py` | Parses `USCF_DASHBOARD_USERS` records; `python -m user_config hash '<pw>'` hashes passwords. |
 | `coach_match_core.py` | Pure coach-review matching: coach Chapters → the user's Games, by the moves played. Coach content is enrichment, never a dependency. |
 | `shell.py` | Persistent chrome: header, nav tabs, lens toggle, Sync machinery (`sync-store`, toast, freshness). Never unmounts → filter state survives navigation. |
@@ -115,6 +128,16 @@ make run-debug     # hot-reload dev server
 python app.py --study <ID>   # run directly; needs a study ID or LICHESS_STUDY_IDS
 ```
 
+API contract: edit `openapi/src/<screen>.json`, then `python -m api.contract` to
+rebundle `openapi/v1.json` (a test fails if it's stale). Contract tests
+(`tests/test_api_*.py`, harness in `tests/api_contract.py`) validate every
+response and compare it with `openapi/fixtures/*.json`, failing on any drift.
+After a deliberate payload change, re-record with
+`RECORD_FIXTURES=1 .venv/bin/pytest tests/test_api_*.py` and commit the fixtures.
+
+iOS: `make kit-test` (package tests on the Mac), `make ios-test` (simulator),
+`make ios-build`, `make ios-codegen` after a spec or `styles.THEME` change.
+
 `.env` holds the Lichess token and USCF member ID for local runs. CI is
 lint → test → typecheck (`.github/workflows/ci.yml`).
 
@@ -126,3 +149,5 @@ lint → test → typecheck (`.github/workflows/ci.yml`).
   `games.pgn`, `.coverage`) and the venv live here. Stage files by name.
 - Adding a stat? Put the pure function in `pgn_stats_core.py` (or `uscf_core.py`),
   unit-test it there, then wire it into a page callback. Don't compute in the page.
+- `payloads/` is also a pure home (ADR 0008): it assembles a screen's response
+  from the cores' results, framework-agnostic, and API routes never compute inline.

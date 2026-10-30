@@ -1,0 +1,146 @@
+{
+  "paths": {
+    "/api/v1/events/{event_id}": {
+      "get": {
+        "operationId": "getEvent",
+        "tags": ["screens"],
+        "summary": "One Rated Event: its Sections, placement, rating change, Games, and full crosstables.",
+        "description": "The pushed detail of one Rated Event card from the Events screen, with the crosstables the web embeds as expandable blocks. Keyed by USCF event ID, not by Series: if Games from one Rated Event sit under more than one Series, this view combines them (series lists every one). The Games list and the facts counted from it (counts, score, performance) follow the filters; the Sections played, their crosstables, and the rating change are facts about the whole Rated Event and are never filtered.",
+        "parameters": [
+          {
+            "name": "event_id", "in": "path", "required": true,
+            "description": "The USCF event ID of the Rated Event (UscfEventId on the Game, UscfEvent.event_id, the first half of the data.get_uscf_standings() key). It is the natural key: it is what the web card and its crosstables are keyed by, and it is stable across Syncs. A Series name would be the wrong key (a Series holds many Rated Events).",
+            "schema": {"type": "string", "minLength": 1}
+          },
+          {"$ref": "#/components/parameters/colors"},
+          {"$ref": "#/components/parameters/outcomes"},
+          {"$ref": "#/components/parameters/terminations"},
+          {"$ref": "#/components/parameters/start"},
+          {"$ref": "#/components/parameters/end"},
+          {"$ref": "#/components/parameters/series"},
+          {"$ref": "#/components/parameters/min_moves"},
+          {"$ref": "#/components/parameters/max_moves"},
+          {"$ref": "#/components/parameters/lens"}
+        ],
+        "responses": {
+          "200": {
+            "description": "The Rated Event for this filter state. When the filters hide all its Games this is still 200, with games_count 0 and empty games; sections and the rating change still describe the whole Rated Event.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/EventPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "404": {"$ref": "#/components/responses/NotFound"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EventPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series (counts) and over all its Games (Sections, rating change) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.",
+        "required": ["games_count", "event_id", "name", "series", "start", "end", "player_count", "game_count", "forfeit_count", "win", "draw", "loss", "score", "pre_rating", "post_rating", "rating_change", "performance_rating", "games", "sections"],
+        "properties": {
+          "games_count": {"type": "integer", "minimum": 0, "description": "This Rated Event's Games after filters, Forfeits included (the same rows as games)."},
+          "event_id": {"type": "string", "minLength": 1, "description": "The USCF event ID."},
+          "name": {"type": "string", "description": "USCF's official name, e.g. 'ACC JUNE 2025' (falls back to the Games' UscfEventName when the member-events list lacks it)."},
+          "series": {
+            "type": "array",
+            "description": "The Series (PGN Event headers) this Rated Event's Games sit under, usually exactly one.",
+            "items": {"type": "string"}
+          },
+          "start": {"$ref": "#/components/schemas/IsoDate"},
+          "end": {"$ref": "#/components/schemas/IsoDate"},
+          "player_count": {"type": ["integer", "null"], "minimum": 0, "description": "The Rated Event's whole field, from USCF; null when unknown."},
+          "game_count": {"type": "integer", "minimum": 0, "description": "Games over the board (Forfeits excluded)."},
+          "forfeit_count": {"type": "integer", "minimum": 0},
+          "win": {"type": "integer", "minimum": 0, "description": "Wins over the board (Forfeits excluded); likewise draw and loss."},
+          "draw": {"type": "integer", "minimum": 0},
+          "loss": {"type": "integer", "minimum": 0},
+          "score": {"type": "number", "minimum": 0, "description": "Tournament points: wins + 0.5 x draws + Forfeit wins. The web reads 'Score <score> . <game_count> games + <forfeit_count> forfeit wins'."},
+          "pre_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking in (before the first played Section), whole number; null when unrated or unknown."},
+          "post_rating": {"$ref": "#/components/schemas/Rating", "description": "Live Rating walking out (after the last played Section), whole number; null when unknown."},
+          "rating_change": {"type": ["integer", "null"], "description": "round(post) - round(pre) of the Live Rating; null when either is null. Always the Live series, whatever the lens, and never filtered."},
+          "performance_rating": {"$ref": "#/components/schemas/Rating", "description": "Performance rating over this Rated Event's filtered Games (Forfeits and unrated opponents excluded); null when none qualify."},
+          "games": {
+            "type": "array",
+            "description": "This Rated Event's Games, in date then round order.",
+            "items": {"$ref": "#/components/schemas/EventGameRow"}
+          },
+          "sections": {
+            "type": "array",
+            "description": "The Sections the player played in this Rated Event (from all its Games, never filtered), sorted by name.",
+            "items": {"$ref": "#/components/schemas/EventSection"}
+          }
+        }
+      },
+      "EventGameRow": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Game line in the Rated Event: 'R<round> <color> <outcome> vs <opponent> <opponent_rating>' plus a Forfeit marker. Tap opens GET /api/v1/games/{game.game_id}.",
+        "required": ["round", "forfeit", "game"],
+        "properties": {
+          "round": {"type": ["integer", "null"], "minimum": 1, "description": "The REAL round from the cached crosstable (UscfRound) when known, falling back to the hand-typed Round header; null shows as a dash. May differ from game.round, which is the typed one."},
+          "forfeit": {"type": "boolean", "description": "The Game is a Forfeit."},
+          "game": {"$ref": "#/components/schemas/GameSummary"}
+        }
+      },
+      "EventSection": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Section of the Rated Event the player played, with its final placement and full crosstable. Summary line: 'Finished <ordinal(placement)> of <player_count>', or '<player_count> players' when placement is null.",
+        "required": ["name", "has_crosstable", "placement", "player_count", "crosstable"],
+        "properties": {
+          "name": {"type": "string", "description": "The Section name, e.g. 'U1600'."},
+          "has_crosstable": {"type": "boolean", "description": "Whether the crosstable for (event_id, name) is cached. False: placement and player_count are null and crosstable is empty (the web shows no crosstable block)."},
+          "placement": {"type": ["integer", "null"], "minimum": 1, "description": "The player's final ordinal (1 = Section winner); null when no crosstable or the player's member ID isn't in it."},
+          "player_count": {"type": ["integer", "null"], "minimum": 0, "description": "Rows in the crosstable; null when no crosstable."},
+          "crosstable": {
+            "type": "array",
+            "description": "Every player's row, in final placement order.",
+            "items": {"$ref": "#/components/schemas/EventCrosstableRow"}
+          }
+        }
+      },
+      "EventCrosstableRow": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One player's line in a Section's crosstable (uscf_core.StandingEntry). The player's own row is highlighted and its rounds link to his Games.",
+        "required": ["ordinal", "member_id", "name", "is_player", "pre_rating", "post_rating", "rating_change", "score", "rounds"],
+        "properties": {
+          "ordinal": {"type": "integer", "minimum": 0, "description": "Final placement, 1 = Section winner."},
+          "member_id": {"type": "string", "description": "USCF member ID."},
+          "name": {"type": "string"},
+          "is_player": {"type": "boolean", "description": "This row is the dashboard's player (member_id equals the USCF profile's member ID). At most one row per Section."},
+          "pre_rating": {"$ref": "#/components/schemas/Rating", "description": "Regular pre-rating, whole number; null means the player walked in unrated (the web shows 'unrated -> <post>')."},
+          "post_rating": {"$ref": "#/components/schemas/Rating", "description": "Regular post-rating, whole number; null when unknown (the web then shows no rating)."},
+          "rating_change": {"type": ["integer", "null"], "description": "round(post) - round(pre); null when either is null."},
+          "score": {"type": "number", "minimum": 0, "description": "Points scored in the Section. Halves are possible."},
+          "rounds": {
+            "type": "array",
+            "description": "One entry per round, in round order.",
+            "items": {"$ref": "#/components/schemas/EventCrosstableRound"}
+          }
+        }
+      },
+      "EventCrosstableRound": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One round cell (uscf_core.RoundOutcome). The web renders a letter: Win/WinForfeit W, Loss L, Draw D, Forfeit F, ByeFull B, ByeHalf b, Unpaired or anything else a dot; its tooltip reads 'R<round_number>: <outcome> vs <opponent_name>'.",
+        "required": ["round_number", "outcome", "color", "opponent_member_id", "opponent_name", "game_id"],
+        "properties": {
+          "round_number": {"type": "integer", "minimum": 0},
+          "outcome": {"type": "string", "description": "USCF's round outcome, passed through: Win, Loss, Draw, WinForfeit, Forfeit, ByeFull, ByeHalf, or Unpaired (an unrecognized value renders as a dot)."},
+          "color": {"type": "string", "description": "White, Black, or Unknown (byes and forfeits have no color), as USCF sends it."},
+          "opponent_member_id": {"type": "string", "description": "Empty for byes and unpaired rounds."},
+          "opponent_name": {"type": "string", "description": "Empty for byes and unpaired rounds."},
+          "game_id": {
+            "anyOf": [{"$ref": "#/components/schemas/GameId"}, {"type": "null"}],
+            "description": "Set only on the player's own row (is_player), when a Game (filtered or not) has this real round (UscfRound): this Rated Event's Games plus the unmatched Forfeit Games of the same Series whose crosstable round was attached. Tap opens GET /api/v1/games/{game_id}. Null on every other row and round."
+          }
+        }
+      }
+    }
+  }
+}

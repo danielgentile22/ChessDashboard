@@ -1,0 +1,92 @@
+{
+  "games": [
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00046",
+      "color": "Black",
+      "date": "2026-03-29",
+      "eco": "B15",
+      "game_id": "chp00046",
+      "has_lesson": false,
+      "moves": 21,
+      "opening": "Caro-Kann Defense: von Hennig Gambit",
+      "opponent": "Bob Baker",
+      "opponent_rating": 1498,
+      "outcome": "Win",
+      "player_rating": 1506,
+      "result": "0-1",
+      "round": 4,
+      "series": "2nd Annual DMV Adults-Only (U1800)",
+      "tags": [],
+      "termination": "win by resignation",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00015",
+      "color": "White",
+      "date": "2026-05-01",
+      "eco": "C42",
+      "game_id": "chp00015",
+      "has_lesson": false,
+      "moves": 47,
+      "opening": "Petrov's Defense: Nimzowitsch Attack",
+      "opponent": "Bob Baker",
+      "opponent_rating": 1465,
+      "outcome": "Win",
+      "player_rating": 1470,
+      "result": "1-0",
+      "round": 24,
+      "series": "ACC Friday Ladder",
+      "tags": [],
+      "termination": "win by resignation",
+      "uscf_status": "matched_by_name"
+    }
+  ],
+  "games_count": 2,
+  "lessons": [],
+  "openings_as_black": [
+    {
+      "draw": 0,
+      "eco": "B15",
+      "games": 1,
+      "loss": 0,
+      "opening": "Caro-Kann Defense: von Hennig Gambit",
+      "win": 1
+    }
+  ],
+  "openings_as_white": [
+    {
+      "draw": 0,
+      "eco": "C42",
+      "games": 1,
+      "loss": 0,
+      "opening": "Petrov's Defense: Nimzowitsch Attack",
+      "win": 1
+    }
+  ],
+  "opponent": "Bob Baker",
+  "opponent_id": "uscf-20000056",
+  "rating_gap": -5,
+  "record": {
+    "draw": 0,
+    "games": 2,
+    "loss": 0,
+    "score": "2/2",
+    "score_points": 2.0,
+    "win": 2
+  },
+  "terminations": [
+    {
+      "games": 2,
+      "termination": "win by resignation"
+    }
+  ],
+  "their_rating": 1465,
+  "uscf_identity": {
+    "member_id": "20000056",
+    "name": "BOB BAKER",
+    "official_rating": 1400,
+    "profile_url": "https://ratings.uschess.org/members/20000056",
+    "rating_change": -65,
+    "rating_when_last_played": 1465
+  }
+}

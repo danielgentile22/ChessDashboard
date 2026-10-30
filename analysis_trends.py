@@ -18,6 +18,7 @@ accuracy_trend         Per-Game accuracy over time, with the player's rating.
 mistake_type_trend     Per-Game tactical/positional counts over time + rating.
 phase_type_matrix      Mistakes as a phase × type matrix (the worst combination).
 mistake_move_histogram Counts of mistakes by the move number they happened on.
+awaiting_analysis      The Games whose Chapter carried no engine evaluations.
 """
 from __future__ import annotations
 
@@ -30,6 +31,7 @@ __all__ = [
     "mistake_type_trend",
     "phase_type_matrix",
     "mistake_move_histogram",
+    "awaiting_analysis",
 ]
 
 
@@ -190,3 +192,18 @@ def mistake_move_histogram(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(
         {"MoveNumber": sorted(counts), "Count": [counts[m] for m in sorted(counts)]}
     )
+
+
+# ---------------------------------------------------------------------------
+# The Games still awaiting analysis
+# ---------------------------------------------------------------------------
+
+def awaiting_analysis(df: pd.DataFrame) -> pd.DataFrame:
+    """The Games still awaiting computer analysis: a real Chapter (one with a
+    ChapterURL) whose Study export carried no engine evaluations.
+
+    Returns a copy so callers never mutate the input.
+    """
+    if df.empty or "Analyzed" not in df.columns:
+        return df.copy()
+    return df[(~df["Analyzed"].astype(bool)) & (df["ChapterURL"] != "")].copy()

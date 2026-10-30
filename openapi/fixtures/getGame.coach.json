@@ -1,0 +1,66 @@
+{
+  "board": {
+    "coach": "[Event \"ACC Friday Ladder\"]\n[Date \"2025.06.20\"]\n[Round \"1\"]\n[White \"Diana Davis\"]\n[Black \"Daniel Gentile\"]\n[Result \"1-0\"]\n\n{ You drifted in a King's-Indian-reversed; watch the e5 break. } 1. d4 g6 2.\nBe3 Bg7 3. Nf3 a6 4. Nc3 b5 5. a3 Bb7 6. Bf4 d6 7. e4 Nd7 8. Be2 Rc8 9. e5\n{ [%eval 1.2] e5 was the move you missed — it opens the long diagonal. } ( 9.\nBh6 Nxh6 10. Ng5 ) 9... dxe5 10. dxe5 Bxf3 11. Bxf3 Nxe5 12. Bb7 Rb8 13. Bxa6\nc6 14. Bxe5 Bxe5 15. Qe2 Bxc3+ 16. bxc3 Qa5 17. Qe5 Qxa6 18. Qxh8 Kf8 19. Qxh7\nQa5 20. Qh3 Rd8 21. O-O Rd2 22. Qc8+ Kg7 23. Qxc6 Rxc2 24. Rfc1 Qxa3 25. Re1\nRxc3 26. Qxb5 Rc5 27. Qd7 Qb2 28. Rab1 Qc3 29. h3 Qf6 30. Rbd1 Rc2 31. Qd4 e6\n32. Qxf6+ Nxf6 33. Ra1 Rc7 34. Rac1 Re7 35. Rc8 Rd7 36. Ra1 Re7 37. Raa8 Rd7\n38. g4 Re7 39. g5",
+    "engine": null,
+    "game": "[Event \"ACC Friday Ladder\"]\n[Date \"2025.06.20\"]\n[Round \"1\"]\n[White \"Diana Davis\"]\n[Black \"Daniel Gentile\"]\n[Result \"1-0\"]\n\n1. d4 g6 2. Be3 Bg7 3. Nf3 a6 4. Nc3 b5 5. a3 Bb7 6. Bf4 d6 7. e4 Nd7 8. Be2\nRc8 9. e5 dxe5 10. dxe5 Bxf3 11. Bxf3 Nxe5 12. Bb7 Rb8 13. Bxa6 c6 14. Bxe5\nBxe5 15. Qe2 Bxc3+ 16. bxc3 Qa5 17. Qe5 Qxa6 18. Qxh8 Kf8 19. Qxh7 Qa5 20. Qh3\nRd8 21. O-O Rd2 22. Qc8+ Kg7 23. Qxc6 Rxc2 24. Rfc1 Qxa3 25. Re1 Rxc3 26. Qxb5\nRc5 27. Qd7 Qb2 28. Rab1 Qc3 29. h3 Qf6 30. Rbd1 Rc2 31. Qd4 e6 32. Qxf6+ Nxf6\n33. Ra1 Rc7 34. Rac1 Re7 35. Rc8 Rd7 36. Ra1 Re7 37. Raa8 Rd7 38. g4 Re7 39. g5\n1-0",
+    "my_analysis": "[Event \"ACC Friday Ladder\"]\n[Date \"2025.06.20\"]\n[Round \"1\"]\n[White \"Diana Davis\"]\n[Black \"Daniel Gentile\"]\n[Result \"1-0\"]\n\n1. d4 g6 2. Be3 Bg7 3. Nf3 a6 4. Nc3 b5 5. a3 Bb7 6. Bf4 d6 7. e4 Nd7 8. Be2\nRc8 9. e5 dxe5 10. dxe5 Bxf3 11. Bxf3 Nxe5 12. Bb7 Rb8 13. Bxa6 c6 14. Bxe5\nBxe5 15. Qe2 Bxc3+ 16. bxc3 Qa5 ( 16... Nf6 17. a4 Qa5 18. Qe5 O-O 19. O-O Qxa6\n) 17. Qe5 Qxa6 18. Qxh8 Kf8 19. Qxh7 Qa5 20. Qh3 Rd8 21. O-O Rd2 22. Qc8+ Kg7\n23. Qxc6 Rxc2 24. Rfc1 Qxa3 25. Re1 Rxc3 26. Qxb5 Rc5 27. Qd7 Qb2 28. Rab1 Qc3\n29. h3 Qf6 30. Rbd1 Rc2 31. Qd4 e6 32. Qxf6+ Nxf6 33. Ra1 Rc7 34. Rac1 Re7 35.\nRc8 Rd7 36. Ra1 Re7 37. Raa8 Rd7 38. g4 Re7 39. g5 { 1-0 White wins. } 1-0"
+  },
+  "engine": {
+    "ai_summary": "",
+    "critical_moment": null,
+    "judged_moves": [],
+    "state": "awaiting_analysis",
+    "win_probability": []
+  },
+  "forfeit": false,
+  "game": {
+    "chapter_url": "https://lichess.org/study/abcdWXYZ/dian0001",
+    "color": "Black",
+    "date": "2025-06-20",
+    "eco": "A40",
+    "game_id": "dian0001",
+    "has_lesson": false,
+    "moves": 39,
+    "opening": "Queen's Pawn Game: Modern Defense",
+    "opponent": "Diana Davis",
+    "opponent_rating": 1097,
+    "outcome": "Loss",
+    "player_rating": 1200,
+    "result": "1-0",
+    "round": 1,
+    "series": "ACC Friday Ladder",
+    "tags": [],
+    "termination": "loss by resignation",
+    "uscf_status": "matched_by_id"
+  },
+  "lessons": [],
+  "metadata": {
+    "color": "Black",
+    "date": "2025-06-20",
+    "eco": "A40",
+    "moves": 39,
+    "opening": "Queen's Pawn Game: Modern Defense",
+    "opponent_rating": 1097,
+    "player_rating": 1200,
+    "result": "1-0",
+    "round": 1,
+    "series": "ACC Friday Ladder",
+    "study_name": "USCF OTB Games",
+    "termination": "loss by resignation"
+  },
+  "player_color": "Black",
+  "tags": [],
+  "uscf_record": {
+    "color_conflict": false,
+    "matched_by": "id",
+    "opponent_id": "20000075",
+    "opponent_name": "Diana Davis",
+    "opponent_url": "https://ratings.uschess.org/members/20000075",
+    "rated_event_id": "202506284842",
+    "rated_event_name": "ACC JUNE 2025",
+    "rating_system": "R",
+    "rating_system_label": "Regular",
+    "section": "LADDER",
+    "uscf_color": "Black"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "average_length": {
+    "draw": null,
+    "loss": null,
+    "win": null
+  },
+  "calendar": [],
+  "game_lengths": [],
+  "games_count": 0,
+  "games_per_month": [],
+  "rating_chart": {
+    "emphasized": "official",
+    "live": [],
+    "mode": "uscf",
+    "official": [],
+    "typed": []
+  },
+  "rounds": [],
+  "time_controls": [],
+  "upsets": {
+    "giant_kills": [],
+    "upset_losses": []
+  },
+  "win_rate": [],
+  "win_rate_by_weekday": []
+}

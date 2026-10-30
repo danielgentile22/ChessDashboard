@@ -1,0 +1,127 @@
+{
+  "games_count": 7,
+  "kpis": {
+    "draw_pct": 28.6,
+    "favorite_opening": "Caro-Kann Defense",
+    "longest_win_streak": 3,
+    "loss_pct": 14.3,
+    "peak_rating": 1810,
+    "performance_rating": 2007,
+    "rating": 1810,
+    "unique_opponents": 4,
+    "win_pct": 57.1
+  },
+  "milestones": [
+    {
+      "date": "2024-01-06",
+      "description": "First recorded game",
+      "event_id": "",
+      "game_id": "chap0001",
+      "game_num": 1,
+      "kind": "first"
+    },
+    {
+      "date": "2024-01-06",
+      "description": "First win (vs Opponent A)",
+      "event_id": "",
+      "game_id": "chap0001",
+      "game_num": 1,
+      "kind": "win"
+    },
+    {
+      "date": "2024-01-06",
+      "description": "First draw (vs Opponent B)",
+      "event_id": "",
+      "game_id": "chap0002",
+      "game_num": 2,
+      "kind": "draw"
+    },
+    {
+      "date": "2024-01-07",
+      "description": "First loss (vs Opponent C)",
+      "event_id": "",
+      "game_id": "chap0003",
+      "game_num": 3,
+      "kind": "loss"
+    },
+    {
+      "date": "2024-06-15",
+      "description": "Beat highest-rated opponent: Opponent A (1930)",
+      "event_id": "",
+      "game_id": "chap0004",
+      "game_num": 4,
+      "kind": "peak"
+    },
+    {
+      "date": "2024-06-15",
+      "description": "Achieved peak rating: 1810",
+      "event_id": "",
+      "game_id": "chap0004",
+      "game_num": 4,
+      "kind": "peak"
+    },
+    {
+      "date": "2024-06-15",
+      "description": "Start of longest win streak (3 in a row, ended game #6)",
+      "event_id": "",
+      "game_id": "chap0004",
+      "game_num": 4,
+      "kind": "streak"
+    }
+  ],
+  "outcome_counts": {
+    "draw": 2,
+    "loss": 1,
+    "unknown": 0,
+    "win": 4
+  },
+  "streak": {
+    "current_count": 1,
+    "current_outcome": "Draw",
+    "indicator": {
+      "blazing": false,
+      "count": 0,
+      "kind": "none"
+    },
+    "last_20": [
+      "Win",
+      "Draw",
+      "Loss",
+      "Win",
+      "Win",
+      "Win",
+      "Draw"
+    ],
+    "longest_unbeaten": 4,
+    "longest_win_streak": 3
+  },
+  "terminations": [
+    {
+      "games": 2,
+      "termination": "win by resignation"
+    },
+    {
+      "games": 2,
+      "termination": "Normal"
+    },
+    {
+      "games": 1,
+      "termination": "loss by resignation"
+    },
+    {
+      "games": 1,
+      "termination": "loss by checkmate"
+    },
+    {
+      "games": 1,
+      "termination": "win by checkmate"
+    }
+  ],
+  "top_weakness": null,
+  "uscf_card": {
+    "profile": null,
+    "state": "disabled",
+    "unavailable_reason": "",
+    "unavailable_since": null
+  }
+}

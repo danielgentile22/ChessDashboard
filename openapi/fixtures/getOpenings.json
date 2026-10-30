@@ -1,0 +1,565 @@
+{
+  "eco_families": [
+    {
+      "draw": 1,
+      "eco_family": "E",
+      "family_name": "E: Indian Defences",
+      "game_count": 3,
+      "loss": 0,
+      "win": 2,
+      "win_rate_pct": 66.7
+    },
+    {
+      "draw": 1,
+      "eco_family": "B",
+      "family_name": "B: Semi-Open",
+      "game_count": 2,
+      "loss": 0,
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 0,
+      "eco_family": "A",
+      "family_name": "A: Flank / Queen's Pawn",
+      "game_count": 1,
+      "loss": 1,
+      "win": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "draw": 0,
+      "eco_family": "C",
+      "family_name": "C: Open",
+      "game_count": 1,
+      "loss": 0,
+      "win": 1,
+      "win_rate_pct": 100.0
+    }
+  ],
+  "games_count": 7,
+  "repertoire": {
+    "black": {
+      "color": "Black",
+      "game_count": 3,
+      "min_games": 3,
+      "moves": [
+        {
+          "draw": 1,
+          "ended_here": [],
+          "game_count": 2,
+          "games": [
+            {
+              "date": "2024-01-06",
+              "game_id": "chap0002",
+              "opponent": "Opponent B",
+              "outcome": "Draw"
+            },
+            {
+              "date": "2024-06-16",
+              "game_id": "chap0006",
+              "opponent": "Opponent B",
+              "outcome": "Win"
+            }
+          ],
+          "loss": 0,
+          "moves": [
+            {
+              "draw": 1,
+              "ended_here": [],
+              "game_count": 2,
+              "games": [
+                {
+                  "date": "2024-01-06",
+                  "game_id": "chap0002",
+                  "opponent": "Opponent B",
+                  "outcome": "Draw"
+                },
+                {
+                  "date": "2024-06-16",
+                  "game_id": "chap0006",
+                  "opponent": "Opponent B",
+                  "outcome": "Win"
+                }
+              ],
+              "loss": 0,
+              "moves": [
+                {
+                  "draw": 1,
+                  "ended_here": [],
+                  "game_count": 2,
+                  "games": [
+                    {
+                      "date": "2024-01-06",
+                      "game_id": "chap0002",
+                      "opponent": "Opponent B",
+                      "outcome": "Draw"
+                    },
+                    {
+                      "date": "2024-06-16",
+                      "game_id": "chap0006",
+                      "opponent": "Opponent B",
+                      "outcome": "Win"
+                    }
+                  ],
+                  "loss": 0,
+                  "moves": [
+                    {
+                      "draw": 1,
+                      "ended_here": [],
+                      "game_count": 2,
+                      "games": [
+                        {
+                          "date": "2024-01-06",
+                          "game_id": "chap0002",
+                          "opponent": "Opponent B",
+                          "outcome": "Draw"
+                        },
+                        {
+                          "date": "2024-06-16",
+                          "game_id": "chap0006",
+                          "opponent": "Opponent B",
+                          "outcome": "Win"
+                        }
+                      ],
+                      "loss": 0,
+                      "moves": [
+                        {
+                          "draw": 1,
+                          "ended_here": [],
+                          "game_count": 2,
+                          "games": [
+                            {
+                              "date": "2024-01-06",
+                              "game_id": "chap0002",
+                              "opponent": "Opponent B",
+                              "outcome": "Draw"
+                            },
+                            {
+                              "date": "2024-06-16",
+                              "game_id": "chap0006",
+                              "opponent": "Opponent B",
+                              "outcome": "Win"
+                            }
+                          ],
+                          "loss": 0,
+                          "moves": [
+                            {
+                              "draw": 1,
+                              "ended_here": [
+                                {
+                                  "date": "2024-06-16",
+                                  "game_id": "chap0006",
+                                  "opponent": "Opponent B",
+                                  "outcome": "Win"
+                                }
+                              ],
+                              "game_count": 2,
+                              "games": [
+                                {
+                                  "date": "2024-01-06",
+                                  "game_id": "chap0002",
+                                  "opponent": "Opponent B",
+                                  "outcome": "Draw"
+                                },
+                                {
+                                  "date": "2024-06-16",
+                                  "game_id": "chap0006",
+                                  "opponent": "Opponent B",
+                                  "outcome": "Win"
+                                }
+                              ],
+                              "loss": 0,
+                              "moves": [
+                                {
+                                  "draw": 1,
+                                  "ended_here": [],
+                                  "game_count": 1,
+                                  "games": [
+                                    {
+                                      "date": "2024-01-06",
+                                      "game_id": "chap0002",
+                                      "opponent": "Opponent B",
+                                      "outcome": "Draw"
+                                    }
+                                  ],
+                                  "loss": 0,
+                                  "moves": [],
+                                  "ply": 7,
+                                  "san": "c3",
+                                  "score_pct": 50.0,
+                                  "underperforming": false,
+                                  "win": 0
+                                }
+                              ],
+                              "ply": 6,
+                              "san": "Bf5",
+                              "score_pct": 75.0,
+                              "underperforming": false,
+                              "win": 1
+                            }
+                          ],
+                          "ply": 5,
+                          "san": "e5",
+                          "score_pct": 75.0,
+                          "underperforming": false,
+                          "win": 1
+                        }
+                      ],
+                      "ply": 4,
+                      "san": "d5",
+                      "score_pct": 75.0,
+                      "underperforming": false,
+                      "win": 1
+                    }
+                  ],
+                  "ply": 3,
+                  "san": "d4",
+                  "score_pct": 75.0,
+                  "underperforming": false,
+                  "win": 1
+                }
+              ],
+              "ply": 2,
+              "san": "c6",
+              "score_pct": 75.0,
+              "underperforming": false,
+              "win": 1
+            }
+          ],
+          "ply": 1,
+          "san": "e4",
+          "score_pct": 75.0,
+          "underperforming": false,
+          "win": 1
+        },
+        {
+          "draw": 0,
+          "ended_here": [],
+          "game_count": 1,
+          "games": [
+            {
+              "date": "2024-06-15",
+              "game_id": "chap0004",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            }
+          ],
+          "loss": 0,
+          "moves": [],
+          "ply": 1,
+          "san": "d4",
+          "score_pct": 100.0,
+          "underperforming": false,
+          "win": 1
+        }
+      ],
+      "score_pct": 83.3
+    },
+    "white": {
+      "color": "White",
+      "game_count": 4,
+      "min_games": 3,
+      "moves": [
+        {
+          "draw": 1,
+          "ended_here": [],
+          "game_count": 3,
+          "games": [
+            {
+              "date": "2024-01-06",
+              "game_id": "chap0001",
+              "opponent": "Opponent A",
+              "outcome": "Win"
+            },
+            {
+              "date": "2024-01-07",
+              "game_id": "chap0003",
+              "opponent": "Opponent C",
+              "outcome": "Loss"
+            },
+            {
+              "date": "2024-06-16",
+              "game_id": "chap0007",
+              "opponent": "Opponent A",
+              "outcome": "Draw"
+            }
+          ],
+          "loss": 1,
+          "moves": [
+            {
+              "draw": 1,
+              "ended_here": [],
+              "game_count": 3,
+              "games": [
+                {
+                  "date": "2024-01-06",
+                  "game_id": "chap0001",
+                  "opponent": "Opponent A",
+                  "outcome": "Win"
+                },
+                {
+                  "date": "2024-01-07",
+                  "game_id": "chap0003",
+                  "opponent": "Opponent C",
+                  "outcome": "Loss"
+                },
+                {
+                  "date": "2024-06-16",
+                  "game_id": "chap0007",
+                  "opponent": "Opponent A",
+                  "outcome": "Draw"
+                }
+              ],
+              "loss": 1,
+              "moves": [
+                {
+                  "draw": 1,
+                  "ended_here": [],
+                  "game_count": 2,
+                  "games": [
+                    {
+                      "date": "2024-01-06",
+                      "game_id": "chap0001",
+                      "opponent": "Opponent A",
+                      "outcome": "Win"
+                    },
+                    {
+                      "date": "2024-06-16",
+                      "game_id": "chap0007",
+                      "opponent": "Opponent A",
+                      "outcome": "Draw"
+                    }
+                  ],
+                  "loss": 0,
+                  "moves": [
+                    {
+                      "draw": 1,
+                      "ended_here": [],
+                      "game_count": 2,
+                      "games": [
+                        {
+                          "date": "2024-01-06",
+                          "game_id": "chap0001",
+                          "opponent": "Opponent A",
+                          "outcome": "Win"
+                        },
+                        {
+                          "date": "2024-06-16",
+                          "game_id": "chap0007",
+                          "opponent": "Opponent A",
+                          "outcome": "Draw"
+                        }
+                      ],
+                      "loss": 0,
+                      "moves": [
+                        {
+                          "draw": 1,
+                          "ended_here": [],
+                          "game_count": 2,
+                          "games": [
+                            {
+                              "date": "2024-01-06",
+                              "game_id": "chap0001",
+                              "opponent": "Opponent A",
+                              "outcome": "Win"
+                            },
+                            {
+                              "date": "2024-06-16",
+                              "game_id": "chap0007",
+                              "opponent": "Opponent A",
+                              "outcome": "Draw"
+                            }
+                          ],
+                          "loss": 0,
+                          "moves": [
+                            {
+                              "draw": 1,
+                              "ended_here": [
+                                {
+                                  "date": "2024-06-16",
+                                  "game_id": "chap0007",
+                                  "opponent": "Opponent A",
+                                  "outcome": "Draw"
+                                }
+                              ],
+                              "game_count": 2,
+                              "games": [
+                                {
+                                  "date": "2024-01-06",
+                                  "game_id": "chap0001",
+                                  "opponent": "Opponent A",
+                                  "outcome": "Win"
+                                },
+                                {
+                                  "date": "2024-06-16",
+                                  "game_id": "chap0007",
+                                  "opponent": "Opponent A",
+                                  "outcome": "Draw"
+                                }
+                              ],
+                              "loss": 0,
+                              "moves": [
+                                {
+                                  "draw": 0,
+                                  "ended_here": [],
+                                  "game_count": 1,
+                                  "games": [
+                                    {
+                                      "date": "2024-01-06",
+                                      "game_id": "chap0001",
+                                      "opponent": "Opponent A",
+                                      "outcome": "Win"
+                                    }
+                                  ],
+                                  "loss": 0,
+                                  "moves": [],
+                                  "ply": 7,
+                                  "san": "Bg2",
+                                  "score_pct": 100.0,
+                                  "underperforming": false,
+                                  "win": 1
+                                }
+                              ],
+                              "ply": 6,
+                              "san": "d5",
+                              "score_pct": 75.0,
+                              "underperforming": false,
+                              "win": 1
+                            }
+                          ],
+                          "ply": 5,
+                          "san": "g3",
+                          "score_pct": 75.0,
+                          "underperforming": false,
+                          "win": 1
+                        }
+                      ],
+                      "ply": 4,
+                      "san": "e6",
+                      "score_pct": 75.0,
+                      "underperforming": false,
+                      "win": 1
+                    }
+                  ],
+                  "ply": 3,
+                  "san": "c4",
+                  "score_pct": 75.0,
+                  "underperforming": false,
+                  "win": 1
+                },
+                {
+                  "draw": 0,
+                  "ended_here": [],
+                  "game_count": 1,
+                  "games": [
+                    {
+                      "date": "2024-01-07",
+                      "game_id": "chap0003",
+                      "opponent": "Opponent C",
+                      "outcome": "Loss"
+                    }
+                  ],
+                  "loss": 1,
+                  "moves": [],
+                  "ply": 3,
+                  "san": "e4",
+                  "score_pct": 0.0,
+                  "underperforming": false,
+                  "win": 0
+                }
+              ],
+              "ply": 2,
+              "san": "Nf6",
+              "score_pct": 50.0,
+              "underperforming": true,
+              "win": 1
+            }
+          ],
+          "ply": 1,
+          "san": "d4",
+          "score_pct": 50.0,
+          "underperforming": true,
+          "win": 1
+        },
+        {
+          "draw": 0,
+          "ended_here": [],
+          "game_count": 1,
+          "games": [
+            {
+              "date": "2024-06-15",
+              "game_id": "chap0005",
+              "opponent": "Opponent D",
+              "outcome": "Win"
+            }
+          ],
+          "loss": 0,
+          "moves": [],
+          "ply": 1,
+          "san": "e4",
+          "score_pct": 100.0,
+          "underperforming": false,
+          "win": 1
+        }
+      ],
+      "score_pct": 62.5
+    }
+  },
+  "top_openings": [
+    {
+      "draw": 1,
+      "eco": "B12",
+      "game_count": 2,
+      "loss": 0,
+      "opening": "Caro-Kann Defense",
+      "win": 1,
+      "win_rate_pct": 50.0
+    },
+    {
+      "draw": 0,
+      "eco": "A45",
+      "game_count": 1,
+      "loss": 1,
+      "opening": "Indian Game",
+      "win": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "draw": 0,
+      "eco": "C50",
+      "game_count": 1,
+      "loss": 0,
+      "opening": "Italian Game",
+      "win": 1,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 1,
+      "eco": "E04",
+      "game_count": 1,
+      "loss": 0,
+      "opening": "Catalan Opening",
+      "win": 0,
+      "win_rate_pct": 0.0
+    },
+    {
+      "draw": 0,
+      "eco": "E04",
+      "game_count": 1,
+      "loss": 0,
+      "opening": "Catalan Opening: Open Defense",
+      "win": 1,
+      "win_rate_pct": 100.0
+    },
+    {
+      "draw": 0,
+      "eco": "E60",
+      "game_count": 1,
+      "loss": 0,
+      "opening": "King's Indian Defense",
+      "win": 1,
+      "win_rate_pct": 100.0
+    }
+  ]
+}

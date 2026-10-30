@@ -15,7 +15,6 @@ upset losses ranked by rating margin, each clickable into its Game.
 from __future__ import annotations
 
 import dash
-import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -34,11 +33,11 @@ from components import (
     register_game_navigation,
 )
 from filters import FILTER_INPUTS, get_filtered
+from payloads.trends import typed_rating_points
 from pgn_stats_core import (
     activity_data,
     daily_activity,
     game_length_data,
-    player_rating_over_time,
     round_performance,
     time_control_summary,
     upset_tracker,
@@ -287,7 +286,8 @@ _LIVE_COLOR = COLORS["primary"]
 
 
 def _typed_rating_fig(pr: pd.DataFrame) -> go.Figure:
-    """The pre-USCF rating chart: typed header values plus a linear trend.
+    """The pre-USCF rating chart: typed header values plus a linear trend
+    (``payloads.trends.typed_rating_points``, the API's same points).
 
     Kept as the fallback when USCF was never reached (ADR 0003) — the chart
     degrades to what the Studies alone can say."""
@@ -303,12 +303,9 @@ def _typed_rating_fig(pr: pd.DataFrame) -> go.Figure:
         name="Rating",
     ))
     # Linear trend overlay
-    if len(pr) >= 3:
-        x_num = np.arange(len(pr))
-        coeffs = np.polyfit(x_num, pr["PlayerRating"].values, 1)
-        trend = np.polyval(coeffs, x_num)
+    if pr["Trend"].notna().any():
         fig.add_trace(go.Scatter(
-            x=pr["Date_dt"], y=trend,
+            x=pr["Date_dt"], y=pr["Trend"],
             mode="lines",
             line=dict(color=COLORS["muted"], width=1, dash="dot"),
             hoverinfo="skip",
@@ -376,7 +373,7 @@ def update_rating(colors, outcomes, terminations, start, end, events, moves,
     if not full_official and not full_live:
         # USCF never reached or not configured → the Studies' own numbers
         df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
-        pr = player_rating_over_time(df_f)
+        pr = typed_rating_points(df_f)
         if pr.empty:
             return empty_fig("No rating data")
         return _typed_rating_fig(pr)

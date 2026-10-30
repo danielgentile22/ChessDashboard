@@ -81,3 +81,77 @@ jobs:
             sleep 2
           done
           echo "health check never passed"; docker logs cd; exit 1
+
+  ios-changes:
+    name: iOS paths changed?
+    runs-on: ubuntu-latest
+    outputs:
+      ios: ${{ steps.filter.outputs.ios }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ios:
+              - 'ios/**'
+              - 'openapi/**'
+              - 'payloads/**'
+              - 'api/**'
+              - '.github/workflows/ci.yml'
+
+  ios:
+    name: iOS (package tests + simulator)
+    needs: ios-changes
+    if: needs.ios-changes.outputs.ios == 'true'
+    # Package.swift needs swift-tools 6.2, so Xcode 26 or newer.
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate the Xcode project
+        working-directory: ios
+        run: xcodegen generate --quiet
+
+      - name: Package tests (swift test)
+        working-directory: ios/ChessDashboardKit
+        run: swift test
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          udid=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          ios = sorted((r for r in devices if "iOS" in r), reverse=True)
+          print(next(d["udid"] for r in ios for d in devices[r] if d["name"].startswith("iPhone")))')
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+
+      - name: Build for testing and test on the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          flags=(-project ChessDashboard.xcodeproj -scheme ChessDashboard
+                 -derivedDataPath build/DerivedData
+                 -destination "id=${{ steps.sim.outputs.udid }}"
+                 CODE_SIGNING_ALLOWED=NO)
+          # Keep the full log; on failure show the compiler errors, not just the tail.
+          xcodebuild build-for-testing "${flags[@]}" > build.log 2>&1 \
+            || { grep -E "error" build.log | sort -u | head -40 || true; tail -20 build.log; exit 1; }
+          xcodebuild test-without-building "${flags[@]}" | tail -30
+
+      - name: Upload the build log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-log
+          path: ios/build.log

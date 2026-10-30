@@ -4,6 +4,10 @@ annotated-types==0.7.0
     # via pydantic
 ast-serialize==0.6.0
     # via mypy
+attrs==26.1.0
+    # via
+    #   jsonschema
+    #   referencing
 blinker==1.9.0
     # via flask
 certifi==2026.6.17
@@ -42,6 +46,10 @@ janus==2.0.0
     # via dash
 jinja2==3.1.6
     # via flask
+jsonschema==4.26.0
+    # via chess-dashboard (pyproject.toml)
+jsonschema-specifications==2025.9.1
+    # via jsonschema
 librt==0.13.0 ; platform_python_implementation != 'PyPy'
     # via mypy
 markupsafe==3.0.3
@@ -100,12 +108,20 @@ pytest-cov==7.1.0
     # via chess-dashboard (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
+referencing==0.37.0
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
 requests==2.34.2
     # via
     #   chess-dashboard (pyproject.toml)
     #   dash
 retrying==1.4.2
     # via dash
+rpds-py==2026.9.1
+    # via
+    #   jsonschema
+    #   referencing
 ruff==0.15.21
     # via chess-dashboard (pyproject.toml)
 setuptools==83.0.0
@@ -120,6 +136,7 @@ typing-extensions==4.16.0
     #   mypy
     #   pydantic
     #   pydantic-core
+    #   referencing
     #   typing-inspection
 typing-inspection==0.4.2
     # via pydantic

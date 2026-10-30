@@ -1,0 +1,423 @@
+{
+  "accuracy_trend": [
+    {
+      "accuracy": 94.55,
+      "date": "2026-03-29",
+      "game_id": "alic0001",
+      "opponent": "Alice Anderson",
+      "rating": 1506
+    }
+  ],
+  "awaiting_analysis": [
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/dian0001",
+      "date": "2025-06-20",
+      "game_id": "dian0001",
+      "name": "Diana Davis - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/ethn0001",
+      "date": "2025-06-27",
+      "game_id": "ethn0001",
+      "name": "Daniel Gentile - Ethan Edwards"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/fion0001",
+      "date": "2025-07-18",
+      "game_id": "fion0001",
+      "name": "Daniel Gentile - Fiona Foster"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00047",
+      "date": "2025-07-25",
+      "game_id": "chp00047",
+      "name": "Wyatt Davis - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00008",
+      "date": "2025-08-01",
+      "game_id": "chp00008",
+      "name": "Daniel Gentile - Carver Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00030",
+      "date": "2025-08-02",
+      "game_id": "chp00030",
+      "name": "Henry Foster - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00051",
+      "date": "2025-08-02",
+      "game_id": "chp00051",
+      "name": "Daniel Gentile - Henry Garcia"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00014",
+      "date": "2025-08-03",
+      "game_id": "chp00014",
+      "name": "Sofia Foster - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00016",
+      "date": "2025-08-03",
+      "game_id": "chp00016",
+      "name": "Alice Clark - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00013",
+      "date": "2025-08-17",
+      "game_id": "chp00013",
+      "name": "Bob Foster - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00023",
+      "date": "2025-08-17",
+      "game_id": "chp00023",
+      "name": "Daniel Gentile - Liam Anderson"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00045",
+      "date": "2025-08-17",
+      "game_id": "chp00045",
+      "name": "Daniel Gentile - Zane Garcia"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00001",
+      "date": "2025-08-17",
+      "game_id": "chp00001",
+      "name": "Alice Garcia - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00006",
+      "date": "2025-08-29",
+      "game_id": "chp00006",
+      "name": "Olivia Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00024",
+      "date": "2025-09-05",
+      "game_id": "chp00024",
+      "name": "Daniel Gentile - Keira Edwards"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00056",
+      "date": "2025-09-06",
+      "game_id": "chp00056",
+      "name": "Vera Davis - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00007",
+      "date": "2025-09-06",
+      "game_id": "chp00007",
+      "name": "Daniel Gentile - Quinn Anderson"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00010",
+      "date": "2025-09-07",
+      "game_id": "chp00010",
+      "name": "Carter Garcia - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00035",
+      "date": "2025-09-07",
+      "game_id": "chp00035",
+      "name": "Daniel Gentile - Sofia Edwards"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00026",
+      "date": "2025-09-19",
+      "game_id": "chp00026",
+      "name": "Uma Foster - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00021",
+      "date": "2025-09-26",
+      "game_id": "chp00021",
+      "name": "Gina Edwards - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00048",
+      "date": "2025-10-04",
+      "game_id": "chp00048",
+      "name": "Noah Edwards - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00031",
+      "date": "2025-10-04",
+      "game_id": "chp00031",
+      "name": "Daniel Gentile - Fiona Foster"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00057",
+      "date": "2025-10-04",
+      "game_id": "chp00057",
+      "name": "Xena Clark - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00037",
+      "date": "2025-10-05",
+      "game_id": "chp00037",
+      "name": "Daniel Gentile - Yara Anderson"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00002",
+      "date": "2025-10-05",
+      "game_id": "chp00002",
+      "name": "Liam Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00020",
+      "date": "2025-10-10",
+      "game_id": "chp00020",
+      "name": "Daniel Gentile - Uma Foster"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00055",
+      "date": "2025-11-01",
+      "game_id": "chp00055",
+      "name": "Zane Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00032",
+      "date": "2025-11-01",
+      "game_id": "chp00032",
+      "name": "Daniel Gentile - Xena Garcia"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00042",
+      "date": "2025-11-01",
+      "game_id": "chp00042",
+      "name": "Wyatt Garcia - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00009",
+      "date": "2025-11-02",
+      "game_id": "chp00009",
+      "name": "Daniel Gentile - Uma Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00052",
+      "date": "2025-11-02",
+      "game_id": "chp00052",
+      "name": "Daniel Gentile - Liam Garcia"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00043",
+      "date": "2025-11-07",
+      "game_id": "chp00043",
+      "name": "Daniel Gentile - Olivia Davis"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00027",
+      "date": "2025-11-14",
+      "game_id": "chp00027",
+      "name": "Ethan Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00025",
+      "date": "2025-12-05",
+      "game_id": "chp00025",
+      "name": "Alice Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00022",
+      "date": "2025-12-12",
+      "game_id": "chp00022",
+      "name": "Diana Garcia - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00017",
+      "date": "2025-12-13",
+      "game_id": "chp00017",
+      "name": "Daniel Gentile - Gina Harris"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00058",
+      "date": "2025-12-13",
+      "game_id": "chp00058",
+      "name": "Ivy Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00044",
+      "date": "2025-12-14",
+      "game_id": "chp00044",
+      "name": "Daniel Gentile - Olivia Edwards"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00050",
+      "date": "2025-12-14",
+      "game_id": "chp00050",
+      "name": "Zane Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00018",
+      "date": "2025-12-19",
+      "game_id": "chp00018",
+      "name": "Maya Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00034",
+      "date": "2025-12-26",
+      "game_id": "chp00034",
+      "name": "Daniel Gentile - Alice Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00038",
+      "date": "2026-01-02",
+      "game_id": "chp00038",
+      "name": "Daniel Gentile - Zane Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00059",
+      "date": "2026-01-09",
+      "game_id": "chp00059",
+      "name": "Parker Anderson - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00039",
+      "date": "2026-01-23",
+      "game_id": "chp00039",
+      "name": "Ivy Davis - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00003",
+      "date": "2026-01-24",
+      "game_id": "chp00003",
+      "name": "Daniel Gentile - Vera Foster"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00005",
+      "date": "2026-01-24",
+      "game_id": "chp00005",
+      "name": "Daniel Gentile - Zane Foster"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00019",
+      "date": "2026-01-30",
+      "game_id": "chp00019",
+      "name": "Theo Edwards - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00033",
+      "date": "2026-02-20",
+      "game_id": "chp00033",
+      "name": "Liam Davis - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00036",
+      "date": "2026-02-27",
+      "game_id": "chp00036",
+      "name": "Jonah Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00012",
+      "date": "2026-03-07",
+      "game_id": "chp00012",
+      "name": "Daniel Gentile - Sofia Davis"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00054",
+      "date": "2026-03-20",
+      "game_id": "chp00054",
+      "name": "Zane Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00011",
+      "date": "2026-03-28",
+      "game_id": "chp00011",
+      "name": "Olivia Clark - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00040",
+      "date": "2026-03-28",
+      "game_id": "chp00040",
+      "name": "Daniel Gentile - Vera Edwards"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00046",
+      "date": "2026-03-29",
+      "game_id": "chp00046",
+      "name": "Bob Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00053",
+      "date": "2026-04-03",
+      "game_id": "chp00053",
+      "name": "Daniel Gentile - Vera Clark"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00029",
+      "date": "2026-04-17",
+      "game_id": "chp00029",
+      "name": "Daniel Gentile - Jonah Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00049",
+      "date": "2026-04-24",
+      "game_id": "chp00049",
+      "name": "Theo Baker - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00015",
+      "date": "2026-05-01",
+      "game_id": "chp00015",
+      "name": "Daniel Gentile - Bob Baker"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00041",
+      "date": "2026-05-15",
+      "game_id": "chp00041",
+      "name": "Bob Harris - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00028",
+      "date": "2026-05-22",
+      "game_id": "chp00028",
+      "name": "Ethan Edwards - Daniel Gentile"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00004",
+      "date": "2026-05-22",
+      "game_id": "chp00004",
+      "name": "Carter Clark - Daniel Gentile"
+    }
+  ],
+  "has_analysis": true,
+  "mistake_move_histogram": [
+    {
+      "count": 1,
+      "move_number": 15
+    }
+  ],
+  "mistake_type_distribution": {
+    "positional": 1,
+    "tactical": 0
+  },
+  "mistake_type_trend": [
+    {
+      "date": "2026-03-29",
+      "game_id": "alic0001",
+      "opponent": "Alice Anderson",
+      "positional": 1,
+      "rating": 1506,
+      "tactical": 0
+    }
+  ],
+  "phase_type_matrix": [
+    {
+      "phase": "opening",
+      "positional": 0,
+      "tactical": 0
+    },
+    {
+      "phase": "middlegame",
+      "positional": 1,
+      "tactical": 0
+    },
+    {
+      "phase": "endgame",
+      "positional": 0,
+      "tactical": 0
+    }
+  ]
+}

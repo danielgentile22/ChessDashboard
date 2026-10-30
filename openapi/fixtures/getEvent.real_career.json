@@ -1,0 +1,6161 @@
+{
+  "draw": 0,
+  "end": "2026-05-29",
+  "event_id": "202605290393",
+  "forfeit_count": 0,
+  "game_count": 4,
+  "games": [
+    {
+      "forfeit": false,
+      "game": {
+        "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00015",
+        "color": "White",
+        "date": "2026-05-01",
+        "eco": "C42",
+        "game_id": "chp00015",
+        "has_lesson": false,
+        "moves": 47,
+        "opening": "Petrov's Defense: Nimzowitsch Attack",
+        "opponent": "Bob Baker",
+        "opponent_rating": 1465,
+        "outcome": "Win",
+        "player_rating": 1470,
+        "result": "1-0",
+        "round": 24,
+        "series": "ACC Friday Ladder",
+        "tags": [],
+        "termination": "win by resignation",
+        "uscf_status": "matched_by_name"
+      },
+      "round": 1
+    },
+    {
+      "forfeit": false,
+      "game": {
+        "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00041",
+        "color": "Black",
+        "date": "2026-05-15",
+        "eco": "D02",
+        "game_id": "chp00041",
+        "has_lesson": false,
+        "moves": 51,
+        "opening": "Queen's Pawn Game: London System",
+        "opponent": "Bob Harris",
+        "opponent_rating": 1446,
+        "outcome": "Win",
+        "player_rating": 1470,
+        "result": "0-1",
+        "round": 25,
+        "series": "ACC Friday Ladder",
+        "tags": [],
+        "termination": "win by resignation",
+        "uscf_status": "conflict"
+      },
+      "round": 3
+    },
+    {
+      "forfeit": false,
+      "game": {
+        "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00028",
+        "color": "Black",
+        "date": "2026-05-22",
+        "eco": "A13",
+        "game_id": "chp00028",
+        "has_lesson": false,
+        "moves": 55,
+        "opening": "English Opening: Agincourt Defense",
+        "opponent": "Ethan Edwards",
+        "opponent_rating": 1436,
+        "outcome": "Win",
+        "player_rating": 1470,
+        "result": "0-1",
+        "round": 26,
+        "series": "ACC Friday Ladder",
+        "tags": [],
+        "termination": "win by resignation",
+        "uscf_status": "matched_by_name"
+      },
+      "round": 4
+    },
+    {
+      "forfeit": false,
+      "game": {
+        "chapter_url": "https://lichess.org/study/abcdWXYZ/chp00004",
+        "color": "Black",
+        "date": "2026-05-22",
+        "eco": "B12",
+        "game_id": "chp00004",
+        "has_lesson": false,
+        "moves": 62,
+        "opening": "Caro-Kann Defense: Advance Variation, Botvinnik-Carls Defense",
+        "opponent": "Carter Clark",
+        "opponent_rating": 1446,
+        "outcome": "Loss",
+        "player_rating": 1470,
+        "result": "1-0",
+        "round": 27,
+        "series": "ACC Friday Ladder",
+        "tags": [],
+        "termination": "loss by resignation",
+        "uscf_status": "matched_by_name"
+      },
+      "round": 5
+    }
+  ],
+  "games_count": 4,
+  "loss": 1,
+  "name": "ACC MAY 2026",
+  "performance_rating": 1639,
+  "player_count": 116,
+  "post_rating": 1571,
+  "pre_rating": 1544,
+  "rating_change": 27,
+  "score": 3.0,
+  "sections": [
+    {
+      "crosstable": [
+        {
+          "is_player": false,
+          "member_id": "20000182",
+          "name": "ETHAN DAVIS",
+          "ordinal": 1,
+          "post_rating": 1250,
+          "pre_rating": null,
+          "rating_change": null,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000123",
+              "opponent_name": "YARA FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000124",
+              "opponent_name": "BOB GARCIA",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000171",
+              "opponent_name": "ETHAN FOSTER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000146",
+              "opponent_name": "XENA FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000141",
+              "opponent_name": "ALICE FOSTER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 5.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000080",
+          "name": "Xena Anderson",
+          "ordinal": 2,
+          "post_rating": 1357,
+          "pre_rating": 1249,
+          "rating_change": 108,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000092",
+              "opponent_name": "QUINN FOSTER",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000027",
+              "opponent_name": "FIONA FOSTER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000031",
+              "opponent_name": "MAYA GARCIA",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000027",
+              "opponent_name": "FIONA FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000131",
+              "opponent_name": "OLIVIA BAKER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 4.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000004",
+          "name": "THEO ANDERSON",
+          "ordinal": 3,
+          "post_rating": 1932,
+          "pre_rating": 1900,
+          "rating_change": 32,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000018",
+              "opponent_name": "RILEY BAKER",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000021",
+              "opponent_name": "FIONA GARCIA",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000039",
+              "opponent_name": "ALICE DAVIS",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000058",
+              "opponent_name": "SOFIA GARCIA",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000161",
+          "name": "Maya Anderson",
+          "ordinal": 4,
+          "post_rating": 1556,
+          "pre_rating": 1518,
+          "rating_change": 38,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000006",
+              "opponent_name": "NOAH FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000026",
+              "opponent_name": "LIAM BAKER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000026",
+              "opponent_name": "LIAM BAKER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000130",
+              "opponent_name": "NOAH BAKER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": true,
+          "member_id": "12345678",
+          "name": "Daniel Gentile",
+          "ordinal": 5,
+          "post_rating": 1571,
+          "pre_rating": 1544,
+          "rating_change": 27,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": "chp00015",
+              "opponent_member_id": "20000056",
+              "opponent_name": "BOB BAKER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": "chp00041",
+              "opponent_member_id": "20000061",
+              "opponent_name": "BOB HARRIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": "chp00028",
+              "opponent_member_id": "20000082",
+              "opponent_name": "ETHAN EDWARDS",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": "chp00004",
+              "opponent_member_id": "20000144",
+              "opponent_name": "CARVER CLARK",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000144",
+          "name": "Carver Clark",
+          "ordinal": 6,
+          "post_rating": 1484,
+          "pre_rating": 1366,
+          "rating_change": 118,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000180",
+              "opponent_name": "ETHAN CLARK",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000125",
+              "opponent_name": "ALICE HARRIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "12345678",
+              "opponent_name": "DANIEL GENTILE",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000091",
+          "name": "Noah Davis",
+          "ordinal": 7,
+          "post_rating": 1272,
+          "pre_rating": 1194,
+          "rating_change": 78,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000181",
+              "opponent_name": "CARTER ANDERSON",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000156",
+              "opponent_name": "THEO GARCIA",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000185",
+              "opponent_name": "GINA DAVIS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000107",
+              "opponent_name": "PARKER CLARK",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000150",
+          "name": "Gina Edwards",
+          "ordinal": 8,
+          "post_rating": 1148,
+          "pre_rating": 1135,
+          "rating_change": 13,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000121",
+              "opponent_name": "FIONA ANDERSON",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000117",
+              "opponent_name": "GINA GARCIA",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000147",
+              "opponent_name": "UMA FOSTER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000105",
+              "opponent_name": "YARA DAVIS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000115",
+          "name": "Gina Foster",
+          "ordinal": 9,
+          "post_rating": 889,
+          "pre_rating": 767,
+          "rating_change": 122,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000149",
+              "opponent_name": "HENRY ANDERSON",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000101",
+              "opponent_name": "HENRY HARRIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000040",
+              "opponent_name": "ZANE EDWARDS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000117",
+              "opponent_name": "GINA GARCIA",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000123",
+              "opponent_name": "YARA FOSTER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000145",
+          "name": "Carver Garcia",
+          "ordinal": 10,
+          "post_rating": 698,
+          "pre_rating": 538,
+          "rating_change": 160,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000172",
+              "opponent_name": "LIAM CLARK",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000152",
+              "opponent_name": "KEIRA DAVIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000163",
+              "opponent_name": "PARKER DAVIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000172",
+              "opponent_name": "LIAM CLARK",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000172",
+          "name": "Liam Clark",
+          "ordinal": 11,
+          "post_rating": 723,
+          "pre_rating": 634,
+          "rating_change": 89,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000145",
+              "opponent_name": "CARVER GARCIA",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000155",
+              "opponent_name": "MAYA DAVIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000138",
+              "opponent_name": "QUINN EDWARDS",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000145",
+              "opponent_name": "CARVER GARCIA",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 3.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000034",
+          "name": "DIANA ANDERSON",
+          "ordinal": 12,
+          "post_rating": 1919,
+          "pre_rating": 1877,
+          "rating_change": 42,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000015",
+              "opponent_name": "VERA BAKER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000018",
+              "opponent_name": "RILEY BAKER",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000005",
+              "opponent_name": "OLIVIA FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000132",
+          "name": "Henry Clark",
+          "ordinal": 13,
+          "post_rating": 1363,
+          "pre_rating": 1284,
+          "rating_change": 79,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000027",
+              "opponent_name": "FIONA FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000051",
+              "opponent_name": "JONAH BAKER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000006",
+              "opponent_name": "NOAH FOSTER",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000131",
+          "name": "Olivia Baker",
+          "ordinal": 14,
+          "post_rating": 1230,
+          "pre_rating": 1182,
+          "rating_change": 48,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000019",
+              "opponent_name": "PARKER ANDERSON",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000133",
+              "opponent_name": "WYATT BAKER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000181",
+              "opponent_name": "CARTER ANDERSON",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000080",
+              "opponent_name": "XENA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 2.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000134",
+          "name": "Gina Clark",
+          "ordinal": 15,
+          "post_rating": 1665,
+          "pre_rating": 1600,
+          "rating_change": 65,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000014",
+              "opponent_name": "NOAH GARCIA",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000003",
+              "opponent_name": "JONAH EDWARDS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000061",
+          "name": "Bob Harris",
+          "ordinal": 16,
+          "post_rating": 1467,
+          "pre_rating": 1469,
+          "rating_change": -2,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000072",
+              "opponent_name": "ZANE BAKER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "12345678",
+              "opponent_name": "DANIEL GENTILE",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000006",
+              "opponent_name": "NOAH FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000056",
+              "opponent_name": "BOB BAKER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000056",
+          "name": "BOB BAKER",
+          "ordinal": 17,
+          "post_rating": 1444,
+          "pre_rating": 1433,
+          "rating_change": 11,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "12345678",
+              "opponent_name": "DANIEL GENTILE",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000082",
+              "opponent_name": "ETHAN EDWARDS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000092",
+              "opponent_name": "QUINN FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000061",
+              "opponent_name": "BOB HARRIS",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000124",
+          "name": "Bob Garcia",
+          "ordinal": 18,
+          "post_rating": 829,
+          "pre_rating": 746,
+          "rating_change": 83,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000176",
+              "opponent_name": "PARKER FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000182",
+              "opponent_name": "ETHAN DAVIS",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000163",
+              "opponent_name": "PARKER DAVIS",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000095",
+          "name": "Jonah Garcia",
+          "ordinal": 19,
+          "post_rating": 419,
+          "pre_rating": 365,
+          "rating_change": 54,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000113",
+              "opponent_name": "IVY EDWARDS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000169",
+              "opponent_name": "QUINN CLARK",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000181",
+          "name": "CARVER ANDERSON",
+          "ordinal": 20,
+          "post_rating": 1169,
+          "pre_rating": null,
+          "rating_change": null,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000091",
+              "opponent_name": "NOAH DAVIS",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000107",
+              "opponent_name": "PARKER CLARK",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000035",
+              "opponent_name": "NOAH EDWARDS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000131",
+              "opponent_name": "OLIVIA BAKER",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000185",
+          "name": "Gina Davis",
+          "ordinal": 21,
+          "post_rating": 1670,
+          "pre_rating": null,
+          "rating_change": null,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000091",
+              "opponent_name": "NOAH DAVIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000156",
+              "opponent_name": "THEO GARCIA",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 2.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000008",
+          "name": "DIANA HARRIS",
+          "ordinal": 22,
+          "post_rating": 2121,
+          "pre_rating": 2112,
+          "rating_change": 9,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000045",
+              "opponent_name": "QUINN GARCIA",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000048",
+              "opponent_name": "MAYA CLARK",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000024",
+          "name": "PARKER EDWARDS",
+          "ordinal": 23,
+          "post_rating": 1927,
+          "pre_rating": 1928,
+          "rating_change": -1,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000058",
+              "opponent_name": "SOFIA GARCIA",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000110",
+              "opponent_name": "UMA GARCIA",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000010",
+              "opponent_name": "KEIRA ANDERSON",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000058",
+          "name": "Sofia Garcia",
+          "ordinal": 24,
+          "post_rating": 1882,
+          "pre_rating": 1877,
+          "rating_change": 5,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000015",
+              "opponent_name": "VERA BAKER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000024",
+              "opponent_name": "PARKER EDWARDS",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000004",
+              "opponent_name": "THEO ANDERSON",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000018",
+          "name": "RILEY BAKER",
+          "ordinal": 25,
+          "post_rating": 1900,
+          "pre_rating": 1901,
+          "rating_change": -1,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000004",
+              "opponent_name": "THEO ANDERSON",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000010",
+              "opponent_name": "KEIRA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000034",
+              "opponent_name": "DIANA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000015",
+              "opponent_name": "VERA BAKER",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000010",
+          "name": "KEIRA ANDERSON",
+          "ordinal": 26,
+          "post_rating": 1903,
+          "pre_rating": 1900,
+          "rating_change": 3,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000021",
+              "opponent_name": "FIONA GARCIA",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000018",
+              "opponent_name": "RILEY BAKER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000024",
+              "opponent_name": "PARKER EDWARDS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000015",
+          "name": "Vera Baker",
+          "ordinal": 27,
+          "post_rating": 1891,
+          "pre_rating": 1911,
+          "rating_change": -20,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000058",
+              "opponent_name": "SOFIA GARCIA",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000034",
+              "opponent_name": "DIANA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000032",
+              "opponent_name": "PARKER GARCIA",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000018",
+              "opponent_name": "RILEY BAKER",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000005",
+          "name": "OLIVIA FOSTER",
+          "ordinal": 28,
+          "post_rating": 1900,
+          "pre_rating": 1915,
+          "rating_change": -15,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000016",
+              "opponent_name": "JONAH CLARK",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000057",
+              "opponent_name": "WYATT EDWARDS",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000034",
+              "opponent_name": "DIANA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000028",
+          "name": "Wyatt Clark",
+          "ordinal": 29,
+          "post_rating": 1678,
+          "pre_rating": 1654,
+          "rating_change": 24,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000054",
+              "opponent_name": "CARVER HARRIS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000016",
+              "opponent_name": "JONAH CLARK",
+              "outcome": "Draw",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000085",
+          "name": "Riley Garcia",
+          "ordinal": 30,
+          "post_rating": 1643,
+          "pre_rating": 1625,
+          "rating_change": 18,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000016",
+              "opponent_name": "JONAH CLARK",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000026",
+              "opponent_name": "LIAM BAKER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000009",
+          "name": "VERA CLARK",
+          "ordinal": 31,
+          "post_rating": 1500,
+          "pre_rating": 1500,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000037",
+              "opponent_name": "JONAH ANDERSON",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000175",
+              "opponent_name": "RILEY EDWARDS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000180",
+              "opponent_name": "ETHAN CLARK",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000011",
+          "name": "LIAM GARCIA",
+          "ordinal": 32,
+          "post_rating": 1500,
+          "pre_rating": 1500,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000175",
+              "opponent_name": "RILEY EDWARDS",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000180",
+              "opponent_name": "ETHAN CLARK",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000006",
+          "name": "Noah Foster",
+          "ordinal": 33,
+          "post_rating": 1400,
+          "pre_rating": 1403,
+          "rating_change": -3,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000161",
+              "opponent_name": "MAYA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000043",
+              "opponent_name": "ETHAN HARRIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000132",
+              "opponent_name": "HENRY CLARK",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000061",
+              "opponent_name": "BOB HARRIS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000019",
+          "name": "Parker Anderson",
+          "ordinal": 34,
+          "post_rating": 1200,
+          "pre_rating": 1212,
+          "rating_change": -12,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000131",
+              "opponent_name": "OLIVIA BAKER",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000049",
+              "opponent_name": "SOFIA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000046",
+              "opponent_name": "THEO BAKER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000133",
+              "opponent_name": "WYATT BAKER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000175",
+          "name": "Riley Edwards",
+          "ordinal": 35,
+          "post_rating": 1259,
+          "pre_rating": 1195,
+          "rating_change": 64,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000011",
+              "opponent_name": "KEIRA GARCIA",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000009",
+              "opponent_name": "VERA CLARK",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000038",
+          "name": "KEIRA CLARK",
+          "ordinal": 36,
+          "post_rating": 1317,
+          "pre_rating": 1326,
+          "rating_change": -9,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000142",
+              "opponent_name": "XENA DAVIS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000109",
+              "opponent_name": "IVY FOSTER",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000167",
+          "name": "Fiona Edwards",
+          "ordinal": 37,
+          "post_rating": 894,
+          "pre_rating": 844,
+          "rating_change": 50,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000107",
+              "opponent_name": "PARKER CLARK",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000147",
+              "opponent_name": "UMA FOSTER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000109",
+              "opponent_name": "IVY FOSTER",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000170",
+              "opponent_name": "GINA BAKER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000147",
+          "name": "UMA FOSTER",
+          "ordinal": 38,
+          "post_rating": 968,
+          "pre_rating": 954,
+          "rating_change": 14,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000167",
+              "opponent_name": "FIONA EDWARDS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000150",
+              "opponent_name": "GINA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000121",
+              "opponent_name": "FIONA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000121",
+          "name": "FIONA ANDERSON",
+          "ordinal": 39,
+          "post_rating": 998,
+          "pre_rating": 995,
+          "rating_change": 3,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000150",
+              "opponent_name": "GINA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000030",
+              "opponent_name": "THEO CLARK",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000147",
+              "opponent_name": "UMA FOSTER",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000029",
+          "name": "Alice Edwards",
+          "ordinal": 40,
+          "post_rating": 984,
+          "pre_rating": 996,
+          "rating_change": -12,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000149",
+              "opponent_name": "HENRY ANDERSON",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000169",
+              "opponent_name": "QUINN CLARK",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000096",
+          "name": "Olivia Anderson",
+          "ordinal": 41,
+          "post_rating": 775,
+          "pre_rating": 718,
+          "rating_change": 57,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000101",
+              "opponent_name": "HENRY HARRIS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000146",
+              "opponent_name": "XENA FOSTER",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000146",
+          "name": "XENA FOSTER",
+          "ordinal": 42,
+          "post_rating": 767,
+          "pre_rating": 671,
+          "rating_change": 96,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000096",
+              "opponent_name": "OLIVIA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000101",
+              "opponent_name": "HENRY HARRIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000182",
+              "opponent_name": "ETHAN DAVIS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000183",
+          "name": "Keira Baker",
+          "ordinal": 43,
+          "post_rating": 501,
+          "pre_rating": null,
+          "rating_change": null,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000152",
+              "opponent_name": "KEIRA DAVIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000155",
+              "opponent_name": "MAYA DAVIS",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000168",
+              "opponent_name": "XENA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000067",
+          "name": "CARTER BAKER",
+          "ordinal": 44,
+          "post_rating": 2152,
+          "pre_rating": 2141,
+          "rating_change": 11,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000099",
+              "opponent_name": "THEO DAVIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000052",
+          "name": "BOB EDWARDS",
+          "ordinal": 45,
+          "post_rating": 2099,
+          "pre_rating": 2091,
+          "rating_change": 8,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000021",
+              "opponent_name": "FIONA GARCIA",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000055",
+          "name": "DIANA BAKER",
+          "ordinal": 46,
+          "post_rating": 2079,
+          "pre_rating": 2070,
+          "rating_change": 9,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000021",
+              "opponent_name": "FIONA GARCIA",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000045",
+          "name": "Quinn Garcia",
+          "ordinal": 47,
+          "post_rating": 1886,
+          "pre_rating": 1875,
+          "rating_change": 11,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000050",
+              "opponent_name": "UMA DAVIS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000008",
+              "opponent_name": "DIANA HARRIS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000110",
+          "name": "Uma Garcia",
+          "ordinal": 48,
+          "post_rating": 1974,
+          "pre_rating": 1961,
+          "rating_change": 13,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000024",
+              "opponent_name": "PARKER EDWARDS",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000022",
+          "name": "CARVER FOSTER",
+          "ordinal": 49,
+          "post_rating": 1896,
+          "pre_rating": 1887,
+          "rating_change": 9,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000174",
+              "opponent_name": "CARTER FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000016",
+          "name": "JONAH CLARK",
+          "ordinal": 50,
+          "post_rating": 1723,
+          "pre_rating": 1759,
+          "rating_change": -36,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000005",
+              "opponent_name": "OLIVIA FOSTER",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000085",
+              "opponent_name": "RILEY GARCIA",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000001",
+              "opponent_name": "DIANA FOSTER",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000028",
+              "opponent_name": "WYATT CLARK",
+              "outcome": "Draw",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000001",
+          "name": "Diana Foster",
+          "ordinal": 51,
+          "post_rating": 1720,
+          "pre_rating": 1700,
+          "rating_change": 20,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000016",
+              "opponent_name": "JONAH CLARK",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000002",
+          "name": "FIONA DAVIS",
+          "ordinal": 52,
+          "post_rating": 1616,
+          "pre_rating": 1600,
+          "rating_change": 16,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000026",
+              "opponent_name": "LIAM BAKER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000026",
+          "name": "LIAM BAKER",
+          "ordinal": 53,
+          "post_rating": 1517,
+          "pre_rating": 1542,
+          "rating_change": -25,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000002",
+              "opponent_name": "FIONA DAVIS",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000161",
+              "opponent_name": "MAYA ANDERSON",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000161",
+              "opponent_name": "MAYA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000085",
+              "opponent_name": "RILEY GARCIA",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000082",
+          "name": "Ethan Edwards",
+          "ordinal": 54,
+          "post_rating": 1471,
+          "pre_rating": 1467,
+          "rating_change": 4,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000056",
+              "opponent_name": "BOB BAKER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "12345678",
+              "opponent_name": "DANIEL GENTILE",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000129",
+          "name": "Maya Edwards",
+          "ordinal": 55,
+          "post_rating": 1435,
+          "pre_rating": 1389,
+          "rating_change": 46,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000051",
+              "opponent_name": "JONAH BAKER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000151",
+          "name": "Maya Baker",
+          "ordinal": 56,
+          "post_rating": 1364,
+          "pre_rating": 1350,
+          "rating_change": 14,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000158",
+              "opponent_name": "UMA EDWARDS",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000092",
+          "name": "Quinn Foster",
+          "ordinal": 57,
+          "post_rating": 1434,
+          "pre_rating": 1470,
+          "rating_change": -36,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000080",
+              "opponent_name": "XENA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000118",
+              "opponent_name": "BOB DAVIS",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000056",
+              "opponent_name": "BOB BAKER",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000049",
+          "name": "SOFIA ANDERSON",
+          "ordinal": 58,
+          "post_rating": 1262,
+          "pre_rating": 1238,
+          "rating_change": 24,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000019",
+              "opponent_name": "PARKER ANDERSON",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000027",
+          "name": "FIONA FOSTER",
+          "ordinal": 59,
+          "post_rating": 1215,
+          "pre_rating": 1240,
+          "rating_change": -25,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000132",
+              "opponent_name": "HENRY CLARK",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000080",
+              "opponent_name": "XENA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000164",
+              "opponent_name": "LIAM DAVIS",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000080",
+              "opponent_name": "XENA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000133",
+          "name": "Wyatt Baker",
+          "ordinal": 60,
+          "post_rating": 1171,
+          "pre_rating": 1165,
+          "rating_change": 6,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000131",
+              "opponent_name": "OLIVIA BAKER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000019",
+              "opponent_name": "PARKER ANDERSON",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000109",
+          "name": "Ivy Foster",
+          "ordinal": 61,
+          "post_rating": 1165,
+          "pre_rating": 1206,
+          "rating_change": -41,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000033",
+              "opponent_name": "RILEY ANDERSON",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000038",
+              "opponent_name": "KEIRA CLARK",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000167",
+              "opponent_name": "FIONA EDWARDS",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000033",
+          "name": "RILEY ANDERSON",
+          "ordinal": 62,
+          "post_rating": 1108,
+          "pre_rating": 1070,
+          "rating_change": 38,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000109",
+              "opponent_name": "IVY FOSTER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000170",
+          "name": "Gina Baker",
+          "ordinal": 63,
+          "post_rating": 1112,
+          "pre_rating": 1093,
+          "rating_change": 19,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000167",
+              "opponent_name": "FIONA EDWARDS",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000105",
+          "name": "Yara Davis",
+          "ordinal": 64,
+          "post_rating": 1066,
+          "pre_rating": 1024,
+          "rating_change": 42,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000150",
+              "opponent_name": "GINA EDWARDS",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000117",
+          "name": "Gina Garcia",
+          "ordinal": 65,
+          "post_rating": 994,
+          "pre_rating": 988,
+          "rating_change": 6,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000150",
+              "opponent_name": "GINA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000115",
+              "opponent_name": "GINA FOSTER",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000030",
+          "name": "THEO CLARK",
+          "ordinal": 66,
+          "post_rating": 927,
+          "pre_rating": 936,
+          "rating_change": -9,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000142",
+              "opponent_name": "XENA DAVIS",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000121",
+              "opponent_name": "FIONA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000040",
+          "name": "Zane Edwards",
+          "ordinal": 67,
+          "post_rating": 971,
+          "pre_rating": 941,
+          "rating_change": 30,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000115",
+              "opponent_name": "GINA FOSTER",
+              "outcome": "Win",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000123",
+          "name": "Yara Foster",
+          "ordinal": 68,
+          "post_rating": 791,
+          "pre_rating": 801,
+          "rating_change": -10,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000182",
+              "opponent_name": "ETHAN DAVIS",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000171",
+              "opponent_name": "ETHAN FOSTER",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000115",
+              "opponent_name": "GINA FOSTER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000111",
+          "name": "Henry Edwards",
+          "ordinal": 69,
+          "post_rating": 745,
+          "pre_rating": 736,
+          "rating_change": 9,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000137",
+              "opponent_name": "VERA GARCIA",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000163",
+          "name": "Parker Davis",
+          "ordinal": 70,
+          "post_rating": 564,
+          "pre_rating": 594,
+          "rating_change": -30,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000145",
+              "opponent_name": "CARVER GARCIA",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000179",
+              "opponent_name": "YARA CLARK",
+              "outcome": "Win",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000124",
+              "opponent_name": "BOB GARCIA",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000047",
+          "name": "FIONA BAKER",
+          "ordinal": 71,
+          "post_rating": 616,
+          "pre_rating": 609,
+          "rating_change": 7,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000184",
+              "opponent_name": "KEIRA FOSTER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000152",
+          "name": "Keira Davis",
+          "ordinal": 72,
+          "post_rating": 574,
+          "pre_rating": 587,
+          "rating_change": -13,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000145",
+              "opponent_name": "CARVER GARCIA",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000183",
+              "opponent_name": "KEIRA BAKER",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000176",
+              "opponent_name": "PARKER FOSTER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000137",
+          "name": "VERA GARCIA",
+          "ordinal": 73,
+          "post_rating": 392,
+          "pre_rating": 375,
+          "rating_change": 17,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000098",
+              "opponent_name": "GINA ANDERSON",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000111",
+              "opponent_name": "HENRY EDWARDS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000098",
+          "name": "Gina Anderson",
+          "ordinal": 74,
+          "post_rating": 256,
+          "pre_rating": 259,
+          "rating_change": -3,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000173",
+              "opponent_name": "PARKER BAKER",
+              "outcome": "Win",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000137",
+              "opponent_name": "VERA GARCIA",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000177",
+          "name": "Uma Anderson",
+          "ordinal": 75,
+          "post_rating": 1630,
+          "pre_rating": 1566,
+          "rating_change": 64,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000031",
+              "opponent_name": "MAYA GARCIA",
+              "outcome": "Win",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000168",
+          "name": "Xena Edwards",
+          "ordinal": 76,
+          "post_rating": 251,
+          "pre_rating": 100,
+          "rating_change": 151,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000183",
+              "opponent_name": "KEIRA BAKER",
+              "outcome": "Win",
+              "round_number": 5
+            }
+          ],
+          "score": 1.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000048",
+          "name": "Maya Clark",
+          "ordinal": 77,
+          "post_rating": 2262,
+          "pre_rating": 2266,
+          "rating_change": -4,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000008",
+              "opponent_name": "DIANA HARRIS",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000021",
+          "name": "Fiona Garcia",
+          "ordinal": 78,
+          "post_rating": 1974,
+          "pre_rating": 2011,
+          "rating_change": -37,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000010",
+              "opponent_name": "KEIRA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000004",
+              "opponent_name": "THEO ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000052",
+              "opponent_name": "BOB EDWARDS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000055",
+              "opponent_name": "DIANA BAKER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000050",
+          "name": "Uma Davis",
+          "ordinal": 79,
+          "post_rating": 1917,
+          "pre_rating": 1933,
+          "rating_change": -16,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000045",
+              "opponent_name": "QUINN GARCIA",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000074",
+              "opponent_name": "VERA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000074",
+          "name": "Vera Anderson",
+          "ordinal": 80,
+          "post_rating": 1929,
+          "pre_rating": 1929,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000050",
+              "opponent_name": "UMA DAVIS",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000039",
+          "name": "Alice Davis",
+          "ordinal": 81,
+          "post_rating": 1824,
+          "pre_rating": 1819,
+          "rating_change": 5,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000004",
+              "opponent_name": "THEO ANDERSON",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000057",
+          "name": "WYATT EDWARDS",
+          "ordinal": 82,
+          "post_rating": 1684,
+          "pre_rating": 1673,
+          "rating_change": 11,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000005",
+              "opponent_name": "OLIVIA FOSTER",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000037",
+          "name": "JONAH ANDERSON",
+          "ordinal": 83,
+          "post_rating": 1467,
+          "pre_rating": 1466,
+          "rating_change": 1,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000009",
+              "opponent_name": "VERA CLARK",
+              "outcome": "Draw",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000118",
+          "name": "Carter Davis",
+          "ordinal": 84,
+          "post_rating": 1333,
+          "pre_rating": 1326,
+          "rating_change": 7,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000092",
+              "opponent_name": "QUINN FOSTER",
+              "outcome": "Draw",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000031",
+          "name": "MAYA GARCIA",
+          "ordinal": 85,
+          "post_rating": 1241,
+          "pre_rating": 1236,
+          "rating_change": 5,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000177",
+              "opponent_name": "UMA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000080",
+              "opponent_name": "XENA ANDERSON",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000149",
+          "name": "Henry Anderson",
+          "ordinal": 86,
+          "post_rating": 843,
+          "pre_rating": 859,
+          "rating_change": -16,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000115",
+              "opponent_name": "GINA FOSTER",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000029",
+              "opponent_name": "ALICE EDWARDS",
+              "outcome": "Draw",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000155",
+          "name": "Maya Davis",
+          "ordinal": 87,
+          "post_rating": 627,
+          "pre_rating": 681,
+          "rating_change": -54,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000172",
+              "opponent_name": "LIAM CLARK",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000183",
+              "opponent_name": "KEIRA BAKER",
+              "outcome": "Draw",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.5
+        },
+        {
+          "is_player": false,
+          "member_id": "20000099",
+          "name": "Theo Davis",
+          "ordinal": 88,
+          "post_rating": 2143,
+          "pre_rating": 2154,
+          "rating_change": -11,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000067",
+              "opponent_name": "CARTER BAKER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000032",
+          "name": "PARKER GARCIA",
+          "ordinal": 89,
+          "post_rating": 1795,
+          "pre_rating": 1808,
+          "rating_change": -13,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000015",
+              "opponent_name": "VERA BAKER",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000174",
+          "name": "Carter Foster",
+          "ordinal": 90,
+          "post_rating": 1752,
+          "pre_rating": 1773,
+          "rating_change": -21,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000022",
+              "opponent_name": "CARVER FOSTER",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000054",
+          "name": "Carver Harris",
+          "ordinal": 91,
+          "post_rating": 1682,
+          "pre_rating": 1703,
+          "rating_change": -21,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000028",
+              "opponent_name": "WYATT CLARK",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000014",
+          "name": "Olivia Garcia",
+          "ordinal": 92,
+          "post_rating": 1563,
+          "pre_rating": 1579,
+          "rating_change": -16,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000134",
+              "opponent_name": "GINA CLARK",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000003",
+          "name": "JONAH EDWARDS",
+          "ordinal": 93,
+          "post_rating": 1500,
+          "pre_rating": 1500,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000134",
+              "opponent_name": "GINA CLARK",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000130",
+          "name": "Noah Baker",
+          "ordinal": 94,
+          "post_rating": 1500,
+          "pre_rating": 1519,
+          "rating_change": -19,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000161",
+              "opponent_name": "MAYA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000072",
+          "name": "Zane Baker",
+          "ordinal": 95,
+          "post_rating": 1460,
+          "pre_rating": 1484,
+          "rating_change": -24,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000061",
+              "opponent_name": "BOB HARRIS",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000125",
+          "name": "Alice Harris",
+          "ordinal": 96,
+          "post_rating": 1415,
+          "pre_rating": 1433,
+          "rating_change": -18,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000144",
+              "opponent_name": "CARVER CLARK",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000051",
+          "name": "Jonah Baker",
+          "ordinal": 97,
+          "post_rating": 1319,
+          "pre_rating": 1360,
+          "rating_change": -41,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000132",
+              "opponent_name": "HENRY CLARK",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000129",
+              "opponent_name": "MAYA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000184",
+          "name": "Jonah Foster",
+          "ordinal": 98,
+          "post_rating": 248,
+          "pre_rating": null,
+          "rating_change": null,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000047",
+              "opponent_name": "FIONA BAKER",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000046",
+          "name": "Theo Baker",
+          "ordinal": 99,
+          "post_rating": 1300,
+          "pre_rating": 1300,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000019",
+              "opponent_name": "PARKER ANDERSON",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000043",
+          "name": "ETHAN HARRIS",
+          "ordinal": 100,
+          "post_rating": 1300,
+          "pre_rating": 1300,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000006",
+              "opponent_name": "NOAH FOSTER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000164",
+          "name": "Liam Davis",
+          "ordinal": 101,
+          "post_rating": 1175,
+          "pre_rating": 1238,
+          "rating_change": -63,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000027",
+              "opponent_name": "FIONA FOSTER",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000158",
+          "name": "Uma Edwards",
+          "ordinal": 102,
+          "post_rating": 1181,
+          "pre_rating": 1234,
+          "rating_change": -53,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000151",
+              "opponent_name": "MAYA BAKER",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000035",
+          "name": "Noah Edwards",
+          "ordinal": 103,
+          "post_rating": 1117,
+          "pre_rating": 1144,
+          "rating_change": -27,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000181",
+              "opponent_name": "CARTER ANDERSON",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000107",
+          "name": "Parker Clark",
+          "ordinal": 104,
+          "post_rating": 1076,
+          "pre_rating": 1160,
+          "rating_change": -84,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000167",
+              "opponent_name": "FIONA EDWARDS",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000181",
+              "opponent_name": "CARTER ANDERSON",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000091",
+              "opponent_name": "NOAH DAVIS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000156",
+          "name": "Theo Garcia",
+          "ordinal": 105,
+          "post_rating": 1091,
+          "pre_rating": 1110,
+          "rating_change": -19,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000091",
+              "opponent_name": "NOAH DAVIS",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000185",
+              "opponent_name": "GINA DAVIS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000142",
+          "name": "Xena Davis",
+          "ordinal": 106,
+          "post_rating": 762,
+          "pre_rating": 785,
+          "rating_change": -23,
+          "rounds": [
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000038",
+              "opponent_name": "KEIRA CLARK",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000030",
+              "opponent_name": "THEO CLARK",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000101",
+          "name": "Henry Harris",
+          "ordinal": 107,
+          "post_rating": 939,
+          "pre_rating": 1068,
+          "rating_change": -129,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000096",
+              "opponent_name": "OLIVIA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000115",
+              "opponent_name": "GINA FOSTER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000146",
+              "opponent_name": "XENA FOSTER",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000141",
+          "name": "Alice Foster",
+          "ordinal": 108,
+          "post_rating": 724,
+          "pre_rating": 729,
+          "rating_change": -5,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000182",
+              "opponent_name": "ETHAN DAVIS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000171",
+          "name": "Ethan Foster",
+          "ordinal": 109,
+          "post_rating": 633,
+          "pre_rating": 696,
+          "rating_change": -63,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000123",
+              "opponent_name": "YARA FOSTER",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000182",
+              "opponent_name": "ETHAN DAVIS",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000176",
+          "name": "Parker Foster",
+          "ordinal": 110,
+          "post_rating": 868,
+          "pre_rating": 962,
+          "rating_change": -94,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000124",
+              "opponent_name": "BOB GARCIA",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000152",
+              "opponent_name": "KEIRA DAVIS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000138",
+          "name": "Quinn Edwards",
+          "ordinal": 111,
+          "post_rating": 432,
+          "pre_rating": 450,
+          "rating_change": -18,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000172",
+              "opponent_name": "LIAM CLARK",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000113",
+          "name": "Ivy Edwards",
+          "ordinal": 112,
+          "post_rating": 387,
+          "pre_rating": 430,
+          "rating_change": -43,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000095",
+              "opponent_name": "JONAH GARCIA",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000179",
+          "name": "Yara Clark",
+          "ordinal": 113,
+          "post_rating": 146,
+          "pre_rating": 275,
+          "rating_change": -129,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000163",
+              "opponent_name": "PARKER DAVIS",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000180",
+          "name": "Ethan Clark",
+          "ordinal": 114,
+          "post_rating": 1192,
+          "pre_rating": 1459,
+          "rating_change": -267,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000144",
+              "opponent_name": "CARVER CLARK",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000011",
+              "opponent_name": "KEIRA GARCIA",
+              "outcome": "Loss",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000009",
+              "opponent_name": "VERA CLARK",
+              "outcome": "Loss",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000169",
+          "name": "Quinn Clark",
+          "ordinal": 115,
+          "post_rating": 100,
+          "pre_rating": 100,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000095",
+              "opponent_name": "JONAH GARCIA",
+              "outcome": "Loss",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "White",
+              "game_id": null,
+              "opponent_member_id": "20000029",
+              "opponent_name": "ALICE EDWARDS",
+              "outcome": "Loss",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        },
+        {
+          "is_player": false,
+          "member_id": "20000173",
+          "name": "PARKER BAKER",
+          "ordinal": 116,
+          "post_rating": 100,
+          "pre_rating": 100,
+          "rating_change": 0,
+          "rounds": [
+            {
+              "color": "Black",
+              "game_id": null,
+              "opponent_member_id": "20000098",
+              "opponent_name": "GINA ANDERSON",
+              "outcome": "Loss",
+              "round_number": 1
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 2
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 3
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 4
+            },
+            {
+              "color": "Unknown",
+              "game_id": null,
+              "opponent_member_id": "",
+              "opponent_name": "",
+              "outcome": "Unpaired",
+              "round_number": 5
+            }
+          ],
+          "score": 0.0
+        }
+      ],
+      "has_crosstable": true,
+      "name": "LADDER",
+      "placement": 5,
+      "player_count": 116
+    }
+  ],
+  "series": [
+    "ACC Friday Ladder"
+  ],
+  "start": "2026-05-01",
+  "win": 3
+}

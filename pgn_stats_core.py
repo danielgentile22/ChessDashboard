@@ -57,6 +57,7 @@ import logging
 import math
 import re
 from collections import Counter
+from collections.abc import Mapping
 
 import chess.pgn
 import pandas as pd
@@ -272,6 +273,15 @@ CANONICAL_TAGS = [
     "opening", "tactics", "calculation", "endgame",
     "time-trouble", "blunder", "strategy",
 ]
+
+# The TagSources value marking a Tag the engine emitted, not Daniel.
+ENGINE_TAG_SOURCE = "engine"
+
+
+def is_engine_tag(tag: str, sources: Mapping[str, str] | None) -> bool:
+    """Whether a Game's TagSources map says the engine emitted *tag*; a Tag
+    missing from it is hand-written."""
+    return (sources or {}).get(tag) == ENGINE_TAG_SOURCE
 
 
 def _all_comments(game) -> list[str]:
@@ -1652,25 +1662,34 @@ def tag_counts(df: pd.DataFrame) -> list[dict]:
     Canonical taxonomy Tags come first (in taxonomy order), then freeform
     Tags by descending count — so vocabulary fragmentation stays visible.
 
-    Returns: [{"tag": str, "count": int, "canonical": bool}, ...]
+    Each count splits by who wrote the Tag on that Game: ``engine`` when the
+    Game's TagSources says the engine emitted it, ``mine`` otherwise (so
+    count == mine + engine).
+
+    Returns: [{"tag": str, "count": int, "canonical": bool,
+               "mine": int, "engine": int}, ...]
     """
     if df.empty or "Tags" not in df.columns:
         return []
 
     counts: Counter[str] = Counter()
-    for game_tags in df["Tags"]:
+    engine: Counter[str] = Counter()
+    sources = df["TagSources"] if "TagSources" in df.columns else [None] * len(df)
+    for game_tags, game_sources in zip(df["Tags"], sources):
         counts.update(game_tags)
+        engine.update(t for t in game_tags if is_engine_tag(t, game_sources))
 
-    canonical = [
-        {"tag": t, "count": counts[t], "canonical": True}
-        for t in CANONICAL_TAGS if counts[t] > 0
-    ]
-    freeform_pairs = sorted(
-        ((t, n) for t, n in counts.items() if t not in CANONICAL_TAGS),
-        key=lambda pair: (-pair[1], pair[0]),
+    def _item(tag: str, canonical: bool) -> dict:
+        n = counts[tag]
+        return {"tag": tag, "count": n, "canonical": canonical,
+                "mine": n - engine[tag], "engine": engine[tag]}
+
+    canonical = [_item(t, True) for t in CANONICAL_TAGS if counts[t] > 0]
+    freeform = sorted(
+        (t for t in counts if t not in CANONICAL_TAGS),
+        key=lambda t: (-counts[t], t),
     )
-    freeform = [{"tag": t, "count": n, "canonical": False} for t, n in freeform_pairs]
-    return canonical + freeform
+    return canonical + [_item(t, False) for t in freeform]
 
 
 # ---------------------------------------------------------------------------
@@ -1823,7 +1842,8 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
     """
     Auto-detect career milestone games, returned as a chronologically sorted list.
 
-    Each item: {date: str, game_num: int, description: str, kind: str}
+    Each item: {date: str, game_num: int, description: str, kind: str,
+    chapter_url: str}
     Kinds: 'first', 'win', 'draw', 'loss', 'milestone', 'peak', 'streak'
     """
     if df.empty:
@@ -1842,7 +1862,8 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
 
     def _add(row, desc: str, kind: str):
         items.append({"date": _date(row), "game_num": int(row["_gn"]),
-                      "description": desc, "kind": kind})
+                      "description": desc, "kind": kind,
+                      "chapter_url": row.get("ChapterURL", "")})
 
     # Records must not credit no-shows: a forfeit is neither a first win,
     # a giant kill, nor a link in a win streak. Game numbering (_gn), the first

@@ -28,8 +28,8 @@ from components import (
     weakness_callout,
 )
 from filters import FILTER_INPUTS, get_filtered
+from payloads.overview import milestone_timeline
 from pgn_stats_core import (
-    compute_milestones,
     kpi_stats,
     recurring_weaknesses,
     streaks,
@@ -44,7 +44,7 @@ from styles import (
     donut_fig,
     empty_fig,
 )
-from uscf_core import achievement_milestones, membership_alert
+from uscf_core import membership_alert
 
 dash.register_page(
     __name__, path="/", name="Overview", title="Overview | Chess Dashboard", order=0,
@@ -292,21 +292,8 @@ def _milestone_row(m: dict) -> html.Div:
 @callback(Output("milestones-content", "children"), FILTER_INPUTS)
 def update_milestones(colors, outcomes, terminations, start, end, events, moves, _sync=None, lens=None):
     df_f = get_filtered(colors, outcomes, terminations, start, end, events, moves, lens)
-    ms = compute_milestones(df_f)
-    # Official achievements join the timeline.  They aren't Games,
-    # so only the date range applies to them — never the game filters.
-    ms += achievement_milestones(data.get_uscf_achievements(),
-                                 date_start=start, date_end=end)
+    # Official achievements join the timeline; only the date range applies to them
+    ms = milestone_timeline(df_f, data.get_uscf_achievements(), start=start, end=end)
     if not ms:
         return html.Div("No milestone data", style={"color": COLORS["dim"]})
-
-    def _chronological(m: dict):
-        # Undated entries go last (nothing to place them by), and PGN-style
-        # dates ('2026.05.01') compare correctly against ISO ('2026-05-01').
-        date_str = (m["date"] or "").replace(".", "-")
-        return (date_str == "", date_str, m["game_num"] is None, m["game_num"] or 0)
-
-    # Chronological across both kinds; game milestones break date ties by
-    # game number, achievements (no game number) go after them.
-    ms.sort(key=_chronological)
     return html.Div([_milestone_row(m) for m in ms], className="milestone-list")

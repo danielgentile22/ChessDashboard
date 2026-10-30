@@ -1,0 +1,70 @@
+{
+  "games_count": 0,
+  "kpis": {
+    "draw_pct": 0.0,
+    "favorite_opening": "",
+    "longest_win_streak": 0,
+    "loss_pct": 0.0,
+    "peak_rating": null,
+    "performance_rating": null,
+    "rating": null,
+    "unique_opponents": 0,
+    "win_pct": 0.0
+  },
+  "milestones": [],
+  "outcome_counts": {
+    "draw": 0,
+    "loss": 0,
+    "unknown": 0,
+    "win": 0
+  },
+  "streak": {
+    "current_count": 0,
+    "current_outcome": null,
+    "indicator": {
+      "blazing": false,
+      "count": 0,
+      "kind": "none"
+    },
+    "last_20": [],
+    "longest_unbeaten": 0,
+    "longest_win_streak": 0
+  },
+  "terminations": [],
+  "top_weakness": null,
+  "uscf_card": {
+    "profile": {
+      "live_rating": 1571,
+      "member_id": "12345678",
+      "membership_alert": null,
+      "membership_expires": "2028-07-31",
+      "membership_status": "Active",
+      "name": "Daniel Gentile",
+      "national_rank": 11719,
+      "official_rating": 1545,
+      "online_regular": {
+        "floor": 100,
+        "games_played": 11,
+        "is_provisional": true,
+        "rating": 1336
+      },
+      "quick": {
+        "floor": 120,
+        "games_played": 17,
+        "is_provisional": true,
+        "rating": 1092
+      },
+      "regular": {
+        "floor": 1300,
+        "games_played": null,
+        "is_provisional": false,
+        "rating": 1545
+      },
+      "state": "VA",
+      "state_rank": 356
+    },
+    "state": "ok",
+    "unavailable_reason": "",
+    "unavailable_since": null
+  }
+}

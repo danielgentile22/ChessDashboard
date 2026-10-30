@@ -1,0 +1,440 @@
+{
+  "board": {
+    "coach": "[Event \"2nd Annual Adults Only (U1800)\"]\n[Date \"2026.03.29\"]\n[Round \"3\"]\n[White \"Alice Anderson\"]\n[Black \"Daniel Gentile\"]\n[Result \"0-1\"]\n\n{ Caro-Kann again — solid. Our plan: don't let her trade you into a passive structure. }\n1. e4 c6 2. Nc3 d5 3. d3\n{ [%eval -0.17] d3 is too quiet; here you already stand fine. } ( 3. Nxd5 Nh6 )\n3... dxe4 4. Nxe4 ( 4. Nd5 ) 4... Nf6 { [%eval 0.09] } 5. Nxf6+ exf6\n{ [%eval 0.06] Good — the doubled f-pawns hand you the half-open e-file. Use it. }\n6. Nf3 ( 6. Nh3 Rg8 7. Ng5 ) 6... Bg4 7. Be2 ( 7. Ng5 ) 7... Bd6\n{ [%eval -0.05] } 8. O-O ( 8. Ng5 Rg8 ) 8... O-O\n{ Castling done on both sides; now find a plan for the c8-bishop. } 9. Be3 ( 9.\nNg5 ) 9... Nd7 10. Nd4 ( 10. Ng5 Kh8 ) 10... Bxe2 11. Nxe2 ( 11. Ne6 ) 11...\nQc7 { The ...Qc7 and ...Rfe8 manoeuvre is exactly what we drilled. } 12. Ng3\n{ Here she drifted; the initiative is yours now. } ( 12. Bxa7 Kh8 ) 12... Rfe8\n{ Keep improving the worst piece before you commit to a break. } ( 12... Kh8 )\n13. Qd2 Nf8 14. c4 Rad8 15. Rac1 g5 16. Bd4 Bxg3 17. fxg3 Rxd4 18. Rxf6 Qe5 19.\nRf3 Ne6 20. Re1 Qc5 21. Rfe3 Red8 22. b3 Rxd3 23. Qf2 Rxe3 24. Qxe3 Rd1",
+    "engine": "[Event \"2nd Annual Adults Only (U1800)\"]\n[Date \"2026.03.29\"]\n[Round \"3\"]\n[White \"Alice Anderson\"]\n[Black \"Daniel Gentile\"]\n[Result \"0-1\"]\n\n1. e4 { [%eval 0.18] } 1... c6 { [%eval 0.31] } 2. Nc3 { [%eval 0.21] } 2... d5\n{ [%eval 0.38] } 3. d3 $6 { [%eval -0.17] Inaccuracy. d4 was best. } ( 3. d4\ndxe4 4. Nxe4 Nf6 5. Nxf6+ exf6 6. c3 Bd6 7. Bd3 O-O ) 3... dxe4\n{ [%eval 0.17] } 4. Nxe4 { [%eval 0.13] } 4... Nf6 { [%eval 0.09] } 5. Nxf6+\n{ [%eval 0.08] } 5... exf6 { [%eval 0.06] } 6. Nf3 { [%eval 0.02] } 6... Bg4\n{ [%eval 0.29] } 7. Be2 { [%eval 0.14] } 7... Bd6 { [%eval 0.15] } 8. O-O\n{ [%eval 0.09] } 8... O-O { [%eval 0.14] } 9. Be3 { [%eval -0.05] } 9... Nd7\n{ [%eval 0.03] } 10. Nd4 { [%eval -0.15] } 10... Bxe2 { [%eval -0.14] } 11.\nNxe2 { [%eval -0.28] } 11... Qc7 { [%eval -0.15] } 12. Ng3 { [%eval -0.18] }\n12... Rfe8 { [%eval -0.25] } 13. Qd2 { [%eval -0.48] } 13... Nf8\n{ [%eval -0.41] } 14. c4 { [%eval -0.69] } 14... Rad8 { [%eval -0.62] } 15.\nRac1 { [%eval -1.08] } 15... g5 $2 { [%eval 0.54] Mistake. h5 was best. } (\n15... h5 16. c5 Bxg3 17. hxg3 Qd7 18. Rfd1 Ng6 19. Rc4 Qf5 20. Qc2 Re6 21. d4 )\n16. Bd4 $4 { [%eval -4.38] Blunder. Nh5 was best. } ( 16. Nh5 Bxh2+ 17. Kh1 Be5\n18. f4 gxf4 19. Bxf4 Re6 20. Bxe5 fxe5 21. Nf6+ Kg7 ) 16... Bxg3\n{ [%eval -4.5] } 17. fxg3 { [%eval -4.48] } 17... Rxd4 { [%eval -4.41] } 18.\nRxf6 { [%eval -4.51] } 18... Qe5 { [%eval -4.39] } 19. Rf3 { [%eval -4.7] }\n19... Ne6 { [%eval -3.98] } 20. Re1 { [%eval -3.99] } 20... Qc5\n{ [%eval -3.93] } 21. Rfe3 { [%eval -4.08] } 21... Red8 { [%eval -4.63] } 22.\nb3 { [%eval -5.45] } 22... Rxd3 { [%eval -5.36] } 23. Qf2 { [%eval -5.46] }\n23... Rxe3 { [%eval -5.38] } 24. Qxe3 { [%eval -5.41] } 24... Rd1\n{ [%eval -5.13] } 0-1",
+    "game": "[Event \"2nd Annual Adults Only (U1800)\"]\n[Date \"2026.03.29\"]\n[Round \"3\"]\n[White \"Alice Anderson\"]\n[Black \"Daniel Gentile\"]\n[Result \"0-1\"]\n\n1. e4 c6 2. Nc3 d5 3. d3 dxe4 4. Nxe4 Nf6 5. Nxf6+ exf6 6. Nf3 Bg4 7. Be2 Bd6\n8. O-O O-O 9. Be3 Nd7 10. Nd4 Bxe2 11. Nxe2 Qc7 12. Ng3 Rfe8 13. Qd2 Nf8 14. c4\nRad8 15. Rac1 g5 16. Bd4 Bxg3 17. fxg3 Rxd4 18. Rxf6 Qe5 19. Rf3 Ne6 20. Re1\nQc5 21. Rfe3 Red8 22. b3 Rxd3 23. Qf2 Rxe3 24. Qxe3 Rd1 0-1",
+    "my_analysis": "[Event \"2nd Annual Adults Only (U1800)\"]\n[Date \"2026.03.29\"]\n[Round \"3\"]\n[White \"Alice Anderson\"]\n[Black \"Daniel Gentile\"]\n[Result \"0-1\"]\n\n1. e4 { [%eval 0.18] } 1... c6 { [%eval 0.31] } 2. Nc3 { [%eval 0.21] } 2... d5\n{ [%eval 0.38] } 3. d3 $6 { [%eval -0.17] Inaccuracy. d4 was best. } ( 3. d4\ndxe4 4. Nxe4 Nf6 5. Nxf6+ exf6 6. c3 Bd6 7. Bd3 O-O ) 3... dxe4\n{ [%eval 0.17] } 4. Nxe4 { [%eval 0.13] } 4... Nf6 { [%eval 0.09] } 5. Nxf6+\n{ [%eval 0.08] } 5... exf6 { [%eval 0.06] } 6. Nf3 { [%eval 0.02] } 6... Bg4\n{ [%eval 0.29] } 7. Be2 { [%eval 0.14] } 7... Bd6 { [%eval 0.15] } 8. O-O\n{ [%eval 0.09] } 8... O-O { [%eval 0.14] } 9. Be3 { [%eval -0.05] } 9... Nd7\n{ [%eval 0.03] } 10. Nd4 { [%eval -0.15] } 10... Bxe2 { [%eval -0.14] } 11.\nNxe2 { [%eval -0.28] } 11... Qc7 { [%eval -0.15] } 12. Ng3 { [%eval -0.18] }\n12... Rfe8 { [%eval -0.25] } 13. Qd2 { [%eval -0.48] } 13... Nf8\n{ [%eval -0.41] } 14. c4 { [%eval -0.69] } 14... Rad8 { [%eval -0.62] } 15.\nRac1 { [%eval -1.08] } 15... g5 $2 { [%eval 0.54] Mistake. h5 was best. } (\n15... h5 16. c5 Bxg3 17. hxg3 Qd7 18. Rfd1 Ng6 19. Rc4 Qf5 20. Qc2 Re6 21. d4 )\n16. Bd4 $4 { [%eval -4.38] Blunder. Nh5 was best. } ( 16. Nh5 Bxh2+ 17. Kh1 Be5\n18. f4 gxf4 19. Bxf4 Re6 20. Bxe5 fxe5 21. Nf6+ Kg7 ) 16... Bxg3\n{ [%eval -4.5] } 17. fxg3 { [%eval -4.48] } 17... Rxd4 { [%eval -4.41] } 18.\nRxf6 { [%eval -4.51] } 18... Qe5 { [%eval -4.39] } 19. Rf3 { [%eval -4.7] }\n19... Ne6 { [%eval -3.98] } 20. Re1 { [%eval -3.99] } 20... Qc5\n{ [%eval -3.93] } 21. Rfe3 { [%eval -4.08] } 21... Red8 { [%eval -4.63] } 22.\nb3 { [%eval -5.45] } 22... Rxd3 { [%eval -5.36] } 23. Qf2 { [%eval -5.46] }\n23... Rxe3 { [%eval -5.38] } 24. Qxe3 { [%eval -5.41] } 24... Rd1\n{ [%eval -5.13] } 0-1"
+  },
+  "engine": {
+    "ai_summary": "",
+    "critical_moment": {
+      "best_move": "Nh5",
+      "by_player": false,
+      "eval_after": -4.38,
+      "eval_before": 0.54,
+      "headline": "Won after your opponent's blunder on move 16 (Bd4).",
+      "move_number": 16,
+      "ply": 31,
+      "san": "Bd4",
+      "side": "White"
+    },
+    "judged_moves": [
+      {
+        "best_move": "h5",
+        "move_number": 15,
+        "ply": 30,
+        "refutation": [
+          "c5",
+          "Bxg3",
+          "hxg3",
+          "Qd7",
+          "Rfd1",
+          "Ng6",
+          "Rc4"
+        ],
+        "san": "g5",
+        "severity": "inaccuracy"
+      }
+    ],
+    "state": "analyzed",
+    "win_probability": [
+      {
+        "move_number": 1,
+        "ply": 1,
+        "san": "e4",
+        "side": "White",
+        "white_win_pct": 51.66
+      },
+      {
+        "move_number": 1,
+        "ply": 2,
+        "san": "c6",
+        "side": "Black",
+        "white_win_pct": 52.85
+      },
+      {
+        "move_number": 2,
+        "ply": 3,
+        "san": "Nc3",
+        "side": "White",
+        "white_win_pct": 51.93
+      },
+      {
+        "move_number": 2,
+        "ply": 4,
+        "san": "d5",
+        "side": "Black",
+        "white_win_pct": 53.49
+      },
+      {
+        "move_number": 3,
+        "ply": 5,
+        "san": "d3",
+        "side": "White",
+        "white_win_pct": 48.44
+      },
+      {
+        "move_number": 3,
+        "ply": 6,
+        "san": "dxe4",
+        "side": "Black",
+        "white_win_pct": 51.56
+      },
+      {
+        "move_number": 4,
+        "ply": 7,
+        "san": "Nxe4",
+        "side": "White",
+        "white_win_pct": 51.2
+      },
+      {
+        "move_number": 4,
+        "ply": 8,
+        "san": "Nf6",
+        "side": "Black",
+        "white_win_pct": 50.83
+      },
+      {
+        "move_number": 5,
+        "ply": 9,
+        "san": "Nxf6+",
+        "side": "White",
+        "white_win_pct": 50.74
+      },
+      {
+        "move_number": 5,
+        "ply": 10,
+        "san": "exf6",
+        "side": "Black",
+        "white_win_pct": 50.55
+      },
+      {
+        "move_number": 6,
+        "ply": 11,
+        "san": "Nf3",
+        "side": "White",
+        "white_win_pct": 50.18
+      },
+      {
+        "move_number": 6,
+        "ply": 12,
+        "san": "Bg4",
+        "side": "Black",
+        "white_win_pct": 52.67
+      },
+      {
+        "move_number": 7,
+        "ply": 13,
+        "san": "Be2",
+        "side": "White",
+        "white_win_pct": 51.29
+      },
+      {
+        "move_number": 7,
+        "ply": 14,
+        "san": "Bd6",
+        "side": "Black",
+        "white_win_pct": 51.38
+      },
+      {
+        "move_number": 8,
+        "ply": 15,
+        "san": "O-O",
+        "side": "White",
+        "white_win_pct": 50.83
+      },
+      {
+        "move_number": 8,
+        "ply": 16,
+        "san": "O-O",
+        "side": "Black",
+        "white_win_pct": 51.29
+      },
+      {
+        "move_number": 9,
+        "ply": 17,
+        "san": "Be3",
+        "side": "White",
+        "white_win_pct": 49.54
+      },
+      {
+        "move_number": 9,
+        "ply": 18,
+        "san": "Nd7",
+        "side": "Black",
+        "white_win_pct": 50.28
+      },
+      {
+        "move_number": 10,
+        "ply": 19,
+        "san": "Nd4",
+        "side": "White",
+        "white_win_pct": 48.62
+      },
+      {
+        "move_number": 10,
+        "ply": 20,
+        "san": "Bxe2",
+        "side": "Black",
+        "white_win_pct": 48.71
+      },
+      {
+        "move_number": 11,
+        "ply": 21,
+        "san": "Nxe2",
+        "side": "White",
+        "white_win_pct": 47.42
+      },
+      {
+        "move_number": 11,
+        "ply": 22,
+        "san": "Qc7",
+        "side": "Black",
+        "white_win_pct": 48.62
+      },
+      {
+        "move_number": 12,
+        "ply": 23,
+        "san": "Ng3",
+        "side": "White",
+        "white_win_pct": 48.34
+      },
+      {
+        "move_number": 12,
+        "ply": 24,
+        "san": "Rfe8",
+        "side": "Black",
+        "white_win_pct": 47.7
+      },
+      {
+        "move_number": 13,
+        "ply": 25,
+        "san": "Qd2",
+        "side": "White",
+        "white_win_pct": 45.59
+      },
+      {
+        "move_number": 13,
+        "ply": 26,
+        "san": "Nf8",
+        "side": "Black",
+        "white_win_pct": 46.23
+      },
+      {
+        "move_number": 14,
+        "ply": 27,
+        "san": "c4",
+        "side": "White",
+        "white_win_pct": 43.68
+      },
+      {
+        "move_number": 14,
+        "ply": 28,
+        "san": "Rad8",
+        "side": "Black",
+        "white_win_pct": 44.32
+      },
+      {
+        "move_number": 15,
+        "ply": 29,
+        "san": "Rac1",
+        "side": "White",
+        "white_win_pct": 40.19
+      },
+      {
+        "move_number": 15,
+        "ply": 30,
+        "san": "g5",
+        "side": "Black",
+        "white_win_pct": 54.95
+      },
+      {
+        "move_number": 16,
+        "ply": 31,
+        "san": "Bd4",
+        "side": "White",
+        "white_win_pct": 16.62
+      },
+      {
+        "move_number": 16,
+        "ply": 32,
+        "san": "Bxg3",
+        "side": "Black",
+        "white_win_pct": 16.02
+      },
+      {
+        "move_number": 17,
+        "ply": 33,
+        "san": "fxg3",
+        "side": "White",
+        "white_win_pct": 16.12
+      },
+      {
+        "move_number": 17,
+        "ply": 34,
+        "san": "Rxd4",
+        "side": "Black",
+        "white_win_pct": 16.47
+      },
+      {
+        "move_number": 18,
+        "ply": 35,
+        "san": "Rxf6",
+        "side": "White",
+        "white_win_pct": 15.97
+      },
+      {
+        "move_number": 18,
+        "ply": 36,
+        "san": "Qe5",
+        "side": "Black",
+        "white_win_pct": 16.57
+      },
+      {
+        "move_number": 19,
+        "ply": 37,
+        "san": "Rf3",
+        "side": "White",
+        "white_win_pct": 15.05
+      },
+      {
+        "move_number": 19,
+        "ply": 38,
+        "san": "Ne6",
+        "side": "Black",
+        "white_win_pct": 18.76
+      },
+      {
+        "move_number": 20,
+        "ply": 39,
+        "san": "Re1",
+        "side": "White",
+        "white_win_pct": 18.71
+      },
+      {
+        "move_number": 20,
+        "ply": 40,
+        "san": "Qc5",
+        "side": "Black",
+        "white_win_pct": 19.05
+      },
+      {
+        "move_number": 21,
+        "ply": 41,
+        "san": "Rfe3",
+        "side": "White",
+        "white_win_pct": 18.21
+      },
+      {
+        "move_number": 21,
+        "ply": 42,
+        "san": "Red8",
+        "side": "Black",
+        "white_win_pct": 15.38
+      },
+      {
+        "move_number": 22,
+        "ply": 43,
+        "san": "b3",
+        "side": "White",
+        "white_win_pct": 11.85
+      },
+      {
+        "move_number": 22,
+        "ply": 44,
+        "san": "Rxd3",
+        "side": "Black",
+        "white_win_pct": 12.2
+      },
+      {
+        "move_number": 23,
+        "ply": 45,
+        "san": "Qf2",
+        "side": "White",
+        "white_win_pct": 11.81
+      },
+      {
+        "move_number": 23,
+        "ply": 46,
+        "san": "Rxe3",
+        "side": "Black",
+        "white_win_pct": 12.12
+      },
+      {
+        "move_number": 24,
+        "ply": 47,
+        "san": "Qxe3",
+        "side": "White",
+        "white_win_pct": 12.0
+      },
+      {
+        "move_number": 24,
+        "ply": 48,
+        "san": "Rd1",
+        "side": "Black",
+        "white_win_pct": 13.14
+      }
+    ]
+  },
+  "forfeit": false,
+  "game": {
+    "chapter_url": "https://lichess.org/study/abcdWXYZ/alic0001",
+    "color": "Black",
+    "date": "2026-03-29",
+    "eco": "B10",
+    "game_id": "alic0001",
+    "has_lesson": false,
+    "moves": 24,
+    "opening": "Caro-Kann Defense",
+    "opponent": "Alice Anderson",
+    "opponent_rating": 909,
+    "outcome": "Win",
+    "player_rating": 1506,
+    "result": "0-1",
+    "round": 3,
+    "series": "2nd Annual Adults Only (U1800)",
+    "tags": [
+      {
+        "name": "strategy",
+        "source": "engine"
+      }
+    ],
+    "termination": "win by resignation",
+    "uscf_status": "matched_by_id"
+  },
+  "lessons": [],
+  "metadata": {
+    "color": "Black",
+    "date": "2026-03-29",
+    "eco": "B10",
+    "moves": 24,
+    "opening": "Caro-Kann Defense",
+    "opponent_rating": 909,
+    "player_rating": 1506,
+    "result": "0-1",
+    "round": 3,
+    "series": "2nd Annual Adults Only (U1800)",
+    "study_name": "USCF OTB Games",
+    "termination": "win by resignation"
+  },
+  "player_color": "Black",
+  "tags": [
+    {
+      "name": "strategy",
+      "source": "engine"
+    }
+  ],
+  "uscf_record": {
+    "color_conflict": false,
+    "matched_by": "id",
+    "opponent_id": "20000041",
+    "opponent_name": "Alice Anderson",
+    "opponent_url": "https://ratings.uschess.org/members/20000041",
+    "rated_event_id": "202603290543",
+    "rated_event_name": "DMV Chess Second Annual Tournament for All Ages",
+    "rating_system": "R",
+    "rating_system_label": "Regular",
+    "section": "Extra games - Classical",
+    "uscf_color": "Black"
+  }
+}

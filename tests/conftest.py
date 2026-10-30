@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import socket
 from contextlib import contextmanager
+from datetime import date
 from pathlib import Path
 from unittest import mock
 
@@ -726,3 +727,54 @@ def df(sample_df) -> pd.DataFrame:
 @pytest.fixture(scope="session")
 def player(sample_df) -> str:
     return sample_df[1]
+
+
+# ---------------------------------------------------------------------------
+# API contract fixtures (ADR 0008): the real app, fixture data, every response
+# validated against openapi/v1.json.  See tests/api_contract.py.
+# ---------------------------------------------------------------------------
+
+# "Today" for every API test, so date-relative payloads (the "This year"
+# preset) record the same fixture every run.
+API_TODAY = date(2026, 6, 15)
+
+
+# Requests go through the session-scoped ui_app; preserve_dash_callbacks keeps
+# its first request from draining Dash's global callback list, which apps built
+# later in the suite (test_auth) still need.
+@pytest.fixture()
+def api(ui_app, ui_data, monkeypatch):
+    """The contract harness over the ungated real app, USCF available."""
+    import api.routes.meta
+    from tests.api_contract import ApiHarness
+
+    monkeypatch.setattr(api.routes.meta, "today", lambda: API_TODAY)
+    with preserve_dash_callbacks():
+        yield ApiHarness(ui_app.server.test_client())
+
+
+@pytest.fixture()
+def api_lichess_only(ui_app, monkeypatch, sample_pgn_text):
+    """The contract harness with USCF off: every enrichment field must still
+    be present, as the unmatched/empty value (ADR 0003)."""
+    import api.routes.meta
+    import data
+    from tests.api_contract import ApiHarness
+
+    monkeypatch.setattr(api.routes.meta, "today", lambda: API_TODAY)
+    data.reset()
+    with stub_ui_sources(sample_pgn_text):
+        data.initialize(["teststudy"], player_name="Test Player")
+    with preserve_dash_callbacks():
+        yield ApiHarness(ui_app.server.test_client())
+    data.reset()
+
+
+@pytest.fixture()
+def api_real(ui_app, real_career_ui):
+    """The contract harness over Daniel's real Study and USCF record: cached
+    crosstables, so Rated Event placements and round links have data."""
+    from tests.api_contract import ApiHarness
+
+    with preserve_dash_callbacks():
+        yield ApiHarness(ui_app.server.test_client())

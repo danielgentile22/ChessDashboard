@@ -1,0 +1,141 @@
+{
+  "paths": {
+    "/api/v1/analysis": {
+      "get": {
+        "operationId": "getAnalysis",
+        "tags": ["screens"],
+        "summary": "The Analysis screen: the Error Profile across every analysed Game.",
+        "description": "The mistake-type distribution, the Accuracy trend and the mistake-type trend (each with the player's rating overlaid), the Phase x Mistake Type matrix, the mistake move-number histogram, and the Games still awaiting analysis. Takes no filter or lens parameters: the web page's callback listens only to Syncs, and every data accessor it calls reads the full, unfiltered store, so this route does the same. Games awaiting analysis are excluded from every aggregate.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The Analysis screen.",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/AnalysisPayload"}}}
+          },
+          "400": {"$ref": "#/components/responses/BadRequest"},
+          "401": {"$ref": "#/components/responses/Unauthenticated"}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisPayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Everything the Analysis page shows. When has_analysis is false the web shows only the 'No games analyzed yet' empty state plus the awaiting list; the aggregate fields are then their empty values (zero counts, []). Unfiltered and unlensed: the rating overlay is the player's typed rating per Game (PlayerRatingNum on the store DataFrame), not the Official/Live lens. Source: pages/analysis.py update_analysis/_render_analysis -> data.has_any_analysis, data.get_mistake_type_distribution (engine_analysis_core.mistake_type_distribution), data.get_accuracy_trend (analysis_trends.accuracy_trend), data.get_mistake_type_trend (analysis_trends.mistake_type_trend), data.get_phase_type_matrix (analysis_trends.phase_type_matrix), data.get_mistake_move_histogram (analysis_trends.mistake_move_histogram), data.get_awaiting_analysis.",
+        "required": ["has_analysis", "mistake_type_distribution", "accuracy_trend",
+                     "mistake_type_trend", "phase_type_matrix", "mistake_move_histogram",
+                     "awaiting_analysis"],
+        "properties": {
+          "has_analysis": {
+            "type": "boolean",
+            "description": "True once at least one Game carries requested computer analysis. False drives the empty state."
+          },
+          "mistake_type_distribution": {"$ref": "#/components/schemas/AnalysisMistakeTypeDistribution"},
+          "accuracy_trend": {
+            "type": "array",
+            "description": "One point per analysed Game with a known Accuracy, oldest first (undated Games last). Empty before any analysis.",
+            "items": {"$ref": "#/components/schemas/AnalysisAccuracyPoint"}
+          },
+          "mistake_type_trend": {
+            "type": "array",
+            "description": "One point per analysed Game, oldest first (undated last). A clean Game is a 0/0 point so the rating line stays continuous. The web stacks tactical and positional as bars.",
+            "items": {"$ref": "#/components/schemas/AnalysisMistakeTypePoint"}
+          },
+          "phase_type_matrix": {
+            "type": "array",
+            "description": "The Phase x Mistake Type heatmap as three rows in the order opening, middlegame, endgame, zero-filled. Empty ([]) when no analysed Game has a mistake (the web shows 'No mistakes to map yet').",
+            "items": {"$ref": "#/components/schemas/AnalysisPhaseRow"}
+          },
+          "mistake_move_histogram": {
+            "type": "array",
+            "description": "Mistake counts per move number, ascending, only move numbers that carry at least one mistake (inaccuracies, mistakes, and blunders all count). Empty when there are none.",
+            "items": {"$ref": "#/components/schemas/AnalysisMoveBucket"}
+          },
+          "awaiting_analysis": {
+            "type": "array",
+            "description": "Games with a Chapter whose Study export carried no engine evaluations, in store order. The web card title shows the count.",
+            "items": {"$ref": "#/components/schemas/AnalysisAwaitingGame"}
+          }
+        }
+      },
+      "AnalysisMistakeTypeDistribution": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The tactical vs positional split of the player's mistakes across every analysed Game (the donut). Both zero means 'No mistakes in your analysed games yet'; the web drops a zero slice.",
+        "required": ["tactical", "positional"],
+        "properties": {
+          "tactical": {"type": "integer", "minimum": 0},
+          "positional": {"type": "integer", "minimum": 0}
+        }
+      },
+      "AnalysisAccuracyPoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One analysed Game on the Accuracy line, with the rating overlay value and the hover values (opponent, date). Tap drills into the Game.",
+        "required": ["game_id", "date", "accuracy", "rating", "opponent"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"},
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "accuracy": {
+            "type": "number", "minimum": 0, "maximum": 100,
+            "description": "The player's Accuracy for this Game, 0..100 (the web hovers it to one decimal)."
+          },
+          "rating": {"$ref": "#/components/schemas/Rating"},
+          "opponent": {"type": "string"}
+        }
+      },
+      "AnalysisMistakeTypePoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One analysed Game's tactical and positional mistake counts, with the rating overlay value.",
+        "required": ["game_id", "date", "tactical", "positional", "rating", "opponent"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"},
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "tactical": {"type": "integer", "minimum": 0},
+          "positional": {"type": "integer", "minimum": 0},
+          "rating": {"$ref": "#/components/schemas/Rating"},
+          "opponent": {"type": "string"}
+        }
+      },
+      "AnalysisPhaseRow": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Phase row of the matrix: mistake counts per Mistake Type. The hottest cell across rows is the worst specific combination.",
+        "required": ["phase", "tactical", "positional"],
+        "properties": {
+          "phase": {"type": "string", "enum": ["opening", "middlegame", "endgame"]},
+          "tactical": {"type": "integer", "minimum": 0},
+          "positional": {"type": "integer", "minimum": 0}
+        }
+      },
+      "AnalysisMoveBucket": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One histogram bar: how many mistakes landed on this full-move number.",
+        "required": ["move_number", "count"],
+        "properties": {
+          "move_number": {"type": "integer", "minimum": 1},
+          "count": {"type": "integer", "minimum": 1}
+        }
+      },
+      "AnalysisAwaitingGame": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "One Game awaiting analysis: its name, date, and the 'Request on Lichess' link.",
+        "required": ["game_id", "name", "date", "chapter_url"],
+        "properties": {
+          "game_id": {"$ref": "#/components/schemas/GameId"},
+          "name": {
+            "type": "string",
+            "description": "The Chapter name, falling back to the opponent, then to 'Game' (as the web row does)."
+          },
+          "date": {"$ref": "#/components/schemas/IsoDate"},
+          "chapter_url": {"type": "string", "description": "The Chapter on Lichess, where analysis is requested. Never empty here."}
+        }
+      }
+    }
+  }
+}

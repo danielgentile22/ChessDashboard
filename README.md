@@ -235,6 +235,24 @@ Keep the single quotes around the hash: it contains `$`. Sessions last seven day
 
 ---
 
+## iOS app
+
+`ios/` holds a native iPhone app (SwiftUI, iOS 18+) with every page except Reconciliation. It is a client of the server's `/api/v1/` JSON API (ADR 0008): it signs in with the same owner, guest, or multi-user credentials, follows the same filters and Official/Live lens, and caches the last responses so it stays readable offline. The owner gets a Sync button in the toolbar; guests see it disabled with the reason. Pull-to-refresh re-fetches from the server and never Syncs. See `ios/CLAUDE.md` for the layout.
+
+Run it locally against the demo server (needs Xcode and `brew install xcodegen`):
+
+```bash
+python app.py --demo     # http://localhost:8050, the app's Debug server
+make ios-generate        # writes ios/ChessDashboard.xcodeproj
+open ios/ChessDashboard.xcodeproj
+```
+
+Run the `ChessDashboard` scheme on a simulator and sign in (demo mode has no password, and Sync is disabled there). On a real device, copy `ios/Config/Local.xcconfig.example` to `Local.xcconfig` and point Debug at the Mac's LAN address. Tests: `make kit-test` (the package, on the Mac) or `make ios-test` (a simulator).
+
+Ship a TestFlight build with `make ios-testflight`. `ios/testflight.sh` archives a Release build (which talks to the Fly deployment), signs it with the distribution certificate and the "Chess Dashboard App Store" profile from `ios/ExportOptions.plist`, numbers it by date and time, and uploads it with the App Store Connect API key. It reads `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_PATH`, and `CHESSDASH_KEYCHAIN_PASSWORD` from `.env`. Pass `--no-upload` to stop after the signed `build/ios-export/ChessDashboard.ipa`. The profile must be installed in `~/Library/Developer/Xcode/UserData/Provisioning Profiles/` once. Testers in the internal TestFlight group get each build automatically.
+
+---
+
 ## Game / PGN Compatibility
 
 Games are read from Lichess Study chapters (which Lichess serves as standard PGN). Any chapter that includes the headers below works:
