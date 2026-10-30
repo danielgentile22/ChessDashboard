@@ -1,0 +1,173 @@
+{
+  "games": [
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0001",
+      "color": "White",
+      "date": "2024-01-06",
+      "eco": "E04",
+      "game_id": "chap0001",
+      "has_lesson": true,
+      "moves": 6,
+      "opening": "Catalan Opening: Open Defense",
+      "opponent": "Opponent A",
+      "opponent_rating": 1920,
+      "outcome": "Win",
+      "player_rating": 1800,
+      "result": "1-0",
+      "round": 1,
+      "series": "Test Open",
+      "tags": [
+        {
+          "name": "strategy",
+          "source": "mine"
+        }
+      ],
+      "termination": "win by resignation",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0002",
+      "color": "Black",
+      "date": "2024-01-06",
+      "eco": "B12",
+      "game_id": "chap0002",
+      "has_lesson": false,
+      "moves": 4,
+      "opening": "Caro-Kann Defense",
+      "opponent": "Opponent B",
+      "opponent_rating": 1750,
+      "outcome": "Draw",
+      "player_rating": 1800,
+      "result": "1/2-1/2",
+      "round": 2,
+      "series": "Test Open",
+      "tags": [],
+      "termination": "Normal",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0003",
+      "color": "White",
+      "date": "2024-01-07",
+      "eco": "A45",
+      "game_id": "chap0003",
+      "has_lesson": false,
+      "moves": 3,
+      "opening": "Indian Game",
+      "opponent": "Opponent C",
+      "opponent_rating": 2050,
+      "outcome": "Loss",
+      "player_rating": 1800,
+      "result": "0-1",
+      "round": 3,
+      "series": "Test Open",
+      "tags": [
+        {
+          "name": "blunder",
+          "source": "mine"
+        },
+        {
+          "name": "tactics",
+          "source": "mine"
+        }
+      ],
+      "termination": "loss by resignation",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0004",
+      "color": "Black",
+      "date": "2024-06-15",
+      "eco": "E60",
+      "game_id": "chap0004",
+      "has_lesson": true,
+      "moves": 4,
+      "opening": "King's Indian Defense",
+      "opponent": "Opponent A",
+      "opponent_rating": 1930,
+      "outcome": "Win",
+      "player_rating": 1810,
+      "result": "0-1",
+      "round": 1,
+      "series": "Summer Cup",
+      "tags": [
+        {
+          "name": "opening",
+          "source": "mine"
+        }
+      ],
+      "termination": "loss by checkmate",
+      "uscf_status": "conflict"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0005",
+      "color": "White",
+      "date": "2024-06-15",
+      "eco": "C50",
+      "game_id": "chap0005",
+      "has_lesson": false,
+      "moves": 4,
+      "opening": "Italian Game",
+      "opponent": "Opponent D",
+      "opponent_rating": 1600,
+      "outcome": "Win",
+      "player_rating": 1810,
+      "result": "1-0",
+      "round": 2,
+      "series": "Summer Cup",
+      "tags": [
+        {
+          "name": "tactics",
+          "source": "mine"
+        },
+        {
+          "name": "endgame",
+          "source": "mine"
+        }
+      ],
+      "termination": "win by checkmate",
+      "uscf_status": "matched_by_id"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0006",
+      "color": "Black",
+      "date": "2024-06-16",
+      "eco": "B12",
+      "game_id": "chap0006",
+      "has_lesson": false,
+      "moves": 3,
+      "opening": "Caro-Kann Defense",
+      "opponent": "Opponent B",
+      "opponent_rating": 1760,
+      "outcome": "Win",
+      "player_rating": 1810,
+      "result": "0-1",
+      "round": 3,
+      "series": "Summer Cup",
+      "tags": [],
+      "termination": "win by resignation",
+      "uscf_status": "unmatched"
+    },
+    {
+      "chapter_url": "https://lichess.org/study/teststudy/chap0007",
+      "color": "White",
+      "date": "2024-06-16",
+      "eco": "E04",
+      "game_id": "chap0007",
+      "has_lesson": false,
+      "moves": 3,
+      "opening": "Catalan Opening",
+      "opponent": "Opponent A",
+      "opponent_rating": 1925,
+      "outcome": "Draw",
+      "player_rating": 1810,
+      "result": "1/2-1/2",
+      "round": 4,
+      "series": "Summer Cup",
+      "tags": [],
+      "termination": "Normal",
+      "uscf_status": "matched_by_name"
+    }
+  ],
+  "games_count": 7
+}

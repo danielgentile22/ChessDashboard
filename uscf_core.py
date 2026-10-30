@@ -630,9 +630,7 @@ def series_summary(
         return []
 
     events_by_id = {e.event_id: e for e in member_events}
-    live_by_event: dict[str, list[LiveRatingPoint]] = {}
-    for point in live_series:  # chronological → chain order per event
-        live_by_event.setdefault(point.event_id, []).append(point)
+    live_by_event = _live_by_event(live_series)
 
     summaries = []
     d = df.copy()
@@ -700,6 +698,33 @@ def unplayed_events(
             if e.event_id not in played_ids and in_range(e)]
 
 
+def rated_event_summary(
+    event_id: str,
+    games: pd.DataFrame,
+    live_series: list[LiveRatingPoint],
+    member_events: list[UscfEvent],
+) -> dict:
+    """
+    One Rated Event over *games* (its Games, from any Series): the same entry
+    :func:`series_summary` builds per Series, for a view keyed by the event
+    rather than by the Series.  *games* may be empty (filters hid them all):
+    counts are then zero, the rating change unknown, and the name USCF's
+    (``""`` when the member-events list lacks the event too).
+    """
+    return _rated_event_group(
+        event_id, games.sort_values(["Date_dt", "Index"], na_position="last"),
+        {e.event_id: e for e in member_events}, _live_by_event(live_series),
+    )
+
+
+def _live_by_event(live_series: list[LiveRatingPoint]) -> dict[str, list[LiveRatingPoint]]:
+    """The Live series per Rated Event, in chain (chronological) order."""
+    live_by_event: dict[str, list[LiveRatingPoint]] = {}
+    for point in live_series:
+        live_by_event.setdefault(point.event_id, []).append(point)
+    return live_by_event
+
+
 def _rated_event_group(
     event_id: str,
     games: pd.DataFrame,
@@ -708,7 +733,10 @@ def _rated_event_group(
 ) -> dict:
     """One Rated Event's entry inside a Series group."""
     event = events_by_id.get(event_id)
-    name = event.name if event is not None else str(games.iloc[0]["UscfEventName"])
+    if event is not None:
+        name = event.name
+    else:
+        name = str(games.iloc[0]["UscfEventName"]) if not games.empty else ""
 
     # The Sections this Series' games were played in, and the live-rating
     # chain across them (chain order = the live series' chronological order)

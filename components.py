@@ -13,6 +13,7 @@ from __future__ import annotations
 import dash_bootstrap_components as dbc
 from dash import Input, Output, State, callback, dcc, html, no_update
 
+from payloads.common import uscf_status
 from pgn_stats_core import chapter_id
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
 from uscf_core import UscfProfile, UscfRating
@@ -333,6 +334,17 @@ USCF_RATING_SYSTEM_LABELS = {
 }
 
 
+# One glyph per payloads.common.uscf_status value: the API and the web table
+# share that precedence, so they can't disagree about a Game.
+_USCF_STATUS_LABELS = {
+    "forfeit": "Forfeit",
+    "conflict": "⚠",
+    "matched_by_id": "✓",
+    "matched_by_name": "≈",
+    "unmatched": "",
+}
+
+
 def uscf_status_label(matched_by: str, forfeit: bool, conflict: bool = False) -> str:
     """
     A Game's USCF status, one glanceable token:
@@ -340,11 +352,7 @@ def uscf_status_label(matched_by: str, forfeit: bool, conflict: bool = False) ->
     ⚠ matched but the sources disagree (see Reconciliation) ·
     "Forfeit" for no-shows · blank for no USCF Game Record.
     """
-    if forfeit:
-        return "Forfeit"
-    if conflict:
-        return "⚠"
-    return {"id": "✓", "name": "≈"}.get(matched_by, "")
+    return _USCF_STATUS_LABELS[uscf_status(matched_by, forfeit, conflict)]
 
 
 def game_detail_path(chapter_url: str) -> str:
