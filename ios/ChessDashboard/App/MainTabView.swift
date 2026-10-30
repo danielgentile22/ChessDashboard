@@ -6,15 +6,16 @@ import SwiftUI
 struct MainTabView: View {
 	enum TabID: String { case overview, trends, games, lessons, opponents, more }
 
+	@Environment(AppEnvironment.self) private var env
 	@SceneStorage("tab") private var tab: TabID = .overview
 
 	var body: some View {
 		TabView(selection: $tab) {
 			Tab("Overview", systemImage: "square.grid.2x2", value: .overview) {
-				NavigationStack { PlaceholderScreen(title: "Overview", page: .overview) }
+				NavigationStack { OverviewScreen(context: env.context!) }
 			}
 			Tab("Trends", systemImage: "chart.xyaxis.line", value: .trends) {
-				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends) }
+				NavigationStack { TrendsScreen(context: env.context!) }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
 				NavigationStack { PlaceholderScreen(title: "Games", page: .games) }
