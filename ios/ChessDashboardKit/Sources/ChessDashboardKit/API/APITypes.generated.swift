@@ -6,7 +6,7 @@ import Foundation
 /// Every request and response type in the v1 contract.
 public enum API {
 	/// SHA-256 of the openapi/v1.json these types were generated from.
-	public static let specDigest = "a8aa561278d7226f0990574f79bc8742dd027f5445c2941198c4575665c36123"
+	public static let specDigest = "43734885df6c3232f1cffb21a33f36bdba80a45bdb5a439367811682daa3a7b4"
 
 	/// The 200 response type of every operation, by operationId.
 	public static let responseTypes: [String: any (Decodable & Sendable).Type] = [
@@ -1945,32 +1945,32 @@ extension API {
 
 	/// The opponent's official USCF identity and their rating then vs now.
 	public struct OpponentUscfIdentity: Codable, Sendable, Hashable {
-		/// Their current Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular.
-		public var currentRating: Rating?
 		/// USCF member ID, taken from the first matched Game in the filtered set.
 		public var memberId: String
 		/// Their name as USCF records it, falling back to the Opponent name when USCF has none.
 		public var name: String
+		/// Their Official Rating: the Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular.
+		public var officialRating: Rating?
 		/// Their page on ratings.uschess.org.
 		public var profileUrl: String
-		/// current_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then.
+		/// official_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then.
 		public var ratingChange: Int?
 		/// Same value as OpponentPayload.their_rating.
 		public var ratingWhenLastPlayed: Rating?
 
-		public init(currentRating: Rating? = nil, memberId: String, name: String, profileUrl: String, ratingChange: Int? = nil, ratingWhenLastPlayed: Rating? = nil) {
-			self.currentRating = currentRating
+		public init(memberId: String, name: String, officialRating: Rating? = nil, profileUrl: String, ratingChange: Int? = nil, ratingWhenLastPlayed: Rating? = nil) {
 			self.memberId = memberId
 			self.name = name
+			self.officialRating = officialRating
 			self.profileUrl = profileUrl
 			self.ratingChange = ratingChange
 			self.ratingWhenLastPlayed = ratingWhenLastPlayed
 		}
 
 		enum CodingKeys: String, CodingKey {
-			case currentRating = "current_rating"
 			case memberId = "member_id"
 			case name = "name"
+			case officialRating = "official_rating"
 			case profileUrl = "profile_url"
 			case ratingChange = "rating_change"
 			case ratingWhenLastPlayed = "rating_when_last_played"
@@ -2161,8 +2161,6 @@ extension API {
 
 	/// The KPI bar. Total Games is the payload's games_count.
 	public struct OverviewKpis: Codable, Sendable, Hashable {
-		/// The player rating on the latest dated, rated Game, under the active lens.
-		public var currentRating: Rating?
 		/// Draws, same basis and unit as win_pct.
 		public var drawPct: Double
 		/// Most-played opening name over non-Forfeit Games; "" when none (the core returns an em dash placeholder, the payload builder maps it to "").
@@ -2175,30 +2173,32 @@ extension API {
 		public var peakRating: Rating?
 		/// Performance rating over Games with a rated opponent (Forfeits excluded); null when there are none.
 		public var performanceRating: Rating?
+		/// The player rating on the latest dated, rated Game, under the active lens (the Official or Live Rating, whichever the lens picks).
+		public var rating: Rating?
 		public var uniqueOpponents: Int
 		/// Wins as a percentage 0..100 (one decimal) of finished, non-Forfeit Games (Win + Draw + Loss). 0 when there are none.
 		public var winPct: Double
 
-		public init(currentRating: Rating? = nil, drawPct: Double, favoriteOpening: String, longestWinStreak: Int, lossPct: Double, peakRating: Rating? = nil, performanceRating: Rating? = nil, uniqueOpponents: Int, winPct: Double) {
-			self.currentRating = currentRating
+		public init(drawPct: Double, favoriteOpening: String, longestWinStreak: Int, lossPct: Double, peakRating: Rating? = nil, performanceRating: Rating? = nil, rating: Rating? = nil, uniqueOpponents: Int, winPct: Double) {
 			self.drawPct = drawPct
 			self.favoriteOpening = favoriteOpening
 			self.longestWinStreak = longestWinStreak
 			self.lossPct = lossPct
 			self.peakRating = peakRating
 			self.performanceRating = performanceRating
+			self.rating = rating
 			self.uniqueOpponents = uniqueOpponents
 			self.winPct = winPct
 		}
 
 		enum CodingKeys: String, CodingKey {
-			case currentRating = "current_rating"
 			case drawPct = "draw_pct"
 			case favoriteOpening = "favorite_opening"
 			case longestWinStreak = "longest_win_streak"
 			case lossPct = "loss_pct"
 			case peakRating = "peak_rating"
 			case performanceRating = "performance_rating"
+			case rating = "rating"
 			case uniqueOpponents = "unique_opponents"
 			case winPct = "win_pct"
 		}

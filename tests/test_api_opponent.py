@@ -63,5 +63,5 @@ def test_then_vs_now_from_the_opponents_profile(ui_app, real_career_ui):
     regular = data.get_opponent_profiles()["20000056"].rating("R")
     assert body["opponent"] == "Bob Baker"
     assert identity["profile_url"].endswith("/members/20000056")
-    assert identity["current_rating"] == regular.rating
+    assert identity["official_rating"] == regular.rating
     assert identity["rating_change"] == regular.rating - identity["rating_when_last_played"]

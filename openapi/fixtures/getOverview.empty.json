@@ -1,13 +1,13 @@
 {
   "games_count": 0,
   "kpis": {
-    "current_rating": null,
     "draw_pct": 0.0,
     "favorite_opening": "",
     "longest_win_streak": 0,
     "loss_pct": 0.0,
     "peak_rating": null,
     "performance_rating": null,
+    "rating": null,
     "unique_opponents": 0,
     "win_pct": 0.0
   },

@@ -103,7 +103,7 @@
         "additionalProperties": false,
         "description": "The opponent's official USCF identity and their rating then vs now.",
         "required": ["member_id", "name", "profile_url", "rating_when_last_played",
-                     "current_rating", "rating_change"],
+                     "official_rating", "rating_change"],
         "properties": {
           "member_id": {"type": "string", "description": "USCF member ID, taken from the first matched Game in the filtered set."},
           "name": {"type": "string", "description": "Their name as USCF records it, falling back to the Opponent name when USCF has none."},
@@ -112,13 +112,13 @@
             "$ref": "#/components/schemas/Rating",
             "description": "Same value as OpponentPayload.their_rating."
           },
-          "current_rating": {
+          "official_rating": {
             "$ref": "#/components/schemas/Rating",
-            "description": "Their current Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular."
+            "description": "Their Official Rating: the Regular rating from their USCF profile (refreshed at most weekly). Null when no profile is cached or they are unrated in Regular."
           },
           "rating_change": {
             "type": ["integer", "null"],
-            "description": "current_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then."
+            "description": "official_rating minus rating_when_last_played. Positive means they climbed since (the harder rematch; the web colors it as a loss), negative means they dropped (colored as a win). Null unless both ratings are known; the web hides the then-vs-now line then."
           }
         }
       },

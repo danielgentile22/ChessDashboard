@@ -78,7 +78,7 @@
           "win_pct",
           "draw_pct",
           "loss_pct",
-          "current_rating",
+          "rating",
           "peak_rating",
           "performance_rating",
           "longest_win_streak",
@@ -98,9 +98,9 @@
             "type": "number",
             "description": "Losses, same basis and unit as win_pct."
           },
-          "current_rating": {
+          "rating": {
             "$ref": "#/components/schemas/Rating",
-            "description": "The player rating on the latest dated, rated Game, under the active lens."
+            "description": "The player rating on the latest dated, rated Game, under the active lens (the Official or Live Rating, whichever the lens picks)."
           },
           "peak_rating": {
             "$ref": "#/components/schemas/Rating",

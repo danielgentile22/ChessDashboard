@@ -67,7 +67,7 @@ public final class ScoutingReportModel {
 	/// Rated X when you last played them, Y now. Nil unless both are known.
 	public var thenVsNow: ThenVsNow? {
 		guard let id = resource.value?.uscfIdentity, let then = id.ratingWhenLastPlayed,
-			let now = id.currentRating, let change = RatingDelta(ifKnown: id.ratingChange)
+			let now = id.officialRating, let change = RatingDelta(ifKnown: id.ratingChange)
 		else { return nil }
 		return ThenVsNow(then: then, now: now, change: change)
 	}

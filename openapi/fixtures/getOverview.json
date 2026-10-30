@@ -1,13 +1,13 @@
 {
   "games_count": 7,
   "kpis": {
-    "current_rating": 1810,
     "draw_pct": 28.6,
     "favorite_opening": "Caro-Kann Defense",
     "longest_win_streak": 3,
     "loss_pct": 14.3,
     "peak_rating": 1810,
     "performance_rating": 2007,
+    "rating": 1810,
     "unique_opponents": 4,
     "win_pct": 57.1
   },

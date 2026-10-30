@@ -133,7 +133,7 @@ def _kpis(df: pd.DataFrame) -> dict:
         "win_pct": k["win_pct"],
         "draw_pct": k["draw_pct"],
         "loss_pct": k["loss_pct"],
-        "current_rating": whole_rating(k["current_rating"]),
+        "rating": whole_rating(k["current_rating"]),
         "peak_rating": whole_rating(k["peak_rating"]),
         "performance_rating": whole_rating(k["performance_rating"]),
         "longest_win_streak": k["longest_win_streak"],

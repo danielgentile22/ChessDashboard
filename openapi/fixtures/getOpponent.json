@@ -213,9 +213,9 @@
   ],
   "their_rating": 1925,
   "uscf_identity": {
-    "current_rating": null,
     "member_id": "10000001",
     "name": "OPPONENT A",
+    "official_rating": null,
     "profile_url": "https://ratings.uschess.org/members/10000001",
     "rating_change": null,
     "rating_when_last_played": 1925

@@ -23,7 +23,7 @@ def uscf_identity(games: pd.DataFrame, opponent: str, their_rating: int | None,
     Record (ADR 0003).
 
     "Then" is *their_rating* (the lens-aware rating when last played); "now"
-    is their current Regular rating from their profile.
+    is their Official Rating (Regular) from their USCF profile.
     """
     matched = games[games["UscfOpponentId"] != ""]
     if matched.empty:
@@ -37,7 +37,7 @@ def uscf_identity(games: pd.DataFrame, opponent: str, their_rating: int | None,
         "name": str(matched.iloc[0]["UscfOpponentName"]) or opponent,
         "profile_url": uscf_member_url(member_id),
         "rating_when_last_played": their_rating,
-        "current_rating": now,
+        "official_rating": now,
         "rating_change": now - their_rating if now is not None and their_rating is not None else None,
     }
 

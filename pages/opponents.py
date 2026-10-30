@@ -153,7 +153,7 @@ def _uscf_identity(report: dict, games) -> html.Div | None:
             html.Span(f"Rated {identity['rating_when_last_played']} when you last played",
                       className="scout-then"),
             html.Span(" · ", className="scout-then-sep"),
-            html.Span(f"{identity['current_rating']} now ({delta_str})",
+            html.Span(f"{identity['official_rating']} now ({delta_str})",
                       className=f"scout-now {delta_class}".strip()),
         ]))
 

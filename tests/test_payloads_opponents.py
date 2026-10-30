@@ -77,14 +77,14 @@ class TestUscfIdentity:
             "name": "ANN SMITH",
             "profile_url": identity["profile_url"],
             "rating_when_last_played": 1500,
-            "current_rating": 1580,
+            "official_rating": 1580,
             "rating_change": 80,
         }
         assert "111" in identity["profile_url"]
 
     def test_no_profile_leaves_now_and_the_change_null(self):
         identity = uscf_identity(self._games(1500), "Ann", 1500, {})
-        assert identity["current_rating"] is None and identity["rating_change"] is None
+        assert identity["official_rating"] is None and identity["rating_change"] is None
 
     def test_none_without_a_matched_game(self):
         games = self._games(1500).iloc[:1]

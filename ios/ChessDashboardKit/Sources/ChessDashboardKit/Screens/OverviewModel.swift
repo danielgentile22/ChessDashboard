@@ -50,7 +50,7 @@ public final class OverviewModel {
 			KPI(title: "Win %", value: percent(k.winPct), tone: .win, isText: false),
 			KPI(title: "Draw %", value: percent(k.drawPct), tone: .neutral, isText: false),
 			KPI(title: "Loss %", value: percent(k.lossPct), tone: .loss, isText: false),
-			KPI(title: "Current Rating", value: RatingFormat.whole(k.currentRating), tone: .neutral, isText: false),
+			KPI(title: "Current Rating", value: RatingFormat.whole(k.rating), tone: .neutral, isText: false),
 			KPI(title: "Peak Rating", value: RatingFormat.whole(k.peakRating), tone: .neutral, isText: false),
 			KPI(
 				title: "Performance Rating", value: k.performanceRating.map(String.init) ?? "None",

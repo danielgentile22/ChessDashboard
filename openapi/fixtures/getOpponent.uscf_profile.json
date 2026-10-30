@@ -82,9 +82,9 @@
   ],
   "their_rating": 1465,
   "uscf_identity": {
-    "current_rating": 1400,
     "member_id": "20000056",
     "name": "BOB BAKER",
+    "official_rating": 1400,
     "profile_url": "https://ratings.uschess.org/members/20000056",
     "rating_change": -65,
     "rating_when_last_played": 1465
