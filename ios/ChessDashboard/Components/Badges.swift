@@ -33,9 +33,12 @@ struct TagChip: View {
 struct FreshnessView: View {
 	let freshness: API.MetaFreshness
 
+	// One TimelineView per line, not around the ForEach: in a List that
+	// would fold every source into a single row.
 	var body: some View {
-		TimelineView(.periodic(from: .now, by: 60)) { context in
-			ForEach(FreshnessSummary(freshness, now: context.date).lines, id: \.self) { line in
+		ForEach(FreshnessSummary(freshness).lines, id: \.source) { first in
+			TimelineView(.periodic(from: .now, by: 60)) { context in
+				let line = FreshnessSummary(freshness, now: context.date).lines.first { $0.source == first.source } ?? first
 				LabeledContent {
 					Text(line.text)
 						.foregroundStyle(line.isWarning ? Theme.warning.color : Theme.muted.color)
