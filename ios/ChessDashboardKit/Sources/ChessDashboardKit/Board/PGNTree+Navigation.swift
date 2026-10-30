@@ -8,8 +8,37 @@ extension PGNTree {
 	/// The next move on this line, if any.
 	public func next(_ id: ID) -> ID? { nodes[id].children.first }
 
+	/// The next move on the line through `tip`: toward `tip` while `id` comes
+	/// before it on that line, then that line's own continuation. Stepping
+	/// back out of a variation and forward again stays in the variation.
+	public func next(_ id: ID, toward tip: ID) -> ID? {
+		var node = tip
+		while let parent = nodes[node].parent {
+			if parent == id { return node }
+			node = parent
+		}
+		return next(id)
+	}
+
 	/// The move before, or nil at the start position.
 	public func previous(_ id: ID) -> ID? { nodes[id].parent }
+
+	/// Whether `id` is `descendant` or one of the moves leading to it.
+	public func isAncestor(_ id: ID, of descendant: ID) -> Bool {
+		var node: ID? = descendant
+		while let n = node {
+			if n == id { return true }
+			node = nodes[n].parent
+		}
+		return false
+	}
+
+	/// Whether another move could have been played instead of `id` (it or a
+	/// sibling starts a variation): the move list marks these branch points.
+	public func hasAlternatives(_ id: ID) -> Bool {
+		guard let parent = nodes[id].parent else { return false }
+		return nodes[parent].children.count > 1
+	}
 
 	/// The node at ply `ply` of the main line, clamped to the Game's length.
 	public func mainline(ply: Int) -> ID {
@@ -21,16 +50,14 @@ extension PGNTree {
 		return ply < mainline.count && mainline[ply] == id
 	}
 
-	/// Where a variation branched off: the move before its first move. Nil
-	/// when `id` is already on the main line. Stepping out of a nested
-	/// variation lands in the line that contains it.
+	/// Where the main line was left: the main-line move the outermost
+	/// variation around `id` branched from, at any nesting depth. Nil when
+	/// `id` is already on the main line.
 	public func exitVariation(from id: ID) -> ID? {
+		guard !isOnMainline(id) else { return nil }
 		var node = id
-		while let parent = nodes[node].parent {
-			if nodes[parent].children.first != node { return parent }
-			node = parent
-		}
-		return nil
+		while !isOnMainline(node), let parent = nodes[node].parent { node = parent }
+		return node
 	}
 
 	/// The line `id` sits on, from the first move to its end: the moves
