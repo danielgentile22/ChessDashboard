@@ -6,7 +6,7 @@ import Foundation
 /// Every request and response type in the v1 contract.
 public enum API {
 	/// SHA-256 of the openapi/v1.json these types were generated from.
-	public static let specDigest = "c73004533fc5fc7a0ee27baae52afcc5ec8aa13a54a80c1385586e051ce5883d"
+	public static let specDigest = "cc4e576e395d5172fb3670b970d45f31b6f72fe3340a7dc217a9c0c45c904aaf"
 
 	/// The 200 response type of every operation, by operationId.
 	public static let responseTypes: [String: any (Decodable & Sendable).Type] = [
@@ -341,7 +341,7 @@ extension API {
 		}
 	}
 
-	/// One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.series_summary (its _rated_event_group entry for this event_id, merged across Series) + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.
+	/// One Rated Event as the web's rated-event card plus its crosstables. 404 when no Game in the UNFILTERED store carries this UscfEventId (an unknown ID, or an entered-never-played event). Source: pages/events.py update_series_groups / _rated_event_card / _crosstable -> uscf_core.rated_event_summary over the event's filtered Games from every Series + pgn_stats_core.performance_rating_stats on the event's filtered Games + data.get_uscf_standings()[(event_id, section)] + data.get_uscf_profile().member_id + uscf_core.ordinal for the placement line.
 	public struct EventPayload: Codable, Sendable, Hashable {
 		public var draw: Int
 		public var end: IsoDate?
@@ -849,7 +849,7 @@ extension API {
 
 	/// The Game card's rows as the Chapter headers carry them. The web hides a row whose value is empty or '?'; here those are "" or null.
 	public struct GameMetadata: Codable, Sendable, Hashable {
-		public var color: Color
+		public var color: GameColor
 		public var date: IsoDate?
 		public var eco: String
 		/// Full moves played.
@@ -869,7 +869,7 @@ extension API {
 		public var studyName: String
 		public var termination: String
 
-		public init(color: Color, date: IsoDate? = nil, eco: String, moves: Int? = nil, opening: String, opponentRating: Rating? = nil, playerRating: Rating? = nil, result: String, round: String, series: String, studyName: String, termination: String) {
+		public init(color: GameColor, date: IsoDate? = nil, eco: String, moves: Int? = nil, opening: String, opponentRating: Rating? = nil, playerRating: Rating? = nil, result: String, round: String, series: String, studyName: String, termination: String) {
 			self.color = color
 			self.date = date
 			self.eco = eco
@@ -918,14 +918,14 @@ extension API {
 		/// The Game's Lessons (text after 'Lesson:'), in Chapter order. [] when none; the web then teaches the 'Lesson:' convention.
 		public var lessons: [String]
 		public var metadata: GameMetadata
-		/// The color the player had: orient the board with it at the bottom (the web's data-orientation).
-		public var playerColor: Color
+		/// The color the player had: orient the board with it at the bottom (the web's data-orientation). Unknown when the player wasn't found in the Chapter headers; the web then orients from White.
+		public var playerColor: GameColor
 		/// The Game's Tags with their source (mine or engine), in the order the web renders the chips. A Tag missing from the Game's source map is mine.
 		public var tags: [Tag]
 		/// The matched USCF Game Record, or null when the Game is unmatched (no USCF facts are ever invented).
 		public var uscfRecord: GameUscfRecord?
 
-		public init(board: GameBoardPgns, engine: GameEngineView, forfeit: Bool, game: GameSummary, lessons: [String], metadata: GameMetadata, playerColor: Color, tags: [Tag], uscfRecord: GameUscfRecord? = nil) {
+		public init(board: GameBoardPgns, engine: GameEngineView, forfeit: Bool, game: GameSummary, lessons: [String], metadata: GameMetadata, playerColor: GameColor, tags: [Tag], uscfRecord: GameUscfRecord? = nil) {
 			self.board = board
 			self.engine = engine
 			self.forfeit = forfeit
@@ -2679,11 +2679,11 @@ extension API {
 		public var date: IsoDate?
 		public var gameId: GameId
 		public var opponent: String
-		public var outcome: Outcome
+		public var outcome: GameOutcome
 		/// The PGN Result, e.g. 1-0.
 		public var result: String
 
-		public init(date: IsoDate? = nil, gameId: GameId, opponent: String, outcome: Outcome, result: String) {
+		public init(date: IsoDate? = nil, gameId: GameId, opponent: String, outcome: GameOutcome, result: String) {
 			self.date = date
 			self.gameId = gameId
 			self.opponent = opponent
