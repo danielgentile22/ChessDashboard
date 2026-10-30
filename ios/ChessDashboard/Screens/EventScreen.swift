@@ -53,12 +53,14 @@ private struct SummaryHeader: View {
 				.font(.footnote).foregroundStyle(Theme.muted.color)
 			HStack(spacing: 16) {
 				Kpi(title: "Score", value: EventText.points(event.score))
-				Kpi(title: "Record", value: "\(event.win)W \(event.draw)D \(event.loss)L")
 				if let performance = event.performanceRating {
 					Kpi(title: "Performance", value: RatingFormat.whole(performance))
 				}
 			}
-			.padding(.vertical, 4)
+			.padding(.top, 4)
+			Text(RecordText.record(win: event.win, draw: event.draw, loss: event.loss))
+				.font(.subheadline).monospacedDigit()
+				.padding(.bottom, 4)
 			let change = EventText.ratingChange(pre: event.preRating, post: event.postRating, change: event.ratingChange)
 			if !change.isEmpty {
 				LabeledContent("Live Rating", value: change).monospacedDigit()
@@ -134,9 +136,7 @@ private struct CrosstableRow: View {
 	}
 
 	private var ratingLine: String {
-		guard let post = row.postRating else { return "" }
-		guard let pre = row.preRating else { return "unrated → \(post)" }
-		return "\(pre) → \(post)"
+		EventText.ratingChange(pre: row.preRating, post: row.postRating, change: nil)
 	}
 }
 

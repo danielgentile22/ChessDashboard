@@ -15,6 +15,16 @@ public enum ChartDates {
 
 	/// The point nearest to `date` (ties go to the earlier point).
 	public static func nearest<Point>(_ points: [Point], to date: Date, by key: (Point) -> Date) -> Point? {
-		points.min { abs(key($0).timeIntervalSince(date)) < abs(key($1).timeIntervalSince(date)) }
+		ChartSelection.nearest(points, to: date.timeIntervalSinceReferenceDate) {
+			key($0).timeIntervalSinceReferenceDate
+		}
+	}
+}
+
+/// Touch-to-read on any numeric axis (move number, ply).
+public enum ChartSelection {
+	/// The point whose `key` is nearest to `value` (ties go to the earlier point).
+	public static func nearest<Point>(_ points: [Point], to value: Double, by key: (Point) -> Double) -> Point? {
+		points.min { abs(key($0) - value) < abs(key($1) - value) }
 	}
 }

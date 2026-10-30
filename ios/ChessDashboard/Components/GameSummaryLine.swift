@@ -30,14 +30,14 @@ struct GameSummaryLine: View {
 	}
 }
 
-/// Wins, draws and losses as one proportional bar with the counts beside it.
+/// Wins, draws and losses as one proportional bar with the counts under it.
 struct RecordBar: View {
 	let win: Int
 	let draw: Int
 	let loss: Int
 
 	var body: some View {
-		HStack(spacing: 8) {
+		VStack(alignment: .leading, spacing: 4) {
 			GeometryReader { geo in
 				let total = max(win + draw + loss, 1)
 				HStack(spacing: 1) {
@@ -48,13 +48,12 @@ struct RecordBar: View {
 			}
 			.frame(height: 6)
 			.clipShape(Capsule())
-			Text("\(win)W \(draw)D \(loss)L")
+			Text(RecordText.record(win: win, draw: draw, loss: loss))
 				.font(.caption.monospacedDigit())
 				.foregroundStyle(Theme.muted.color)
-				.fixedSize()
 		}
 		.accessibilityElement(children: .ignore)
-		.accessibilityLabel("\(win) wins, \(draw) draws, \(loss) losses")
+		.accessibilityLabel(RecordText.record(win: win, draw: draw, loss: loss))
 	}
 
 	private func segment(_ n: Int, of total: Int, width: CGFloat, color: Color) -> some View {

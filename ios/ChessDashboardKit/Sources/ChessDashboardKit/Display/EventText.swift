@@ -7,28 +7,33 @@ public enum EventText {
 		score.rounded() == score ? String(Int(score)) : String(score)
 	}
 
-	/// "1544 → 1571 (+27)", "unrated → 695", or "" when the post-rating is unknown.
+	/// "1544 → 1571 (+27)", "1544 → 1571" with no change given, "unrated →
+	/// 695", or "" when the post-rating is unknown.
 	public static func ratingChange(pre: Int?, post: Int?, change: Int?) -> String {
 		guard let post else { return "" }
-		guard let pre, let change else { return "unrated → \(post)" }
-		return "\(pre) → \(post) (\(change >= 0 ? "+" : "")\(change))"
+		let to = RatingFormat.whole(post)
+		guard let pre else { return "unrated → \(to)" }
+		let line = "\(RatingFormat.whole(pre)) → \(to)"
+		guard let change else { return line }
+		return line + " (\(change >= 0 ? "+" : "")\(change))"
 	}
 
-	/// "Score 3.5 · 4 games + 1 forfeit win": the Forfeit rule made visible.
+	/// "Score 3.5 · 4 Games + 1 forfeit win": the Forfeit rule made visible.
 	public static func scoreLine(score: Double, games: Int, forfeits: Int) -> String {
-		var line = "Score \(points(score)) · \(games) game\(games == 1 ? "" : "s")"
-		if forfeits > 0 { line += " + \(forfeits) forfeit win\(forfeits == 1 ? "" : "s")" }
+		var line = "Score \(points(score)) · \(RecordText.games(games))"
+		if forfeits > 0 { line += " + \(RecordText.count(forfeits, "forfeit win", "forfeit wins"))" }
 		return line
 	}
 
-	/// "3 games · 1 forfeit · 1W 1D 1L · 1.5 pts · best streak 3W".
+	/// "3 Games · 1 forfeit · 1 win, 1 draw, 1 loss · 1.5 points · best win streak 3".
 	public static func seriesStats(_ series: API.EventsSeries) -> String {
-		var bits = ["\(series.gameCount) game\(series.gameCount == 1 ? "" : "s")", "\(series.win)W \(series.draw)D \(series.loss)L",
-					"\(points(series.score)) pts"]
+		var bits = [RecordText.games(series.gameCount),
+					RecordText.record(win: series.win, draw: series.draw, loss: series.loss),
+					"\(points(series.score)) point\(series.score == 1 ? "" : "s")"]
 		if series.forfeitCount > 0 {
-			bits.insert("\(series.forfeitCount) forfeit\(series.forfeitCount == 1 ? "" : "s")", at: 1)
+			bits.insert(RecordText.count(series.forfeitCount, "forfeit", "forfeits"), at: 1)
 		}
-		if series.longestWinStreak >= 2 { bits.append("best streak \(series.longestWinStreak)W") }
+		if series.longestWinStreak >= 2 { bits.append("best win streak \(series.longestWinStreak)") }
 		return bits.joined(separator: " · ")
 	}
 

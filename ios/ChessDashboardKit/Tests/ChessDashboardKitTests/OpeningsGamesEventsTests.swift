@@ -179,7 +179,7 @@ struct EventsModelTests {
 		await model.load()
 		let series = try #require(model.resource.value?.series)
 		#expect(series.map(\.series) == ["Test Open", "Summer Cup"])
-		#expect(EventText.seriesStats(series[0]) == "3 games · 1W 1D 1L · 1.5 pts")
+		#expect(EventText.seriesStats(series[0]) == "3 Games · 1 win, 1 draw, 1 loss · 1.5 points")
 	}
 
 	@Test("real career: Series, the ladder's Rated Events, and the unplayed card")
@@ -202,8 +202,9 @@ struct EventsModelTests {
 		#expect(EventText.ratingChange(pre: 1544, post: 1571, change: 27) == "1544 → 1571 (+27)")
 		#expect(EventText.ratingChange(pre: nil, post: 695, change: nil) == "unrated → 695")
 		#expect(EventText.ratingChange(pre: 1500, post: nil, change: nil) == "")
-		#expect(EventText.scoreLine(score: 3.5, games: 4, forfeits: 1) == "Score 3.5 · 4 games + 1 forfeit win")
-		#expect(EventText.scoreLine(score: 1, games: 1, forfeits: 2) == "Score 1 · 1 game + 2 forfeit wins")
+		#expect(EventText.ratingChange(pre: 1500, post: 1512, change: nil) == "1500 → 1512")
+		#expect(EventText.scoreLine(score: 3.5, games: 4, forfeits: 1) == "Score 3.5 · 4 Games + 1 forfeit win")
+		#expect(EventText.scoreLine(score: 1, games: 1, forfeits: 2) == "Score 1 · 1 Game + 2 forfeit wins")
 		#expect(EventText.ordinal(1) == "1st")
 		#expect(EventText.ordinal(22) == "22nd")
 		#expect(EventText.ordinal(13) == "13th")

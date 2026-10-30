@@ -15,6 +15,36 @@ struct DisplayTests {
 		#expect(RatingFormat.change(0.4) == "0")
 	}
 
+	@Test("percentages: whole, up to one decimal, spoken, share")
+	func percents() {
+		#expect(PercentFormat.whole(57.14) == "57%")
+		#expect(PercentFormat.whole(42.5) == "43%")
+		#expect(PercentFormat.upToOneDecimal(57.14) == "57.1%")
+		#expect(PercentFormat.upToOneDecimal(50) == "50%")
+		#expect(PercentFormat.spoken(66.6) == "67 percent")
+		#expect(PercentFormat.share(1, of: 3) == "33%")
+		#expect(PercentFormat.share(0, of: 0) == "0%")
+	}
+
+	@Test("a record reads in words, never W/D/L")
+	func records() {
+		#expect(RecordText.record(win: 3, draw: 1, loss: 2) == "3 wins, 1 draw, 2 losses")
+		#expect(RecordText.record(win: 1, draw: 0, loss: 1) == "1 win, 0 draws, 1 loss")
+		#expect(RecordText.recordWithGames(win: 3, draw: 1, loss: 2) == "3 wins, 1 draw, 2 losses, 6 Games")
+		#expect(RecordText.games(1) == "1 Game")
+	}
+
+	@Test("touch to read picks the nearest point, ties to the earlier one")
+	func nearestPoint() {
+		let moves = [1.0, 2.0, 4.0]
+		#expect(ChartSelection.nearest(moves, to: 3, by: { $0 }) == 2)
+		#expect(ChartSelection.nearest(moves, to: 3.6, by: { $0 }) == 4)
+		#expect(ChartSelection.nearest([Double](), to: 1, by: { $0 }) == nil)
+		let day = ChartDates.day("2024-03-10")!
+		let days = ["2024-03-01", "2024-03-12"].compactMap { ChartDates.day($0) }
+		#expect(ChartDates.nearest(days, to: day, by: { $0 }) == days[1])
+	}
+
 	@Test("mine and engine Tags read differently")
 	func tags() {
 		let mine = TagDisplay(API.Tag(name: "time-trouble", source: .mine))
