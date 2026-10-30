@@ -120,7 +120,7 @@ private struct BoardCard: View {
 		Card {
 			VStack(alignment: .leading, spacing: 12) {
 				if model.views.count > 1 {
-					Picker("Board view", selection: Binding(get: { model.selectedView?.kind ?? .game }, set: model.select)) {
+					Picker("Board view", selection: Binding(get: { model.selectedView?.kind ?? .game }, set: { model.select($0) })) {
 						ForEach(model.views.map(\.kind)) { Text($0.title).tag($0) }
 					}
 					.pickerStyle(.segmented)
