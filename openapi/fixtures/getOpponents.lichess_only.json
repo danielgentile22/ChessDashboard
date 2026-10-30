@@ -1,0 +1,120 @@
+{
+  "games_count": 7,
+  "opponents": [
+    {
+      "opponent": "Opponent A",
+      "opponent_id": "name-T3Bwb25lbnQgQQ"
+    },
+    {
+      "opponent": "Opponent B",
+      "opponent_id": "name-T3Bwb25lbnQgQg"
+    },
+    {
+      "opponent": "Opponent C",
+      "opponent_id": "name-T3Bwb25lbnQgQw"
+    },
+    {
+      "opponent": "Opponent D",
+      "opponent_id": "name-T3Bwb25lbnQgRA"
+    }
+  ],
+  "outcome_vs_rating": [
+    {
+      "date": "2024-01-06",
+      "opponent": "Opponent A",
+      "opponent_rating": 1920,
+      "outcome": "Win",
+      "outcome_value": 1.0
+    },
+    {
+      "date": "2024-01-06",
+      "opponent": "Opponent B",
+      "opponent_rating": 1750,
+      "outcome": "Draw",
+      "outcome_value": 0.5
+    },
+    {
+      "date": "2024-01-07",
+      "opponent": "Opponent C",
+      "opponent_rating": 2050,
+      "outcome": "Loss",
+      "outcome_value": 0.0
+    },
+    {
+      "date": "2024-06-15",
+      "opponent": "Opponent A",
+      "opponent_rating": 1930,
+      "outcome": "Win",
+      "outcome_value": 1.0
+    },
+    {
+      "date": "2024-06-15",
+      "opponent": "Opponent D",
+      "opponent_rating": 1600,
+      "outcome": "Win",
+      "outcome_value": 1.0
+    },
+    {
+      "date": "2024-06-16",
+      "opponent": "Opponent B",
+      "opponent_rating": 1760,
+      "outcome": "Win",
+      "outcome_value": 1.0
+    },
+    {
+      "date": "2024-06-16",
+      "opponent": "Opponent A",
+      "opponent_rating": 1925,
+      "outcome": "Draw",
+      "outcome_value": 0.5
+    }
+  ],
+  "rating_buckets": [
+    {
+      "bucket": "< −200",
+      "draw": 0,
+      "games": 1,
+      "loss": 0,
+      "win": 1
+    },
+    {
+      "bucket": "−100 to −1",
+      "draw": 1,
+      "games": 2,
+      "loss": 0,
+      "win": 1
+    },
+    {
+      "bucket": "+100 to +199",
+      "draw": 1,
+      "games": 3,
+      "loss": 0,
+      "win": 2
+    },
+    {
+      "bucket": "≥ +200",
+      "draw": 0,
+      "games": 1,
+      "loss": 1,
+      "win": 0
+    }
+  ],
+  "records": [
+    {
+      "draw": 1,
+      "games": 3,
+      "loss": 0,
+      "opponent": "Opponent A",
+      "opponent_id": "name-T3Bwb25lbnQgQQ",
+      "win": 2
+    },
+    {
+      "draw": 1,
+      "games": 2,
+      "loss": 0,
+      "opponent": "Opponent B",
+      "opponent_id": "name-T3Bwb25lbnQgQg",
+      "win": 1
+    }
+  ]
+}

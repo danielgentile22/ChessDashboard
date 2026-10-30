@@ -15,7 +15,11 @@ from dash import Input, Output, State, callback, dcc, html, no_update
 
 from pgn_stats_core import chapter_id
 from styles import COLORS, FONT_SYSTEM, LOSS_WASH, WIN_WASH
-from uscf_core import UscfProfile, UscfRating
+from uscf_core import (  # noqa: F401 (pages import it from here)
+    UscfProfile,
+    UscfRating,
+    uscf_member_url,
+)
 
 # ---------------------------------------------------------------------------
 # Dark DataTable styles (shared by every table in the app)
@@ -314,11 +318,6 @@ def coach_note_card(note: dict) -> html.Div:
 def lichess_link(chapter_url: str) -> str:
     """Markdown 'Open on Lichess' link for a Game's ChapterURL ('' if none)."""
     return f"[Open ↗]({chapter_url})" if chapter_url else ""
-
-
-def uscf_member_url(member_id: str) -> str:
-    """The USCF ratings-site page for a member ('' if no ID)."""
-    return f"https://ratings.uschess.org/members/{member_id}" if member_id else ""
 
 
 # Display names for USCF rating-system codes.
