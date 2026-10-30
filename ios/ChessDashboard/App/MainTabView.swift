@@ -11,22 +11,22 @@ struct MainTabView: View {
 	var body: some View {
 		TabView(selection: $tab) {
 			Tab("Overview", systemImage: "square.grid.2x2", value: .overview) {
-				NavigationStack { PlaceholderScreen(title: "Overview", page: .overview) }
+				NavigationStack { PlaceholderScreen(title: "Overview", page: .overview).gameDestination() }
 			}
 			Tab("Trends", systemImage: "chart.xyaxis.line", value: .trends) {
-				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends) }
+				NavigationStack { PlaceholderScreen(title: "Trends", page: .trends).gameDestination() }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
-				NavigationStack { PlaceholderScreen(title: "Games", page: .games) }
+				NavigationStack { PlaceholderScreen(title: "Games", page: .games).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
-				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons) }
+				NavigationStack { PlaceholderScreen(title: "Lessons", page: .lessons).gameDestination() }
 			}
 			Tab("Opponents", systemImage: "person.2", value: .opponents) {
-				NavigationStack { PlaceholderScreen(title: "Opponents", page: .opponents) }
+				NavigationStack { PlaceholderScreen(title: "Opponents", page: .opponents).gameDestination() }
 			}
 			Tab("More", systemImage: "ellipsis.circle", value: .more) {
-				NavigationStack { MoreView() }
+				NavigationStack { MoreView().gameDestination() }
 			}
 		}
 	}
