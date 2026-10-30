@@ -1832,7 +1832,8 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
     """
     Auto-detect career milestone games, returned as a chronologically sorted list.
 
-    Each item: {date: str, game_num: int, description: str, kind: str}
+    Each item: {date: str, game_num: int, description: str, kind: str,
+    chapter_url: str}
     Kinds: 'first', 'win', 'draw', 'loss', 'milestone', 'peak', 'streak'
     """
     if df.empty:
@@ -1851,7 +1852,8 @@ def compute_milestones(df: pd.DataFrame) -> list[dict]:
 
     def _add(row, desc: str, kind: str):
         items.append({"date": _date(row), "game_num": int(row["_gn"]),
-                      "description": desc, "kind": kind})
+                      "description": desc, "kind": kind,
+                      "chapter_url": row.get("ChapterURL", "")})
 
     # Records must not credit no-shows: a forfeit is neither a first win,
     # a giant kill, nor a link in a win streak. Game numbering (_gn), the first
