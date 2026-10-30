@@ -40,6 +40,30 @@ struct TrendsModelTests {
 		#expect(readout.lines[1].value == "1800" && readout.lines[1].detail == "TEST OPEN JANUARY, from 1782")
 	}
 
+	@Test("the Official Rating is read where the rule is drawn, from the step line, never before it starts")
+	func readoutFollowsTheDrawnLines() async throws {
+		let model = await loaded()
+		// Just before the Oct 2025 supplement, nearest to the Oct 5 Section:
+		// the rule sits on Oct 5, where the step line already shows 1005.
+		let beforeStep = try #require(model.ratingReadout(at: day("2025-10-01").addingTimeInterval(-3_600)))
+		#expect(readout(beforeStep, "Official Rating") == "1005")
+		#expect(beforeStep.date == day("2025-10-05"))
+
+		// Official only, before the first supplement: no line, so no reading.
+		var json = try JSONSerialization.jsonObject(with: Repo.fixture("getTrends")) as! [String: Any]
+		var chart = json["rating_chart"] as! [String: Any]
+		chart["live"] = []
+		json["rating_chart"] = chart
+		let api = FixtureAPIClient(directory: Repo.fixtures)
+		api.set(try JSONSerialization.data(withJSONObject: json), for: "getTrends")
+		let officialOnly = await loaded(api: api)
+		#expect(officialOnly.ratingReadout(at: day("2023-06-01")) == nil)
+	}
+
+	private func readout(_ r: TrendsModel.Readout, _ series: String) -> String? {
+		r.lines.first { $0.series == series }?.value
+	}
+
 	@Test("USCF off: the chart degrades to typed header ratings with the trend line")
 	func typedChart() async throws {
 		let model = await loaded(variant: "lichess_only")
