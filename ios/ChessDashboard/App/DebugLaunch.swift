@@ -62,17 +62,19 @@ struct DebugLaunch {
 		}
 	}
 
-	/// The More tab's initial navigation path.
-	var morePath: [Screen] {
-		switch screen {
-		case .openings, .events, .analysis: [screen!]
-		default: []
-		}
+	/// The More tab's initial navigation path. Untyped, so the stack still
+	/// takes every other route its screens push (Games, Events, lines).
+	var morePath: NavigationPath {
+		var path = NavigationPath()
+		if let screen, [.openings, .events, .analysis].contains(screen) { path.append(screen) }
+		return path
 	}
 
 	/// The Games tab's initial navigation path.
-	var gamesPath: [GameRoute] {
-		gameID.map { [GameRoute(gameID: $0)] } ?? []
+	var gamesPath: NavigationPath {
+		var path = NavigationPath()
+		if let gameID { path.append(GameRoute(gameID: gameID)) }
+		return path
 	}
 
 	/// The environment: the live app, or one over the recorded fixtures with a

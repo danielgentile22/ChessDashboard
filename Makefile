@@ -34,7 +34,7 @@ $(VENV)/.installed: $(VENV)/pyvenv.cfg requirements.txt
 	uv pip install --quiet --python $(PYTHON) -r requirements.txt
 	touch $@
 
-$(VENV)/.installed-dev: $(VENV)/pyvenv.cfg requirements-dev.txt
+$(VENV)/.installed-dev: $(VENV)/pyvenv.cfg requirements.txt requirements-dev.txt
 	uv pip install --quiet --python $(PYTHON) -r requirements-dev.txt
 	touch $@
 
