@@ -8,6 +8,8 @@ struct MainTabView: View {
 
 	@Environment(AppEnvironment.self) private var env
 	@SceneStorage("tab") private var tab: TabID = .overview
+	@State private var gamesPath = DebugLaunch.current.gamesPath
+	@State private var morePath = DebugLaunch.current.morePath
 
 	var body: some View {
 		TabView(selection: $tab) {
@@ -18,7 +20,7 @@ struct MainTabView: View {
 				NavigationStack { TrendsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Games", systemImage: "list.bullet.rectangle", value: .games) {
-				NavigationStack { GamesScreen(context: env.context!).gameDestination() }
+				NavigationStack(path: $gamesPath) { GamesScreen(context: env.context!).gameDestination() }
 			}
 			Tab("Lessons", systemImage: "lightbulb", value: .lessons) {
 				NavigationStack { LessonsScreen(context: env.context!).gameDestination() }
@@ -27,9 +29,12 @@ struct MainTabView: View {
 				NavigationStack { OpponentsScreen(context: env.context!).gameDestination() }
 			}
 			Tab("More", systemImage: "ellipsis.circle", value: .more) {
-				NavigationStack { MoreView().gameDestination() }
+				NavigationStack(path: $morePath) {
+					MoreView().gameDestination().debugLaunchDestination(env.context)
+				}
 			}
 		}
+		.onAppear { if let launch = DebugLaunch.current.tab { tab = launch } }
 	}
 }
 

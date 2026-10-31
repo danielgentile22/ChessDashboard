@@ -10,9 +10,11 @@ struct ChessDashboardApp: App {
 		let raw = Bundle.main.object(forInfoDictionaryKey: "CDBaseURL") as? String ?? ""
 		guard let baseURL = URL(string: raw) else { fatalError("CDBaseURL is not a URL: \(raw)") }
 		let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-		_env = State(initialValue: AppEnvironment(
-			config: AppConfig(baseURL: baseURL), defaults: UserDefaults.standard,
-			cachesDirectory: caches))
+		_env = State(initialValue: DebugLaunch.current.makeEnvironment(baseURL: baseURL) {
+			AppEnvironment(
+				config: AppConfig(baseURL: baseURL), defaults: UserDefaults.standard,
+				cachesDirectory: caches)
+		})
 	}
 
 	var body: some Scene {
@@ -21,6 +23,10 @@ struct ChessDashboardApp: App {
 				.environment(env)
 				.preferredColorScheme(.dark)
 				.tint(Theme.primary.color)
+				.task {
+					guard DebugLaunch.current.guest, env.session.session == nil else { return }
+					try? await env.session.continueAsGuest()
+				}
 		}
 		.onChange(of: scenePhase) { _, phase in
 			guard phase == .active else { return }

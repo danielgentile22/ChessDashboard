@@ -142,8 +142,21 @@ make ios-test            # same suite on a simulator (SIM_NAME="iPhone 17" by de
 make ios-build           # Debug build for a simulator
 make ios-build-release   # Release build, generic simulator, no signing
 make ios-codegen         # regenerate API types + theme after a spec/THEME change
+make ios-shot SCREEN=games OUT=/tmp/games.png   # screenshot one screen (below)
 ```
 
+**Seeing a screen.** `make ios-shot` (`scripts/shot.sh`) builds Debug, boots
+the simulator, launches straight onto `SCREEN` served from `openapi/fixtures`
+(no server, no sign-in) and saves a PNG you can read back. `shot.sh --list`
+names the screens; `SCREEN=game` opens a Game (`shot.sh game out.png <id>`
+picks which). It drives the Debug-only launch arguments in
+`ChessDashboard/App/DebugLaunch.swift` (`-CDFixtures`, `-CDGuest`,
+`-CDScreen <screen>`, `-CDGame <id>`); pass them to `simctl launch` yourself
+to tap around from there. Never write your own launch patch: add a case.
+
 Signing and TestFlight: `make ios-testflight` (see the README's iOS section).
-CI runs `swift test` and the simulator tests in a macOS job when `ios/**` or
-`openapi/**` change.
+CI runs `swift test` and the simulator tests in a macOS job when `ios/**`,
+`openapi/**`, `payloads/**` or `api/**` change. **CI's Xcode lags the
+Studio's** (`latest-stable` on GitHub's `macos-26` runner, 26.x, while the
+Studio runs 27.x), so code that builds here can crash CI's compiler: watch
+the iOS job after every iOS push, before shipping a TestFlight build.
