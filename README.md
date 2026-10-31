@@ -84,7 +84,7 @@ Boots entirely from a committed, anonymized game history (`tests/data/demo-games
 
 ### Prerequisites
 
-- Python 3.11 or newer
+- Python 3.11 (pinned in `.python-version`; `make` fetches it with [uv](https://docs.astral.sh/uv/))
 - A Lichess Study containing your games (one Game per Chapter), e.g. `https://lichess.org/study/abcdWXYZ` → study ID `abcdWXYZ`
 
 ### Install with Make (recommended)
@@ -92,7 +92,7 @@ Boots entirely from a committed, anonymized game history (`tests/data/demo-games
 ```bash
 git clone https://github.com/danielgentile22/ChessDashboard.git chess-dashboard
 cd chess-dashboard
-make install        # creates .venv and installs runtime deps
+make install        # creates .venv (uv, Python 3.11) and installs runtime deps
 make run STUDY=abcdWXYZ
 ```
 
@@ -177,6 +177,7 @@ All common tasks are wrapped in the `Makefile`:
 
 ```bash
 make help           # list all targets
+make check          # lint + typecheck + test: the same steps as CI
 make install-dev    # install runtime + dev deps (pytest, ruff, mypy)
 make test           # run pytest with coverage report
 make lint           # run ruff (check only, like CI)

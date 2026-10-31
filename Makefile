@@ -1,17 +1,19 @@
 # Chess Dashboard — Developer Makefile
 # Usage: make <target>
 #
-# Requires: python3, pip, make
+# Requires: uv, make. Python is pinned in .python-version (CI's version); uv
+# fetches it, so the venv is the same in any checkout or worktree.
 
 VENV      := .venv
 PYTHON    := $(VENV)/bin/python
-PIP       := $(VENV)/bin/pip
 PYTEST    := $(VENV)/bin/pytest
 RUFF      := $(VENV)/bin/ruff
 STUDY     ?= abcdWXYZ
+SCREEN    ?= overview
+OUT       ?= ios/build/shot-$(SCREEN).png
 
-.PHONY: help venv install install-dev run demo test lint fix typecheck clean docker docker-up \
-	ios-codegen ios-generate ios-build ios-build-release ios-test kit-test ios-testflight
+.PHONY: help install install-dev run demo check test lint fix typecheck clean docker docker-up \
+	ios-codegen ios-generate ios-build ios-build-release ios-test kit-test ios-testflight ios-shot
 
 # iOS (ios/). `xcrun simctl list devices available` lists simulator names.
 SIM_NAME  ?= iPhone 17
@@ -22,15 +24,25 @@ IOS_FLAGS := -project $(IOS_PROJ) -scheme ChessDashboard -derivedDataPath ios/bu
 help:          ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*##' Makefile | awk 'BEGIN{FS=":.*##"}{printf "  \033[36m%-16s\033[0m %s\n",$$1,$$2}'
 
-venv:          ## Create Python virtual environment
-	python3 -m venv $(VENV)
-	$(PIP) install --upgrade pip
+# The venv is a file target: built once with the pinned Python, rebuilt when
+# the pin changes. The stamps reinstall only when a requirements file changes.
+$(VENV)/pyvenv.cfg: .python-version
+	rm -rf $(VENV)
+	uv venv --quiet --python "$$(cat .python-version)" $(VENV)
 
-install: venv  ## Install runtime dependencies
-	$(PIP) install -r requirements.txt
+$(VENV)/.installed: $(VENV)/pyvenv.cfg requirements.txt
+	uv pip install --quiet --python $(PYTHON) -r requirements.txt
+	touch $@
 
-install-dev: venv  ## Install runtime + dev dependencies
-	$(PIP) install -r requirements-dev.txt
+$(VENV)/.installed-dev: $(VENV)/pyvenv.cfg requirements-dev.txt
+	uv pip install --quiet --python $(PYTHON) -r requirements-dev.txt
+	touch $@
+
+install: $(VENV)/.installed  ## Install runtime dependencies
+
+install-dev: $(VENV)/.installed-dev  ## Install runtime + dev dependencies
+
+check: lint typecheck test  ## Everything CI's lint, typecheck and test jobs run
 
 run: install   ## Start the dashboard locally
 	$(PYTHON) app.py --study $(STUDY)
@@ -81,6 +93,9 @@ ios-test: ios-generate  ## The ChessDashboardKit tests on a simulator (SIM_NAME=
 
 kit-test:      ## The ChessDashboardKit tests on the Mac, in seconds (swift test)
 	cd ios/ChessDashboardKit && swift test
+
+ios-shot:      ## Screenshot one screen on a simulator from fixtures (SCREEN=overview OUT=shot.png)
+	ios/scripts/shot.sh $(SCREEN) $(OUT)
 
 ios-testflight:  ## Archive, sign and upload a TestFlight build (ios/testflight.sh; reads .env)
 	ios/testflight.sh

@@ -119,13 +119,18 @@ tests pass:
 
 ## Build, test, run
 
+**Python 3.11 only** (`.python-version`, CI's version). The Makefile builds
+`.venv` with `uv venv` from that pin, so it works in any checkout or worktree;
+never build your own venv or call pip.
+
 ```bash
+make check         # lint + typecheck + test: run before every commit
 make install-dev   # venv + runtime + dev deps (pytest, ruff, mypy)
 make test          # pytest with coverage  (1000+ tests; keep them green)
-make lint          # ruff (auto-fix)
+make lint          # ruff check, read-only (`make fix` auto-fixes)
 make typecheck     # mypy on the shared scope (pyproject.toml [tool.mypy]: cores, clients, sync, data, auth …)
 make run-debug     # hot-reload dev server
-python app.py --study <ID>   # run directly; needs a study ID or LICHESS_STUDY_IDS
+.venv/bin/python app.py --study <ID>   # run directly; needs a study ID or LICHESS_STUDY_IDS
 ```
 
 API contract: edit `openapi/src/<screen>.json`, then `python -m api.contract` to
@@ -138,8 +143,14 @@ After a deliberate payload change, re-record with
 iOS: `make kit-test` (package tests on the Mac), `make ios-test` (simulator),
 `make ios-build`, `make ios-codegen` after a spec or `styles.THEME` change.
 
-`.env` holds the Lichess token and USCF member ID for local runs. CI is
-lint → test → typecheck (`.github/workflows/ci.yml`).
+`.env` holds the Lichess token and USCF member ID for local runs.
+
+CI (`.github/workflows/ci.yml`): **make check equals CI.** Its lint, test and
+typecheck jobs each call the same make target, so a green `make check` is a
+green Python CI. CI also builds the Docker image and boots it in demo mode
+(`make docker`, then `/health`), and on `ios/**`, `openapi/**`, `payloads/**`
+or `api/**` changes runs the iOS job (`swift test` plus the simulator tests;
+its Xcode lags the Studio's, see `ios/CLAUDE.md`).
 
 ## House rules
 

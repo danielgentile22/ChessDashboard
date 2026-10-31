@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: ["main"]
 
+# The lint, test and typecheck jobs are `make check`, split so they run in parallel.
 jobs:
   lint:
     name: Lint (ruff)
@@ -13,17 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # make builds the venv with uv and the Python in .python-version, as locally.
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: pip
-
-      - name: Install dev dependencies
-        run: pip install -r requirements-dev.txt
+          enable-cache: true
+          cache-dependency-glob: requirements*.txt
 
       - name: Run ruff
-        run: ruff check .
+        run: make lint
 
   test:
     name: Tests (pytest)
@@ -32,17 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # make builds the venv with uv and the Python in .python-version, as locally.
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: pip
-
-      - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+          enable-cache: true
+          cache-dependency-glob: requirements*.txt
 
       - name: Run pytest with coverage (gate in pyproject.toml)
-        run: pytest tests/ --cov --cov-report=term-missing --cov-fail-under=92
+        run: make test
 
   typecheck:
     name: Type check (mypy)
@@ -51,17 +48,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      # make builds the venv with uv and the Python in .python-version, as locally.
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: pip
-
-      - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+          enable-cache: true
+          cache-dependency-glob: requirements*.txt
 
       - name: Run mypy (file list in pyproject.toml)
-        run: mypy
+        run: make typecheck
 
   docker:
     name: Docker image (build + smoke)
