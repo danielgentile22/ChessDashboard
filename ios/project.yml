@@ -49,7 +49,7 @@ targets:
         PRODUCT_NAME: ChessDashboard
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: NO
-        # Drawn by scripts/make_app_icon.swift.
+        # Rendered from icon.svg at the repo root.
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: ChessDashboard/Info.plist

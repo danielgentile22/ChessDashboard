@@ -22,7 +22,7 @@ are generated and gitignored.
 | `ChessDashboardKit/` | Swift package with everything testable. No UIKit; `swift test` runs it on the Mac in seconds. One dependency: ChessKit (`exact: "0.17.0"`), for chess rules only. |
 | `scripts/gen_api_types.py` | Swift types from `openapi/v1.json` (checked in as `API/APITypes.generated.swift`). |
 | `scripts/gen_theme.py` | Swift color tokens from `styles.THEME` (checked in as `Theme/ThemeTokens.generated.swift`). |
-| `scripts/make_app_icon.swift` | Draws `ChessDashboard/Assets.xcassets/AppIcon.appiconset/AppIcon.png` (CoreGraphics, opaque 1024 px). |
+| `../icon.svg` | Source of `ChessDashboard/Assets.xcassets/AppIcon.appiconset/AppIcon.png`: render it square and opaque at 1024 px (the App Store refuses an alpha channel; iOS rounds the corners). |
 | `testflight.sh`, `ExportOptions.plist` | Archive, sign (manual: the distribution certificate in `tvhome-signing.keychain-db`, profile "Chess Dashboard App Store"), export, and upload to TestFlight; `--no-upload` stops at the `.ipa`. Reads the repo-root `.env` (`ENV_FILE` overrides, e.g. from a worktree). |
 
 Inside `ChessDashboardKit/Sources/ChessDashboardKit/`:
